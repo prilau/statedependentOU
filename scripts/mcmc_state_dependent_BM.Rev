@@ -1,0 +1,131 @@
+################################################################################
+#
+# RevBayes Example: Bayesian inference of rates of evolution under a
+#                   state-dependent Brownian-motion model
+#
+#
+# authors: Michael R. May
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+character <- 1
+
+### Read in the tree
+T <- readTrees("data/haemulidae.nex")[1]
+ntips <- T.ntips()
+nbranches <- 2 * ntips - 2
+
+### Read in the continuous-character data
+cont <- readContinuousCharacterData("data/haemulidae_trophic_traits.nex")
+cont.excludeAll()
+cont.includeCharacter(character)
+
+### Read in the discrete-character data
+disc <- readDiscreteCharacterData("data/haemulidae_habitat.nex")
+num_disc_states <- disc.getStateDescriptions().size()
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+
+##########################
+# Specify the tree model #
+##########################
+
+tree <- T
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+Q <- fnJC(num_disc_states)
+
+# make the transition rate parameter
+lambda ~ dnLoguniform(1e-3, 2)
+moves.append( mvScale(lambda, weight=1.0) )
+
+# make the data-augmented CTCM model
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X.clamp(disc)
+
+# include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=20.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=20.0) )
+
+# keep track of the number of transitions
+for(i in 1:nbranches) {
+    num_changes[i] := sum(X.numCharacterChanges(i))
+}
+total_num_changes := sum(num_changes)
+
+
+##########################
+# Specify the rate model #
+##########################
+
+
+root_age := tree.rootAge()
+for (i in 1:num_disc_states){
+  sigma2[i] ~ dnLoguniform(1e-3, 1)
+  alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
+  theta[i] ~ dnUniform(-10, 10)
+
+  moves.append( mvScale(sigma2[i], weight=2.0) )
+  moves.append( mvScale(alpha[i], weight=2.0) )
+  moves.append( mvSlide(theta[i], weight=2.0) )
+}
+
+
+#sigma2 ~ dnLoguniform(1e-3, 1)
+#alpha ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
+#theta ~ dnUniform(-10, 10)
+
+#moves.append( mvScale(sigma2, weight=2.0) )
+#moves.append( mvScale(alpha, weight=2.0) )
+#moves.append( mvSlide(theta, weight=2.0) )
+
+##########################
+# Specify the BM process #
+##########################
+
+#Y ~ dnPhyloBrownianREML(tree, branchRates=branch_rates^0.5)
+Y ~ dnPhyloOUSD(tree, X, theta=theta, alpha=alpha, sigma=sigma2^0.5)
+Y.clamp(cont)
+
+
+
+#############
+# The Model #
+#############
+
+mymodel = model(Q)
+
+### set up the monitors that will output parameter values to file and screen
+monitors.append( mnModel(filename="output/state_dependent_BM.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, total_num_changes) )
+
+
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="mixed")
+
+
+### run the MCMC ###
+mymcmc.burnin(generations=5000, tuningInterval=100)
+mymcmc.run(generations=250000, tuningInterval=200)
+
+
+
+## quit ##
+q()
