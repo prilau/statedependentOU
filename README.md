@@ -1,13 +1,13 @@
 # statedependentOU
 State-dependent OU model for RevBayes. 
 
-##Done
+## Done
 1. Obtained test dataset (birds)
 2. Subset the data - 2 binary discrete traits and 1 continuous trait
 3. First test-run with state-dependent theta and state-independent sigma and alpha
     a. Results: very small alpha (very large phylogenetic half life)
 
-##To-do
+## To-do
 1. Find different datasets to fit the model.
 2. Fit the current dataset to different models
     a. Change flexibility of different parameters
@@ -21,7 +21,7 @@ State-dependent OU model for RevBayes.
     c. Estimate the parameter(s) of the model
     d. Compare the estimated parameter values with true parameter values
 
-##Timeline (tentative)
+## Timeline (tentative)
 early August 2023   To-do #2-3
 late August 2023    To-do #5
 September 2023      Let's see...
