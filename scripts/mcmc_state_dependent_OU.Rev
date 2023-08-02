@@ -1,10 +1,10 @@
 ################################################################################
 #
 # RevBayes Example: Bayesian inference of rates of evolution under a
-#                   state-dependent Brownian-motion model
+#                   state-dependent OU model
 #
 #
-# authors: Michael R. May
+# authors: 
 #
 ################################################################################
 
@@ -16,28 +16,25 @@
 character <- 1
 
 ### Read in the tree
-T <- readTrees("data/haemulidae.nex")[1]
-ntips <- T.ntips()
+tree <- readTrees("data/bird_tree_pruned_resolvedPoly.tre")[1]
+ntips <- tree.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/haemulidae_trophic_traits.nex")
+cont <- readContinuousCharacterData("data/birdForelimbRatio.nex")
 cont.excludeAll()
 cont.includeCharacter(character)
 
 ### Read in the discrete-character data
-disc <- readDiscreteCharacterData("data/haemulidae_habitat.nex")
+disc <- readDiscreteCharacterData("data/birdDiscrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
+disc.excludeAll()
+disc.includeCharacter(character)
 
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
 
-##########################
-# Specify the tree model #
-##########################
-
-tree <- T
 
 ########################################
 # Specify the discrete-character model #
@@ -66,35 +63,35 @@ total_num_changes := sum(num_changes)
 
 
 ##########################
-# Specify the rate model #
+# Specify priors for OU model #
 ##########################
 
 
 root_age := tree.rootAge()
-for (i in 1:num_disc_states){
-  sigma2[i] ~ dnLoguniform(1e-3, 1)
-  alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
-  theta[i] ~ dnUniform(-10, 10)
+stationaryVar ~ dnLognormal(log(0.01586195, 2.71), 0.587)
+halfLife ~ dnUniform(0, 108.8796*3)
+#Moves only for stochastic variables
+moves.append( mvScale(stationaryVar, weight=2.0) )
+moves.append( mvScale(halfLife, weight=2.0) )
 
-  moves.append( mvScale(sigma2[i], weight=2.0) )
-  moves.append( mvScale(alpha[i], weight=2.0) )
+for (i in 1:num_disc_states){
+  theta[i] ~ dnUniform(0.2, 10)
   moves.append( mvSlide(theta[i], weight=2.0) )
+
+  
+  halfLives[i] := halfLife
+  alpha[i] := abs( log(2, 2.71) / halfLives[i] )
+  
+  stationaryVars[i] := stationaryVar
+  sigma2[i] := stationaryVars[i] * 2 * alpha[i]
+
 }
 
 
-#sigma2 ~ dnLoguniform(1e-3, 1)
-#alpha ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
-#theta ~ dnUniform(-10, 10)
-
-#moves.append( mvScale(sigma2, weight=2.0) )
-#moves.append( mvScale(alpha, weight=2.0) )
-#moves.append( mvSlide(theta, weight=2.0) )
-
 ##########################
-# Specify the BM process #
+# Specify the OU process #
 ##########################
 
-#Y ~ dnPhyloBrownianREML(tree, branchRates=branch_rates^0.5)
 Y ~ dnPhyloOUSD(tree, X, theta=theta, alpha=alpha, sigma=sigma2^0.5)
 Y.clamp(cont)
 
@@ -107,7 +104,7 @@ Y.clamp(cont)
 mymodel = model(Q)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/state_dependent_BM.log", printgen=10) )
+monitors.append( mnModel(filename="output/state_dependent_OU.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, total_num_changes) )
 
 
@@ -122,8 +119,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="mixed")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=250000, tuningInterval=200)
+mymcmc.burnin(generations=500, tuningInterval=100)
+mymcmc.run(generations=5000, tuningInterval=200)
 
 
 

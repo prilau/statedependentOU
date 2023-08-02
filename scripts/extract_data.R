@@ -1,3 +1,4 @@
+library(tidyverse)
 discreteTrait <- read_csv("./bird_brain.csv")
 contTrait <- read_csv("./Jess_skel_methods.csv")
 
