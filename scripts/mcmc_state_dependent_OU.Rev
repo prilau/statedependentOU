@@ -13,7 +13,8 @@
 #######################
 
 ### Select the character to analyze
-character <- 1
+characterCont <- 1
+characterDisc <- 1
 
 ### Read in the tree
 tree <- readTrees("data/bird_tree_pruned_resolvedPoly.tre")[1]
@@ -23,13 +24,13 @@ nbranches <- 2 * ntips - 2
 ### Read in the continuous-character data
 cont <- readContinuousCharacterData("data/birdForelimbRatio.nex")
 cont.excludeAll()
-cont.includeCharacter(character)
+cont.includeCharacter(characterCont)
 
 ### Read in the discrete-character data
-disc <- readDiscreteCharacterData("data/birdDiscrete.nex")
+disc <- readDiscreteCharacterData("data/birdDiscrete_combined.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
-disc.includeCharacter(character)
+disc.includeCharacter(characterDisc)
 
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()

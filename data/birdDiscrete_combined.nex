@@ -1,187 +1,181 @@
 #NEXUS
-
+[Data written by write.nexus.data.R, Wed Aug  2 17:14:28 2023]
 BEGIN DATA;
-    DIMENSIONS NTAX=172 NCHAR=1
-    FORMAT DATATYPE=STANDARD SYMBOLS="0123" MISSING=? GAP=-;
-MATRIX						   [flapper-migrant]
-Accipiter_striatus              2
-Pandion_haliaetus               2
-Rostrhamus_sociabilis           2
-Aegithalos_concinnus            1
-Aegotheles_cristatus            1
-Galerida_cristata               1
-Alcedo_atthis                   3
-Cepphus_grylle                  3
-Fratercula_corniculata          3
-Uria_lomvia                     3
-Anas_acuta                      3
-Branta_canadensis               3
-Anhinga_anhinga                 0
-Anseranas_semipalmata           3
-Chaetura_pelagica               3
-Collocalia_spodiopygia          1
-Aramus_guarauna                 1
-Bubulcus_ibis                   3
-Bombycilla_garrulus             3
-Phainopepla_nitens              3
-Burhinus_oedicnemus             3
-Caprimulgus_europaeus           3
-Chordeiles_minor                3
-Habia_rubica                    1
-Pheucticus_chrysogaster         1
-Piranga_rubra                   3
-Cariama_cristata                1
-Cathartes_aura                  2
-Charadrius_wilsonia             3
-Pluvialis_dominica              3
-Pluvialis_fulva                 3
-Vanellus_vanellus               3
-Chionis_albus                   3
-Ciconia_ciconia                 2
-Cisticola_fulvicapilla          1
-Colius_striatus                 1
-Oreoica_gutturalis              1
-Chalcophaps_indica              1
-Columbina_passerina             1
-Geotrygon_montana               1
-Conopophaga_lineata             1
-Coracias_garrulus               3
-Corvus_brachyrhynchos           3
-Cyanocorax_morio                1
-Pica_pica                       1
-Rupicola_rupicola               1
-Lepidocolaptes_affinis          1
-Phoebastria_immutabilis         0
-Dulus_dominicus                 1
-Calcarius_lapponicus            3
-Melospiza_melodia               3
-Passerina_cyanea                3
-Sporophila_americana            1
-Amandava_amandava               1
-Eurypyga_helias                 1
-Falco_sparverius                2
-Formicarius_analis              1
-Fregata_ariel                   0
-Carpodacus_mexicanus            1
-Fringilla_coelebs               3
-Loxia_curvirostra               3
-Asthenes_baeri                  1
-Xenops_minutus                  1
-Galbula_ruficauda               1
-Gavia_immer                     3
-Cursorius_cursor                3
-Haematopus_ostralegus           3
-Hemiprocne_mystacea             1
-Delichon_urbicum                3
-Oceanites_oceanicus             3
-Agelaius_assimilis              1
-Irena_puella                    1
-Jacana_spinosa                  1
-Lanius_nubicus                  3
-Anous_stolidus                  3
-Larus_glaucescens               3
-Larus_hyperboreus               3
-Rynchops_niger                  1
-Sterna_antillarum               3
-Sterna_hirundo                  3
-Sterna_maxima                   3
-Menura_novaehollandiae          1
-Merops_apiaster                 3
-Momotus_momota                  1
-Hypothymis_azurea               1
-Ficedula_parva                  3
-Muscicapa_striata               3
-Nyctibius_griseus               3
-Callipepla_gambelii             1
-Colinus_virginianus             1
-Oreortyx_pictus                 1
-Opisthocomus_hoazin             1
-Ardeotis_kori                   1
-Pachycephala_pectoralis         1
-Parus_major                     1
-Myioborus_pictus                3
-Setophaga_ruticilla             3
-Passer_montanus                 1
-Phaethon_rubricauda             3
-Phoenicopterus_ruber            1
-Phoeniculus_purpureus           1
-Picathartes_oreas               1
-Colaptes_auratus                3
-Pitta_sordida                   3
-Euplectes_orix                  1
-Podargus_strigoides             1
-Podiceps_auritus                3
-Polioptila_caerulea             3
-Daption_capense                 0
-Puffinus_griseus                0
-Promerops_cafer                 1
-Prunella_modularis              3
-Cacatua_galerita                1
-Nestor_notabilis                1
-Ptilonorhynchus_violaceus       1
-Pycnonotus_barbatus             1
-Eubucco_bourcierii              1
-Pteroglossus_torquatus          1
-Recurvirostra_americana         3
-Regulus_satrapa                 3
-Auriparus_flaviceps             1
-Rostratula_benghalensis         3
-Actitis_hypoleucos              3
-Calidris_alba                   3
-Gallinago_gallinago             3
-Numenius_americanus             3
-Phalaropus_lobatus              3
-Scolopax_minor                  3
-Tringa_flavipes                 3
-Sitta_pusilla                   1
-Steatornis_caripensis           1
-Catharacta_maccormicki          3
-Bubo_virginianus                1
-Buphagus_erythrorhynchus        1
-Lamprotornis_purpureus          1
-Onychognathus_nabouroup         1
-Sula_sula                       1
-Locustella_luscinioides         3
-Taraba_major                    1
-Thinocorus_rumicivorus          3
-Phaenicophilus_palmarum         1
-Tangara_cyanicollis             1
-Thraupis_episcopus              1
-Threskiornis_aethiopicus        1
-Alcippe_morrisonia              1
-Crypturellus_soui               1
-Eudromia_elegans                1
-Amazilia_tzacatl                1
-Chlorostilbon_ricordii          1
-Eulampis_jugularis              1
-Glaucis_hirsutus                1
-Thryothorus_ludovicianus        1
-Pharomachrus_mocinno            1
-Trogon_viridis                  1
-Catharus_guttatus               3
-Catharus_minimus                3
-Catharus_ustulatus              3
-Chaetops_frenatus               1
-Hylocichla_mustelina            3
-Myadestes_townsendi             3
-Sialia_currucoides              3
-Sialia_sialis                   3
-Turdus_falcklandii              1
-Turdus_philomelos               3
-Turdus_pilaris                  3
-Turdus_viscivorus               3
-Turnix_suscitator               1
-Attila_spadiceus                1
-Camptostoma_obsoletum           1
-Tyrannus_melancholicus          3
-Upupa_epops                     3
-Zosterops_senegalensis          1
-;
+  DIMENSIONS NTAX=172 NCHAR=1;
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123456789";
+  MATRIX
+    Accipiter_striatus             2
+    Pandion_haliaetus              2
+    Rostrhamus_sociabilis          2
+    Aegithalos_concinnus           1
+    Aegotheles_cristatus           1
+    Galerida_cristata              1
+    Alcedo_atthis                  3
+    Cepphus_grylle                 3
+    Fratercula_corniculata         3
+    Uria_lomvia                    3
+    Anas_acuta                     3
+    Branta_canadensis              3
+    Anhinga_anhinga                0
+    Anseranas_semipalmata          3
+    Chaetura_pelagica              3
+    Collocalia_spodiopygia         1
+    Aramus_guarauna                1
+    Bubulcus_ibis                  3
+    Bombycilla_garrulus            3
+    Phainopepla_nitens             3
+    Burhinus_oedicnemus            3
+    Caprimulgus_europaeus          3
+    Chordeiles_minor               3
+    Habia_rubica                   1
+    Pheucticus_chrysogaster        1
+    Piranga_rubra                  3
+    Cariama_cristata               1
+    Cathartes_aura                 2
+    Charadrius_wilsonia            3
+    Pluvialis_dominica             3
+    Pluvialis_fulva                3
+    Vanellus_vanellus              3
+    Chionis_albus                  3
+    Ciconia_ciconia                2
+    Cisticola_fulvicapilla         1
+    Colius_striatus                1
+    Oreoica_gutturalis             1
+    Chalcophaps_indica             1
+    Columbina_passerina            1
+    Geotrygon_montana              1
+    Conopophaga_lineata            1
+    Coracias_garrulus              3
+    Corvus_brachyrhynchos          3
+    Cyanocorax_morio               1
+    Pica_pica                      1
+    Rupicola_rupicola              1
+    Lepidocolaptes_affinis         1
+    Phoebastria_immutabilis        0
+    Dulus_dominicus                1
+    Calcarius_lapponicus           3
+    Melospiza_melodia              3
+    Passerina_cyanea               3
+    Sporophila_americana           1
+    Amandava_amandava              1
+    Eurypyga_helias                1
+    Falco_sparverius               2
+    Formicarius_analis             1
+    Fregata_ariel                  0
+    Carpodacus_mexicanus           1
+    Fringilla_coelebs              3
+    Loxia_curvirostra              3
+    Asthenes_baeri                 1
+    Xenops_minutus                 1
+    Galbula_ruficauda              1
+    Gavia_immer                    3
+    Cursorius_cursor               3
+    Haematopus_ostralegus          3
+    Hemiprocne_mystacea            1
+    Delichon_urbicum               3
+    Oceanites_oceanicus            3
+    Agelaius_assimilis             1
+    Irena_puella                   1
+    Jacana_spinosa                 1
+    Lanius_nubicus                 3
+    Anous_stolidus                 3
+    Larus_glaucescens              3
+    Larus_hyperboreus              3
+    Rynchops_niger                 1
+    Sterna_antillarum              3
+    Sterna_hirundo                 3
+    Sterna_maxima                  3
+    Menura_novaehollandiae         1
+    Merops_apiaster                3
+    Momotus_momota                 1
+    Hypothymis_azurea              1
+    Ficedula_parva                 3
+    Muscicapa_striata              3
+    Nyctibius_griseus              3
+    Callipepla_gambelii            1
+    Colinus_virginianus            1
+    Oreortyx_pictus                1
+    Opisthocomus_hoazin            1
+    Ardeotis_kori                  1
+    Pachycephala_pectoralis        1
+    Parus_major                    1
+    Myioborus_pictus               3
+    Setophaga_ruticilla            3
+    Passer_montanus                1
+    Phaethon_rubricauda            3
+    Phoenicopterus_ruber           1
+    Phoeniculus_purpureus          1
+    Picathartes_oreas              1
+    Colaptes_auratus               3
+    Pitta_sordida                  3
+    Euplectes_orix                 1
+    Podargus_strigoides            1
+    Podiceps_auritus               3
+    Polioptila_caerulea            3
+    Daption_capense                0
+    Puffinus_griseus               0
+    Promerops_cafer                1
+    Prunella_modularis             3
+    Cacatua_galerita               1
+    Nestor_notabilis               1
+    Ptilonorhynchus_violaceus      1
+    Pycnonotus_barbatus            1
+    Eubucco_bourcierii             1
+    Pteroglossus_torquatus         1
+    Recurvirostra_americana        3
+    Regulus_satrapa                3
+    Auriparus_flaviceps            1
+    Rostratula_benghalensis        3
+    Actitis_hypoleucos             3
+    Calidris_alba                  3
+    Gallinago_gallinago            3
+    Numenius_americanus            3
+    Phalaropus_lobatus             3
+    Scolopax_minor                 3
+    Tringa_flavipes                3
+    Sitta_pusilla                  1
+    Steatornis_caripensis          1
+    Catharacta_maccormicki         3
+    Bubo_virginianus               1
+    Buphagus_erythrorhynchus       1
+    Lamprotornis_purpureus         1
+    Onychognathus_nabouroup        1
+    Sula_sula                      1
+    Locustella_luscinioides        3
+    Taraba_major                   1
+    Thinocorus_rumicivorus         3
+    Phaenicophilus_palmarum        1
+    Tangara_cyanicollis            1
+    Thraupis_episcopus             1
+    Threskiornis_aethiopicus       1
+    Alcippe_morrisonia             1
+    Crypturellus_soui              1
+    Eudromia_elegans               1
+    Amazilia_tzacatl               1
+    Chlorostilbon_ricordii         1
+    Eulampis_jugularis             1
+    Glaucis_hirsutus               1
+    Thryothorus_ludovicianus       1
+    Pharomachrus_mocinno           1
+    Trogon_viridis                 1
+    Catharus_guttatus              3
+    Catharus_minimus               3
+    Catharus_ustulatus             3
+    Chaetops_frenatus              1
+    Hylocichla_mustelina           3
+    Myadestes_townsendi            3
+    Sialia_currucoides             3
+    Sialia_sialis                  3
+    Turdus_falcklandii             1
+    Turdus_philomelos              3
+    Turdus_pilaris                 3
+    Turdus_viscivorus              3
+    Turnix_suscitator              1
+    Attila_spadiceus               1
+    Camptostoma_obsoletum          1
+    Tyrannus_melancholicus         3
+    Upupa_epops                    3
+    Zosterops_senegalensis         1
+  ;
 END;
 
-[
-	0: non-flapper non-migrant
-    1: flapper non-migrant
-	2: non-flapper migrant
-	3: flapper migrant
-]
