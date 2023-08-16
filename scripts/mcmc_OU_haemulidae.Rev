@@ -1,0 +1,105 @@
+################################################################################
+#
+# RevBayes Example: Bayesian inference of rates of evolution under a
+#                   Ornstein-Uhlenbeck model
+#
+#
+# authors: Michael R. May and Sebastian Höhna
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the trait to analyze
+character <- 1
+
+### Read in the trees
+T <- readTrees("data/haemulidaeTree.nex")[1]
+
+
+
+### Read in the character data
+cont <- readContinuousCharacterData("data/haemulidaeContinuous.nex")
+cont.excludeAll()
+cont.includeCharacter(character)
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+
+
+##########################
+# Specify the tree model #
+##########################
+
+tree <- T
+
+##########################
+# Specify the rate model #
+##########################
+
+root_age := tree.rootAge()
+
+sigma2 ~ dnLognormal(0.05787005, 0.587)
+moves.append( mvScale(sigma2, weight=2.0) )
+
+halfLife ~ dnUniform(0, root_age*3)
+alpha := abs( ln(2) / halfLife )
+moves.append( mvScale(halfLife, weight=2.0) )
+
+theta ~ dnUniform(0.2, 10)
+moves.append( mvSlide(theta, weight=2.0) )
+
+# also add an adaptive mutlivariate normal move
+## avmvn_move = mvAVMVN(weight=5, waitBeforeLearning=500, waitBeforeUsing=1000)
+## avmvn_move.addVariable(sigma2)
+## avmvn_move.addVariable(alpha)
+## avmvn_move.addVariable(theta)
+## moves.append( avmvn_move )
+
+# some useful variable transformations to monitor
+root_age := tree.rootAge()
+t_half := ln(2) / alpha
+p_th := 1 - (1 - exp(-2.0*alpha*root_age)) / (2.0*alpha*root_age)
+
+
+##########################
+# Specify the OU process #
+##########################
+
+X ~ dnPhyloOrnsteinUhlenbeckREML(tree, alpha, theta, sigma2^0.5, rootStates=theta)
+X.clamp(cont)
+
+
+
+
+
+#############
+# The Model #
+#############
+
+mymodel = model(tree)
+
+### set up the monitors that will output parameter values to file and screen
+monitors.append( mnModel(filename="output/simpleOU_haemulidae.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, sigma2, alpha, theta) )
+
+
+
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="mixed")
+
+### run the MCMC ###
+mymcmc.burnin(generations=500, tuningInterval=100)
+mymcmc.run(generations=5000, tuningInterval=200)
+
+## quit ##
+q()

@@ -13,16 +13,15 @@
 #######################
 
 ### Select the trait to analyze
-# Datasets: Female Mass, Tail Length – Body Length Residuals, Body Length – Mass Residuals, Maximum Age, Sexual Dimorphism, Geographic Range Size, Latitudinal Midpoint, Distance to Continental Centroid, Population Density, Home Range Size, Group Size, Gestation Duration, Litter size
-trait <- 1
+character <- 1
 
 ### Read in the trees
-T <- readTrees("data/primates_tree.nex")[1]
+T <- readTrees("data/haemulidaeTree.nex")[1]
 
 ### Read in the character data
-data <- readContinuousCharacterData("data/primates_cont_traits.nex")
-data.excludeAll()
-data.includeCharacter( trait )
+cont <- readContinuousCharacterData("data/haemulidaeContinuous.nex")
+cont.excludeAll()
+cont.includeCharacter(character)
 
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
@@ -38,7 +37,7 @@ tree <- T
 # Specify the rate model #
 ##########################
 
-sigma2 ~ dnLoguniform(1e-5, 1e-1)
+sigma2 ~ dnLognormal(0.05787005, 0.587)
 moves.append( mvScale(sigma2, weight=1.0) )
 
 
@@ -47,7 +46,7 @@ moves.append( mvScale(sigma2, weight=1.0) )
 ##########################
 
 X ~ dnPhyloBrownianREML(tree, branchRates=sqrt(sigma2) )
-X.clamp(data)
+X.clamp(cont)
 
 
 
@@ -58,7 +57,7 @@ X.clamp(data)
 mymodel = model(sigma2)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/simple_BM.log", printgen=10) )
+monitors.append( mnModel(filename="output/simple_BM_haemulidae.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, sigma2) )
 
 
@@ -70,12 +69,12 @@ monitors.append( mnScreen(printgen=1000, sigma2) )
 ################
 
 ### workspace mcmc ###
-mymcmc = mcmc(mymodel, monitors, moves, nruns=2, combine="mixed")
+mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="mixed")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=50000, tuningInterval=100)
+mymcmc.burnin(generations=500, tuningInterval=100)
+mymcmc.run(generations=5000, tuningInterval=100)
 
 ## quit ##
 q()
