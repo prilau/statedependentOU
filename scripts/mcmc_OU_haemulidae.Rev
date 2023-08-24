@@ -83,7 +83,7 @@ X.clamp(cont)
 mymodel = model(tree)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/simpleOU_haemulidae.log", printgen=10) )
+monitors.append( mnModel(filename="output/simpleOU_haemulidae_50k.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, sigma2, alpha, theta) )
 
 
@@ -98,8 +98,8 @@ monitors.append( mnScreen(printgen=1000, sigma2, alpha, theta) )
 mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="mixed")
 
 ### run the MCMC ###
-mymcmc.burnin(generations=500, tuningInterval=100)
-mymcmc.run(generations=5000, tuningInterval=200)
+mymcmc.burnin(generations=2000, tuningInterval=100)
+mymcmc.run(generations=40000, tuningInterval=200)
 
 ## quit ##
 q()

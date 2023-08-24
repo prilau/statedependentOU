@@ -101,7 +101,7 @@ halfLife ~ dnUniform(0, root_age*3)
 moves.append( mvSlide(halfLife, weight=2.0) )
 
 
-sigma2Stateless ~ dnLognormal(ln(24.41554), 0.587)
+sigma2Stateless ~ dnLognormal(ln(44.17184), 0.587)
 moves.append( mvScale(sigma2Stateless, weight=2.0) )
 
 
