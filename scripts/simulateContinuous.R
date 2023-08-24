@@ -2,6 +2,49 @@ library(ape)
 library(nodiv)
 library(phytools)
 library(geiger)
+library(TESS)
+source("scripts/readWriteCharacterData.R")
+
+# simulate the tree
+num_tips = 50
+tree = ladderize(tess.sim.taxa(1, num_tips, 10, 1, 0.5)[[1]])
+# rescale the tree
+tree$edge.length = tree$edge.length / max(branching.times(tree))
+
+
+tree_lengths <- sum(tree$edge.length)
+# specify rates so that the expected number of changes is 5
+rates = 5 / tree_lengths
+names(rates) = num_tips
+
+# specify the Mk2 rate matrix
+Q = matrix(1, 2, 2)
+diag(Q) = -1
+rownames(Q) = colnames(Q) = 1:2 - 1
+
+# simulate the discrete characters
+# track the number of rejected simulations based on proportional
+# representation
+colors = c("0"="blue","1"="red")
+num_rejections = numeric(length(num_tips))
+num_simulations = numeric(length(num_tips))
+names(num_rejections) = names(num_simulations) = num_tips
+this_rate = rates[as.character(num_tips)]
+history = sim.history(tree, this_rate * Q, nsim=1, message=FALSE)
+while (! (mean(history$states == "0") > 0.2 & (mean(history$states == "1") > 0.2) ) ) {
+  history = sim.history(tree, this_rate * Q, nsim=1, message=FALSE)
+  num_rejections[as.character(num_tips)] = num_rejections[as.character(num_tips)] + 1
+}
+num_simulations[as.character(num_tips)] = num_simulations[as.character(num_tips)] + 1
+maps = history$mapped.edge[,c("0","1")]
+
+
+
+
+
+
+
+
 
 # obtain root state
 obtainRootState = function(tree) {
