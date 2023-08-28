@@ -11,10 +11,12 @@ tree = ladderize(tess.sim.taxa(1, num_tips, 10, 1, 0.5)[[1]])
 # rescale the tree
 tree$edge.length = tree$edge.length / max(branching.times(tree))
 
+write.tree(tree, file=paste0("data/n50_simulation.tre"))
+
 
 tree_lengths <- sum(tree$edge.length)
 # specify rates so that the expected number of changes is 5
-rates = 5 / tree_lengths
+rates = 10 / tree_lengths
 names(rates) = num_tips
 
 # specify the Mk2 rate matrix
@@ -38,8 +40,11 @@ while (! (mean(history$states == "0") > 0.2 & (mean(history$states == "1") > 0.2
 num_simulations[as.character(num_tips)] = num_simulations[as.character(num_tips)] + 1
 maps = history$mapped.edge[,c("0","1")]
 
+pdf("data/n50History.pdf")
+plot(history, col=colors)
+dev.off()
 
-
+writeCharacterData(t(t(history$states)), file=paste0("data/n50_simulationDiscrete.nex"), type="Standard")
 
 
 
@@ -48,12 +53,9 @@ maps = history$mapped.edge[,c("0","1")]
 
 # obtain root state
 obtainRootState = function(tree) {
-  node0 <- basal_node(tree)
-  node1d <- Descendants(node0, tree)[1]
-  edge1d <- which.edge(tree, node1d)
+  edge1d <- rev(postorder(tree))[1]
   rootState <- names(history$maps[[edge1d]][1])
   rootState <- as.integer(rootState)
-  
   return(rootState)
 }
 
@@ -379,28 +381,90 @@ obtainRootState(tree)
 #                                                sigmaAlt = 2, initialState = 50,
 #                                                currentNode = NULL)
 
-obtainContinuousStates_ver6 = function(tree, alphaRoot, alphaAlt, thetaRoot,
-                                       thetaAlt, sigmaRoot, sigmaAlt,
-                                       initialState = thetaRoot, dt = 0.002,
-                                       currentNode = NULL, contStates = list()) {
-  cont_states <- contStates
+#obtainContinuousStates_ver6 = function(tree, alphaRoot, alphaAlt, thetaRoot,
+#                                       thetaAlt, sigmaRoot, sigmaAlt,
+#                                       initialState = thetaRoot, dt = 0.002,
+#                                       currentNode = NULL, contStates = list()) {
+#  cont_states <- contStates
+#  ## obtain root state
+#  rootState <- obtainRootState(tree)
+#  
+#  ##if it is at root node right now
+#  if (is.null(currentNode[i]) == TRUE) {
+#    currentNode <- Descendants(basal_node(tree), tree)
+#  }
+#  xt0 <- initialState
+#  for (i in 1: length(currentNode)) {
+#    edge <- which.edge(tree, currentNode[i])
+#    edgeLength <- history$maps[[edge]]
+#    for (j in 1:length(edgeLength)) {
+#      subEdgeLength <- edgeLength[[j]]
+#      dt_length = subEdgeLength %/% dt
+#      dt_remainder = subEdgeLength %% dt
+#      
+#      if (rootState == as.integer(names(edgeLength[j]))) {
+#        for (k in 1:dt_length) {
+#          xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt + sigmaRoot * sqrt(dt) * rnorm(1)
+#          xt0 <- xt1
+#        }
+#        xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt_remainder + sigmaRoot * sqrt(dt_remainder) * rnorm(1)
+#        xt0 <- xt1
+#      }
+#      else {
+#        for (k in 1:dt_length) {
+#          xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt + sigmaAlt * sqrt(dt) * rnorm(1)
+#          xt0 <- xt1
+#        }
+#        xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt_remainder + sigmaAlt * sqrt(dt_remainder) * rnorm(1)
+#        xt0 <- xt1
+#      }
+#      initial_state <- xt1
+#      
+#      if (isTRUE(length(tips(tree, currentNode[i])) == 1)) {
+#        cont_states[[tips(tree, currentNode[i])]] <- initial_state
+#      }
+#      else {
+#        next_nodes <- Descendants(currentNode[i], tree)
+#        return(obtainContinuousStates_ver6(tree = tree, alphaRoot = alphaRoot,
+#                                           alphaAlt = alphaAlt, thetaRoot = thetaRoot,
+#                                           thetaAlt = thetaAlt, sigmaRoot = sigmaRoot,
+#                                           sigmaAlt = sigmaAlt,
+#                                           initialState = initial_state, dt = 0.002,
+#                                           currentNode = next_nodes,
+#                                           contStates = cont_states))
+#      }
+#    }
+#  }
+#  return(cont_states)
+#}
+#
+#cont_states_ver6 <- obtainContinuousStates_ver6(tree = tree, alphaRoot = 1,
+#                                                alphaAlt = 1, thetaRoot = 50,
+#                                                thetaAlt = 20, sigmaRoot = 2,
+#                                                sigmaAlt = 2, initialState = 50)
+
+
+obtainContinuousStates_ver7 = function(tree, history, alphaRoot, alphaAlt,
+                                       thetaRoot, thetaAlt, sigmaRoot, sigmaAlt,
+                                       initialValue = thetaRoot, dt = 0.002) {
+  cont_states <- list()
   ## obtain root state
-  rootState <- obtainRootState(tree)
-  
-  ##if it is at root node right now
-  if (is.null(currentNode[i]) == TRUE) {
-    currentNode <- Descendants(basal_node(tree), tree)
-  }
-  xt0 <- initialState
-  for (i in 1: length(currentNode)) {
-    edge <- which.edge(tree, currentNode[i])
-    edgeLength <- history$maps[[edge]]
-    for (j in 1:length(edgeLength)) {
-      subEdgeLength <- edgeLength[[j]]
-      dt_length = subEdgeLength %/% dt
-      dt_remainder = subEdgeLength %% dt
+  root_state <- obtainRootState(tree)
+  branch_order <- rev(postorder(tree))
+  corr_nodes <- tree$edge
+  node0 <- corr_nodes[branch_order[1], 1]
+  node_values <- list()
+  node_values[[as.character(node0)]] <- initialValue
+
+  for (i in 1:length(branch_order)) {
+    sub_edges <- history$maps[[branch_order[i]]]
+    parent_node <- corr_nodes[branch_order[i], 1]
+    xt0 <- node_values[[as.character(parent_node)]]
+    for (j in 1:length(sub_edges)) {
+      dt_length = sub_edges[j] %/% dt
+      dt_remainder = sub_edges[j] %% dt
       
-      if (rootState == as.integer(names(edgeLength[j]))) {
+      if (root_state == as.integer(names(sub_edges[j]))) {
         for (k in 1:dt_length) {
           xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt + sigmaRoot * sqrt(dt) * rnorm(1)
           xt0 <- xt1
@@ -408,6 +472,7 @@ obtainContinuousStates_ver6 = function(tree, alphaRoot, alphaAlt, thetaRoot,
         xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt_remainder + sigmaRoot * sqrt(dt_remainder) * rnorm(1)
         xt0 <- xt1
       }
+      
       else {
         for (k in 1:dt_length) {
           xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt + sigmaAlt * sqrt(dt) * rnorm(1)
@@ -416,35 +481,34 @@ obtainContinuousStates_ver6 = function(tree, alphaRoot, alphaAlt, thetaRoot,
         xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt_remainder + sigmaAlt * sqrt(dt_remainder) * rnorm(1)
         xt0 <- xt1
       }
-      initial_state <- xt1
-      
-      if (isTRUE(length(tips(tree, currentNode[i])) == 1)) {
-        cont_states[[tips(tree, currentNode[i])]] <- initial_state
-      }
-      else {
-        next_nodes <- Descendants(currentNode[i], tree)
-        return(obtainContinuousStates_ver6(tree = tree, alphaRoot = alphaRoot,
-                                           alphaAlt = alphaAlt, thetaRoot = thetaRoot,
-                                           thetaAlt = thetaAlt, sigmaRoot = sigmaRoot,
-                                           sigmaAlt = sigmaAlt,
-                                           initialState = initial_state, dt = 0.002,
-                                           currentNode = next_nodes,
-                                           contStates = cont_states))
-      }
+    }
+    desc_node <- corr_nodes[branch_order[i], 2]
+    node_values[[as.character(desc_node)]] <- xt0
+  }
+  for (i in 1:length(corr_nodes[,2])) {
+    if (!(corr_nodes[i,2] %in% corr_nodes[,1])) {
+      tip_label <- tips(tree, corr_nodes[i,2])
+      cont_states[[tip_label]] <- unname(node_values[[as.character(corr_nodes[i,2])]])
     }
   }
   return(cont_states)
 }
+  
+  
+  
+  
+  
+  
+  
+  
 
-cont_states_ver6 <- obtainContinuousStates_ver6(tree = tree, alphaRoot = 1,
-                                                alphaAlt = 1, thetaRoot = 50,
-                                                thetaAlt = 20, sigmaRoot = 2,
-                                                sigmaAlt = 2, initialState = 50)
+cont_states_ver7 <- obtainContinuousStates_ver7(tree = tree, history = history,
+                                                alphaRoot = 2, alphaAlt = 2,
+                                                thetaRoot = 50, thetaAlt = 20,
+                                                sigmaRoot = 5, sigmaAlt = 5,
+                                                initialValue = 35, dt = 0.002)
 
 
 
-
-
-
-#write.nexus.data(cont_states_ver3, file = "n100_k1_t5Continuous.nex", format = "continuous")
-#var(unlist(cont_states_ver3))
+write.nexus.data(cont_states_ver7, file = "data/n50_simulationContinuous.nex", format = "continuous")
+var(unlist(cont_states_ver7))
