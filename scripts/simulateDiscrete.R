@@ -1,11 +1,11 @@
 library(TESS)
 library(phytools)
-source("readWriteCharacterData.R")
+source("scripts/readWriteCharacterData.R")
 
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_tips   = c(25, 50, 100)
+num_tips   = c(50, 100, 250)
 num_traits = 1
 reps       = 5
 
