@@ -1,5 +1,4 @@
 library(ape)
-library(nodiv)
 library(phytools)
 library(geiger)
 library(TESS)
@@ -11,12 +10,12 @@ tree = ladderize(tess.sim.taxa(1, num_tips, 10, 1, 0.5)[[1]])
 # rescale the tree
 tree$edge.length = tree$edge.length / max(branching.times(tree))
 
-write.tree(tree, file=paste0("data/n50_simulation.tre"))
+write.tree(tree, file=paste0("data/n50_simulation2.tre"))
 
 
 tree_lengths <- sum(tree$edge.length)
 # specify rates so that the expected number of changes is 5
-rates = 10 / tree_lengths
+rates = 8 / tree_lengths
 names(rates) = num_tips
 
 # specify the Mk2 rate matrix
@@ -40,11 +39,11 @@ while (! (mean(history$states == "0") > 0.2 & (mean(history$states == "1") > 0.2
 num_simulations[as.character(num_tips)] = num_simulations[as.character(num_tips)] + 1
 maps = history$mapped.edge[,c("0","1")]
 
-pdf("data/n50History.pdf")
+pdf("data/n50History2.pdf")
 plot(history, col=colors)
 dev.off()
 
-writeCharacterData(t(t(history$states)), file=paste0("data/n50_simulationDiscrete.nex"), type="Standard")
+writeCharacterData(t(t(history$states)), file=paste0("data/n50_simulationDiscrete2.nex"), type="Standard")
 
 
 
@@ -501,14 +500,13 @@ obtainContinuousStates_ver7 = function(tree, history, alphaRoot, alphaAlt,
   
   
   
-
 cont_states_ver7 <- obtainContinuousStates_ver7(tree = tree, history = history,
-                                                alphaRoot = 2, alphaAlt = 2,
-                                                thetaRoot = 50, thetaAlt = 20,
-                                                sigmaRoot = 5, sigmaAlt = 5,
-                                                initialValue = 35, dt = 0.002)
+                                                alphaRoot = 0.5, alphaAlt = 1,
+                                                thetaRoot = 50, thetaAlt = 80,
+                                                sigmaRoot = 2, sigmaAlt = 2,
+                                                initialValue = 60, dt = 0.002)
 
 
 
-write.nexus.data(cont_states_ver7, file = "data/n50_simulationContinuous.nex", format = "continuous")
+write.nexus.data(cont_states_ver7, file = "data/n50_simulationContinuous2.nex", format = "continuous")
 var(unlist(cont_states_ver7))

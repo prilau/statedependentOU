@@ -1,0 +1,133 @@
+################################################################################
+#
+# RevBayes Example: Bayesian inference of rates of evolution under a
+#                   state-dependent OU model
+#
+#
+# authors: Priscilla Lau, Bjørn T. Kopperud, and Sebastian Höhna
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+characterCont <- 1
+characterDisc <- 1
+
+### Read in the tree
+tree <- readTrees("data/n250_simulation.tre")[1]
+ntips <- tree.ntips()
+nbranches <- 2 * ntips - 2
+
+### Read in the continuous-character data
+cont <- readContinuousCharacterData("data/n250_simulationContinuous.nex")
+cont.excludeAll()
+cont.includeCharacter(characterCont)
+
+### Read in the discrete-character data
+disc <- readDiscreteCharacterData("data/n250_simulationDiscrete.nex")
+num_disc_states <- disc.getStateDescriptions().size()
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+Q <- fnJC(num_disc_states)
+
+# make the transition rate parameter
+lambda ~ dnLoguniform(1e-3, 2)
+moves.append( mvScale(lambda, weight=1.0) )
+
+# make the data-augmented CTCM model
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X.clamp(disc)
+
+# include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=20.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=20.0) )
+
+# keep track of the number of transitions
+for(i in 1:nbranches) {
+    num_changes[i] := sum(X.numCharacterChanges(i))
+}
+total_num_changes := sum(num_changes)
+
+
+###############################
+# Specify priors for OU model #
+###############################
+
+
+##########################################
+# alpha -> +0; state-dependent variances #
+##########################################
+
+root_age := tree.rootAge()
+#optimum ~ dnUniform(0.2, 100)
+#moves.append( mvSlide(optimum, weight=2.0) )
+
+halfLife ~ dnUniform(0, root_age*3)
+moves.append( mvSlide(halfLife, weight=2.0) )
+
+
+sigma2Stateless ~ dnLognormal(ln(73.28718), 0.587)
+moves.append( mvScale(sigma2Stateless, weight=2.0) )
+
+
+for (i in 1:num_disc_states){
+  theta[i] ~ dnUniform(1e-3, 200)
+  moves.append( mvSlide(theta[i], weight=2.0) )
+  alpha[i] := abs( ln(2) / halfLife )
+  #sigma2[i] ~ dnLognormal(ln(), 0.587)
+  sigma2[i] := sigma2Stateless
+  #moves.append( mvScale(sigma2[i], weight=2.0) )
+}
+
+##########################
+# Specify the OU process #
+##########################
+
+Y ~ dnPhyloOUSD(tree, X, theta=theta, alpha=alpha, sigma=sigma2^0.5)
+Y.clamp(cont)
+
+
+
+#############
+# The Model #
+#############
+
+mymodel = model(Q)
+
+### set up the monitors that will output parameter values to file and screen
+monitors.append( mnModel(filename="output/sdOU_n250_simulation.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, total_num_changes) )
+
+
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="mixed")
+
+
+### run the MCMC ###
+mymcmc.burnin(generations=1000, tuningInterval=100)
+mymcmc.run(generations=20000, tuningInterval=200)
+
+
+
+## quit ##
+q()
