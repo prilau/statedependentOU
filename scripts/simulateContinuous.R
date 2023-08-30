@@ -1,21 +1,22 @@
 library(ape)
+#library(nodiv)
 library(phytools)
 library(geiger)
 library(TESS)
 source("scripts/readWriteCharacterData.R")
 
 # simulate the tree
-num_tips = 50
+num_tips = 250
 tree = ladderize(tess.sim.taxa(1, num_tips, 10, 1, 0.5)[[1]])
 # rescale the tree
 tree$edge.length = tree$edge.length / max(branching.times(tree))
 
-write.tree(tree, file=paste0("data/n50_simulation2.tre"))
+write.tree(tree, file=paste0("data/n50_simulation.tre"))
 
 
 tree_lengths <- sum(tree$edge.length)
 # specify rates so that the expected number of changes is 5
-rates = 8 / tree_lengths
+rates = 10 / tree_lengths
 names(rates) = num_tips
 
 # specify the Mk2 rate matrix
@@ -39,11 +40,11 @@ while (! (mean(history$states == "0") > 0.2 & (mean(history$states == "1") > 0.2
 num_simulations[as.character(num_tips)] = num_simulations[as.character(num_tips)] + 1
 maps = history$mapped.edge[,c("0","1")]
 
-pdf("data/n50History2.pdf")
+pdf("data/n50History.pdf")
 plot(history, col=colors)
 dev.off()
 
-writeCharacterData(t(t(history$states)), file=paste0("data/n50_simulationDiscrete2.nex"), type="Standard")
+writeCharacterData(t(t(history$states)), file=paste0("data/n50_simulationDiscrete.nex"), type="Standard")
 
 
 
@@ -443,22 +444,32 @@ obtainRootState(tree)
 #                                                sigmaAlt = 2, initialState = 50)
 
 
-obtainContinuousStates_ver7 = function(tree, history, alphaRoot, alphaAlt,
+treeheight <- function(tree) max(node.depth.edgelength(tree))
+obtainContinuousStates_ver7 = function(tree, halflifeRoot, halflifeAlt,
                                        thetaRoot, thetaAlt, sigmaRoot, sigmaAlt,
                                        initialValue = thetaRoot, dt = 0.002) {
+  if (missing(dt)){
+    dt <- 0.002 * treeheight(history)
+  }
+  ## Re-parameterization
+  alphaRoot <- log(2) / halflifeRoot 
+  alphaAlt <- log(2) / halflifeAlt
+  
   cont_states <- list()
   ## obtain root state
   root_state <- obtainRootState(tree)
-  branch_order <- rev(postorder(tree))
-  corr_nodes <- tree$edge
-  node0 <- corr_nodes[branch_order[1], 1]
+  preorder <- rev(postorder(tree))
+  edges <- tree$edge
+  ntips <- length(tree$tip.label)
+  root_node <- ntips + 1
   node_values <- list()
-  node_values[[as.character(node0)]] <- initialValue
-
-  for (i in 1:length(branch_order)) {
-    sub_edges <- history$maps[[branch_order[i]]]
-    parent_node <- corr_nodes[branch_order[i], 1]
-    xt0 <- node_values[[as.character(parent_node)]]
+  node_values[[root_node]] <- initialValue
+  
+  #for (i in 1:length(branch_order)) {
+  for (edge_index in preorder){
+    sub_edges <- tree$maps[[edge_index]]
+    parent_node <- edges[edge_index, 1]
+    xt0 <- node_values[[parent_node]]
     for (j in 1:length(sub_edges)) {
       dt_length = sub_edges[j] %/% dt
       dt_remainder = sub_edges[j] %% dt
@@ -481,32 +492,62 @@ obtainContinuousStates_ver7 = function(tree, history, alphaRoot, alphaAlt,
         xt0 <- xt1
       }
     }
-    desc_node <- corr_nodes[branch_order[i], 2]
-    node_values[[as.character(desc_node)]] <- xt0
+    desc_node <- edges[edge_index, 2]
+    node_values[[desc_node]] <- xt0
   }
-  for (i in 1:length(corr_nodes[,2])) {
-    if (!(corr_nodes[i,2] %in% corr_nodes[,1])) {
-      tip_label <- tips(tree, corr_nodes[i,2])
-      cont_states[[tip_label]] <- unname(node_values[[as.character(corr_nodes[i,2])]])
+  disc_states <- list()
+  for (i in 1:length(edges[,2])) {
+    is_tip <- !(edges[i,2] %in% edges[,1])
+    if (is_tip) {
+      tip_label <- tips(tree, edges[i,2])
+      cont_states[[tip_label]] <- unname(node_values[[edges[i,2]]])
+      disc_states[[tip_label]] <- tail(names(history$maps[[i]]), n = 1)
     }
   }
-  return(cont_states)
+  res <- list(
+    cont_states,
+    disc_states
+  )
+  return(res)
 }
-  
-  
-  
-  
-  
-  
-  
-  
-cont_states_ver7 <- obtainContinuousStates_ver7(tree = tree, history = history,
-                                                alphaRoot = 0.5, alphaAlt = 1,
-                                                thetaRoot = 50, thetaAlt = 80,
-                                                sigmaRoot = 2, sigmaAlt = 2,
-                                                initialValue = 60, dt = 0.002)
+
+plot(history)
+
+cont_states_ver7 <- obtainContinuousStates_ver7(tree = history,
+                                                halflifeRoot = 0.35, halflifeAlt = 0.35,
+                                                thetaRoot = 50, thetaAlt = 20,
+                                                sigmaRoot = 5, sigmaAlt = 5,
+                                                initialValue = 50, dt = 0.001)
+
+par(mar = c(6,7,3,3))
+hist(as.numeric(cont_states_ver7), xlab = "tip character values", ylab = "frequency")
+
+treeheight(history)
 
 
+library(slouch)
+df <- data.frame(
+  "species" = names(cont_states_ver7[[1]]),
+  "y" = as.numeric(cont_states_ver7[[1]]),
+  "regime" = unname(unlist(cont_states_ver7[[2]]))
+)
+df <- df[match(history$tip.label, df$species), ]
 
-write.nexus.data(cont_states_ver7, file = "data/n50_simulationContinuous2.nex", format = "continuous")
-var(unlist(cont_states_ver7))
+m0 <- slouch.fit(
+  history,
+  hl_values = seq(0.05, 0.25, length.out = 35),
+  sigma2_y_values = seq(35, 65, length.out = 35),
+  response = df$y,
+  species = df$species,
+  fixed.fact = df$regime,
+  anc_maps = "simmap",
+  hillclimb = F
+)
+m0
+summary(m0)
+plot(m0)
+regimeplot(m0)
+summary(m0)
+
+write.nexus.data(cont_states_ver7[[1]], file = "data/n50_simulationContinuous.nex", format = "continuous")
+var(unlist(cont_states_ver7[[1]]))
