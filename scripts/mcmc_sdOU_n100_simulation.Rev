@@ -17,17 +17,17 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-tree <- readTrees("data/n250_simulation.tre")[1]
+tree <- readTrees("data/n100_simulation.tre")[1]
 ntips <- tree.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/n250_simulationContinuous.nex")
+cont <- readContinuousCharacterData("data/n100_simulationContinuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
 ### Read in the discrete-character data
-disc <- readDiscreteCharacterData("data/n250_simulationDiscrete.nex")
+disc <- readDiscreteCharacterData("data/n100_simulationDiscrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -80,7 +80,7 @@ halfLife ~ dnUniform(0, root_age*3)
 moves.append( mvSlide(halfLife, weight=2.0) )
 
 
-sigma2Stateless ~ dnLognormal(ln(73.28718), 0.587)
+sigma2Stateless ~ dnLognormal(ln(45.35703), 0.587)
 moves.append( mvScale(sigma2Stateless, weight=2.0) )
 
 
@@ -109,7 +109,7 @@ Y.clamp(cont)
 mymodel = model(Q)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/sdOU_n250_simulation.log", printgen=10) )
+monitors.append( mnModel(filename="output/sdOU_n100_simulation.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, total_num_changes) )
 
 

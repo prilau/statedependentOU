@@ -3,7 +3,7 @@ library(TESS)
 cat("simulating trees.\n")
 
 # simulation parameters
-num_tips   = c(50, 100, 250)
+num_tips   = c(100, 250, 500)
 num_traits = 1
 reps       = 5
 

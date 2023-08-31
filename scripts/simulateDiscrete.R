@@ -5,7 +5,7 @@ source("scripts/readWriteCharacterData.R")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_tips   = c(50, 100, 250)
+num_tips   = c(100, 250, 500)
 num_traits = 1
 reps       = 5
 
@@ -24,8 +24,8 @@ for(i in 1:length(num_tips)) {
 
 mean_tree_lengths = sapply(tree_lengths, mean)
 
-# specify rates so that the expected number of changes is 5
-rates = 5 / mean_tree_lengths
+# specify rates so that the expected number of changes is 10
+rates = 10 / mean_tree_lengths
 names(rates) = num_tips
 
 # specify the Mk2 rate matrix
