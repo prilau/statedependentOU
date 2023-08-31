@@ -6,16 +6,15 @@ cat("simulating discrete characters.\n")
 
 # simulation parameters
 num_tips   = c(100, 250, 500)
-num_traits = 1
+#num_states = c(1, 2, 4)
 reps       = 5
 
-grid = expand.grid(num_tips=num_tips, num_traits=num_traits,
-                   tree=1:reps, stringsAsFactors=FALSE)
+grid = expand.grid(num_tips=num_tips, tree=1:reps, stringsAsFactors=FALSE)
 
 # first, we need to compute the tree length of each replicate
 tree_lengths = vector("list", length(num_tips))
 for(i in 1:length(num_tips)) {
-  this_dir = paste0("n_", num_tips[i])
+  this_dir = paste0("data/n", num_tips[i])
   these_files = list.files(this_dir, pattern="tree.tre", recursive=TRUE, full.names = TRUE)
   these_trees = lapply(these_files, read.tree)
   these_tree_lengths = sapply(these_trees, function(tree) sum(tree$edge.length))
@@ -46,11 +45,10 @@ for(i in 1:nrow(grid)) {
   
   this_row = grid[i,]
   this_num_tips   = this_row[[1]]
-  this_num_traits = this_row[[2]]
-  this_tree       = this_row[[3]]
+  this_tree       = this_row[[2]]
   
   # read the tree
-  this_dir = paste0("n_",this_num_tips,"/k_",this_num_traits,"/t_", this_tree)
+  this_dir = paste0("data/n",this_num_tips, "/t", this_tree)
   tree = read.tree(paste0(this_dir, "/tree.tre"))
   
   # get the rate
@@ -79,17 +77,17 @@ for(i in 1:nrow(grid)) {
   state_1_tree$edge.length = maps[,2] / tree$edge.length
   
   # save these trees
-  write.tree(state_0_tree, file=paste0(this_dir,"/state_0.tre"))
-  write.tree(state_1_tree, file=paste0(this_dir,"/state_1.tre"))
+  write.tree(state_0_tree, file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_State0.tre"))
+  write.tree(state_1_tree, file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_State1.tre"))
   
   # save the discrete trait as a nexus file
-  writeCharacterData(t(t(history$states)), file=paste0(this_dir,"/disc_trait.nex"), type="Standard")
+  writeCharacterData(t(t(history$states)), file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_Discrete.nex"), type="Standard")
   
   # save the character history
-  save(history, file=paste0(this_dir,"/history.Rda"))
+  save(history, file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_History.Rda"))
   
   # write a pdf
-  pdf(paste0(this_dir,"/history.pdf"))
+  pdf(paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_History.pdf"))
   plot(history, col=colors)
   dev.off()
   

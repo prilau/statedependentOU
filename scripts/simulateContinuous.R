@@ -167,6 +167,6 @@ regimeplot(m0)
 summary(m0)
 
 
-writeCharacterData(cont_states_ver7[[1]]), file = "data/n100_simulationDiscrete.nex", type="Continuous")
+write.nexus.data(cont_states_ver7[[1]]), file = "data/n100_simulationDiscrete.nex", format="Continuous")
 
 var(unlist(cont_states_ver7[[1]]))

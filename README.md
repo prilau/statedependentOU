@@ -14,6 +14,11 @@ State-dependent OU model for RevBayes.
 2. Compared with stateless BM model - still weird
 3. Compared with stateless OU model - not as bad as above
 
+31/08/2023 Updates:
+1. Completed script to simulate of continuous trait evolution
+2. Ran RevBayes on 5 simulations (100-tip * 3, 250-tip * 1, 500-tip * 1)
+
+
 ## To-do
 16/08/2023 Updates:
 1. Validate that the multiple optima OU part of the model by simluation
@@ -29,3 +34,17 @@ Depends on time constraints:
 2. Testing with large dataset
 3. Account for intraspecific variations
 
+31/08/2023 Updates:
+1. Plot current results on R (RevGadgets/ggplot2)
+2. Expand simulation datasets
+    a. 10 trees per num_tips
+    b. 5 discrete trait simulation per tree
+    c. 5 continuous trait simulation (same parameters) per discrete trait per tree
+    d. 1000-burnin, 10000 iterations, 4 runs per ReyBayes sdOU model fitting
+3. Start writing :D
+
+
+## Side thoughts / Optionals
+1. Simulate non-binary discrete trait evolution
+2. What if the 250/100-tip trees are subsample from 500-tip trees
+    2.1 How does biased sampling affect the inference?

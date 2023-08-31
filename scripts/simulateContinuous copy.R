@@ -4,15 +4,6 @@ library(geiger)
 library(TESS)
 source("scripts/readWriteCharacterData.R")
 
-cat("simulating continuous characters.\n")
-
-num_tips   = c(100, 250, 500)
-num_states = 1
-reps       = 5
-
-grid = expand.grid(num_tips=num_tips, num_states=num_states,
-                   tree=1:reps, stringsAsFactors=FALSE)
-
 
 # obtain root state
 obtainRootState = function(tree) {
@@ -22,19 +13,21 @@ obtainRootState = function(tree) {
   return(rootState)
 }
 
-obtainRootState(tree)
-
 
 treeheight <- function(tree) max(node.depth.edgelength(tree))
 obtainContinuousStates_ver7 = function(tree, halflifeRoot, halflifeAlt,
-                                       thetaRoot, thetaAlt, sigmaRoot, sigmaAlt,
-                                       initialValue = thetaRoot, dt = 0.002) {
+                                       thetaRoot, thetaAlt, stationaryvarRoot,
+                                       stationaryvarAlt, initialValue = thetaRoot,
+                                       dt = 0.002) {
   if (missing(dt)){
     dt <- 0.002 * treeheight(history)
   }
+  
   ## Re-parameterization
   alphaRoot <- log(2) / halflifeRoot 
   alphaAlt <- log(2) / halflifeAlt
+  sigmaRoot <- sqrt(stationaryvarRoot * 2 * alphaRoot)
+  sigmaAlt <- sqrt(stationaryvarAlt * 2 * alphaAlt)
   
   cont_states <- list()
   ## obtain root state
@@ -94,11 +87,55 @@ obtainContinuousStates_ver7 = function(tree, halflifeRoot, halflifeAlt,
 
 plot(history)
 
-cont_states_ver7 <- obtainContinuousStates_ver7(tree = history,
-                                                halflifeRoot = 0.35, halflifeAlt = 0.35,
-                                                thetaRoot = 50, thetaAlt = 20,
-                                                sigmaRoot = 5, sigmaAlt = 5,
-                                                initialValue = 50, dt = 0.001)
+
+
+
+cat("simulating continuous characters.\n")
+
+num_tips   = c(100, 250, 500)
+reps       = 5
+
+grid = expand.grid(num_tips=num_tips, tree=1:reps, stringsAsFactors=FALSE)
+bar = txtProgressBar(style=3, width=40)
+for(i in 1:nrow(grid)) {
+  
+  this_row = grid[i,]
+  this_num_tips   = this_row[[1]]
+  this_tree       = this_row[[2]]
+  
+  # read the history
+  this_dir = paste0("data/n",this_num_tips, "/t", this_tree)
+  load(paste0(this_dir, "/n", this_num_tips,
+              "t", this_tree, "_History.Rda"))
+  
+  cont_states_ver7 <- obtainContinuousStates_ver7(tree = history,
+                                                  halflifeRoot = 0.35, halflifeAlt = 0.35,
+                                                  thetaRoot = 0.5, thetaAlt = 2,
+                                                  stationaryvarRoot = 0.0625, stationaryvarAlt = 0.0625,
+                                                  initialValue = 0.5, dt = 0.001)
+  
+  #log_cont_states <- list()
+  #for (i in 1:length(cont_states_ver7[[1]])) {
+  #  tiplabel <- names(cont_states_ver7[[1]][i])
+  #  log_value <- log(as.double(cont_states_ver7[[1]][i]))
+  #  log_cont_states[[tiplabel]] <- log_value
+  #}
+  
+  write.nexus.data(cont_states_ver7[[1]], 
+                   file = paste0(this_dir, "/n", this_num_tips,
+                                 "t", this_tree, "_Continuous.nex"),
+                   format="Continuous")
+
+  #write.nexus.data(log_cont_states, 
+  #                 file = paste0(this_dir, "/n", this_num_tips,
+  #                               "t", this_tree, "_logContinuous.nex"),
+  #                 format="Continuous")
+  setTxtProgressBar(bar, i / nrow(grid))
+}
+cat("\n")
+
+
+
 
 par(mar = c(6,7,3,3))
 hist(as.numeric(cont_states_ver7[[1]]), xlab = "tip character values", ylab = "frequency")
@@ -116,8 +153,8 @@ df <- df[match(history$tip.label, df$species), ]
 
 m0 <- slouch.fit(
   history,
-  hl_values = seq(0.05, 0.25, length.out = 35),
-  sigma2_y_values = seq(35, 65, length.out = 35),
+  hl_values = seq(0.05, 0.5, length.out = 25),
+  vy_values = seq(0.001, 0.2, length.out = 25),
   response = df$y,
   species = df$species,
   fixed.fact = df$regime,
@@ -131,6 +168,5 @@ regimeplot(m0)
 summary(m0)
 
 
-writeCharacterData(cont_states_ver7[[1]]), file = "data/n100_simulationDiscrete.nex", type="Continuous")
-
-var(unlist(cont_states_ver7[[1]]))
+data <- c()
+var(data)
