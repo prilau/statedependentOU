@@ -4,7 +4,7 @@ cat("simulating trees.\n")
 
 # simulation parameters
 num_tips   = c(100, 250, 500)
-reps       = 5
+reps       = 10
 
 grid = expand.grid(num_tips=num_tips, tree=1:reps, stringsAsFactors=FALSE)
 

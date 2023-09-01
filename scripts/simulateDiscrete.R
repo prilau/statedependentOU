@@ -7,9 +7,11 @@ cat("simulating discrete characters.\n")
 # simulation parameters
 num_tips   = c(100, 250, 500)
 #num_states = c(1, 2, 4)
-reps       = 5
+num_traits = 5
+reps       = 10
 
-grid = expand.grid(num_tips=num_tips, tree=1:reps, stringsAsFactors=FALSE)
+grid = expand.grid(num_tips=num_tips, tree=1:reps,
+                   traits=1:num_traits, stringsAsFactors=FALSE)
 
 # first, we need to compute the tree length of each replicate
 tree_lengths = vector("list", length(num_tips))
@@ -46,9 +48,12 @@ for(i in 1:nrow(grid)) {
   this_row = grid[i,]
   this_num_tips   = this_row[[1]]
   this_tree       = this_row[[2]]
+  this_num_traits = this_row[[3]]
+  
   
   # read the tree
   this_dir = paste0("data/n",this_num_tips, "/t", this_tree)
+  
   tree = read.tree(paste0(this_dir, "/tree.tre"))
   
   # get the rate
@@ -77,17 +82,22 @@ for(i in 1:nrow(grid)) {
   state_1_tree$edge.length = maps[,2] / tree$edge.length
   
   # save these trees
-  write.tree(state_0_tree, file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_State0.tre"))
-  write.tree(state_1_tree, file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_State1.tre"))
+  this_sub_dir = paste0("data/n",this_num_tips, "/t", this_tree, "/d", this_num_traits)
+  if ( !dir.exists(this_sub_dir) ) {
+    dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
+  }
+  
+  write.tree(state_0_tree, file=paste0(this_sub_dir, "/n", this_num_tips, "t", this_tree, "d", this_num_traits, "_State0.tre"))
+  write.tree(state_1_tree, file=paste0(this_sub_dir, "/n", this_num_tips, "t", this_tree, "d", this_num_traits, "_State1.tre"))
   
   # save the discrete trait as a nexus file
-  writeCharacterData(t(t(history$states)), file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_Discrete.nex"), type="Standard")
+  writeCharacterData(t(t(history$states)), file=paste0(this_sub_dir, "/n", this_num_tips, "t", this_tree, "d", this_num_traits, "_Discrete.nex"), type="Standard")
   
   # save the character history
-  save(history, file=paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_History.Rda"))
+  save(history, file=paste0(this_sub_dir, "/n", this_num_tips, "t", this_tree, "d", this_num_traits, "_History.Rda"))
   
   # write a pdf
-  pdf(paste0(this_dir, "/n", this_num_tips, "t", this_tree, "_History.pdf"))
+  pdf(paste0(this_sub_dir, "/n", this_num_tips, "t", this_tree, "d", this_num_traits, "_History.pdf"))
   plot(history, col=colors)
   dev.off()
   
