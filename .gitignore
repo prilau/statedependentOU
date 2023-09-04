@@ -2,3 +2,4 @@ output/*.log
 data/.Rhistory
 history.txt
 old/*.*
+jobs/*.*

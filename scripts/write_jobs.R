@@ -1,40 +1,51 @@
 cat("writing Rev scripts for simulation 1.\n")
 
 # settings
-num_tips   = c(25, 50, 100)
-num_traits = c(1, 2, 4, 8)
-true_gamma = c(1, 2, 4, 8)
-reps       = 100
-runs       = 2
-state_dep  = "state_dependent"
-noise      = "constant_rate"
+num_tips   = c(100, 250, 500)
+num_dtraits = 5
+num_ctraits = 5
+reps       = 10
 
-dir.create("analyses/simulation_study/simulation_1/jobs", showWarnings=FALSE)
+dir.create("jobs", showWarnings=FALSE)
 
-grid = expand.grid(tree=1:reps, num_tips=num_tips, num_traits=num_traits,
-                   gamma=true_gamma, state_dep=state_dep, run = 1:runs,
-                   noise=noise, stringsAsFactors=FALSE)
+grid = expand.grid(num_tips=num_tips, tree=1:reps, dtrait=1:num_dtraits,
+                   ctrait=1:num_ctraits, stringsAsFactors=FALSE)
 
 # read the stub
-lines = readLines("analyses/simulation_study/simulation_1/src/template.Rev")
+lines = readLines("scripts/mcmc_sdOU_simulation_template.Rev")
 
 # make all the job scripts
 bar = txtProgressBar(style=3, width=40)
 for(i in 1:nrow(grid)) {
 
-  this_model = grid[i,]
+  this_row = grid[i,]
+  this_num_tips    = this_row[[1]]
+  this_tree        = this_row[[2]]
+  this_num_dtraits = this_row[[3]]
+  this_num_ctraits = this_row[[4]]
+  
+  this_disc_file = paste0('/n', this_num_tips,
+                             't', this_tree, 'd', this_num_dtraits,
+                             '_Discrete.nex")')
+  
+  this_cont_file = paste0('/n', this_num_tips,
+                          't', this_tree, 'd', this_num_dtraits,
+                          'c', this_num_ctraits)
+  
   these_lines = lines
 
-  these_lines[8]  = paste0("num_tips    = ",   this_model[[2]])
-  these_lines[9]  = paste0("num_traits  = ",   this_model[[3]])
-  these_lines[10] = paste0("ratio       = ",   this_model[[4]])
-  these_lines[11] = paste0("dataset     = ",   this_model[[1]])
-  these_lines[12] = paste0("state_model = \"", this_model[[5]],"\"")
-  these_lines[13] = paste0("noise_model = \"", this_model[[7]],"\"")
-  these_lines[14] = paste0("run_ID      = ",   this_model[[6]])
-  these_lines[19] = paste0("seed(",paste0(sample.int(9, replace=TRUE), collapse=""),")")
+  these_lines[20]  = paste0('tree <- readTrees("data/n', this_num_tips, '/t', this_tree, '/tree.tre")[1]')
+  these_lines[25]  = paste0('cont <- readContinuousCharacterData("data/n', this_num_tips,
+                            '/t', this_tree, '/d', this_num_dtraits, this_cont_file, '_Continuous.nex")')
+  these_lines[30] = paste0('disc <- readDiscreteCharacterData("data/n', this_num_tips,
+                           '/t', this_tree, '/d', this_num_dtraits, this_disc_file)
+  these_lines[112] = paste0('monitors.append( mnModel(filename="output/sdOU_simulation_n',
+                            this_num_tips, 't', this_tree, 'd', this_num_dtraits,
+                            'c', this_num_ctraits, '.log", printgen=10) )')
 
-  this_file = paste0("analyses/simulation_study/simulation_1/jobs/job_",i,".Rev")
+  this_file = paste0('jobs/job_n', this_num_tips,
+                     't', this_tree, 'd', this_num_dtraits,
+                     'c', this_num_ctraits,'.Rev')
 
   cat(these_lines, file = this_file, sep="\n")
 

@@ -17,17 +17,17 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-tree <- readTrees("data/n100/t3/tree.tre")[1]
+#    tree <- readTrees("data/n100/t3/tree.tre")[1]
 ntips <- tree.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/n100/t3/n100t3_Continuous.nex")
+#    cont <- readContinuousCharacterData("data/n100/t3/n100t3_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
 ### Read in the discrete-character data
-disc <- readDiscreteCharacterData("data/n100/t3/n100t3_Discrete.nex")
+#    disc <- readDiscreteCharacterData("data/n100/t3/n100t3_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -73,27 +73,24 @@ total_num_changes := sum(num_changes)
 ##########################################
 
 root_age := tree.rootAge()
-#optimum ~ dnUniform(0.2, 100)
-#moves.append( mvSlide(optimum, weight=2.0) )
-
 halfLife ~ dnUniform(0, root_age*3)
 moves.append( mvSlide(halfLife, weight=2.0) )
 
 
 
-sigma2Stateless ~ dnLognormal(ln(0.1278705), 0.587)
+#    sigma2Stateless ~ dnLognormal(ln(), 0.587)
 moves.append( mvScale(sigma2Stateless, weight=2.0) )
 
 
 
 for (i in 1:num_disc_states){
-  theta[i] ~ dnUniform(-5, 10)
-  moves.append( mvSlide(theta[i], weight=2.0) )
   alpha[i] := abs( ln(2) / halfLife )
-  #sigma2[i] ~ dnLognormal(ln(), 0.587)
+  
   sigma2[i] := sigma2Stateless
   stationaryVariance[i] := sigma2[i] / (2 * alpha[i])
-  #moves.append( mvScale(sigma2[i], weight=2.0) )
+  
+  theta[i] ~ dnUniform(-5, 10)
+  moves.append( mvSlide(theta[i], weight=2.0) )
 }
 
 ##########################
@@ -112,7 +109,7 @@ Y.clamp(cont)
 mymodel = model(Q)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/sdOU_simulation_n100t3.log", printgen=10) )
+#    monitors.append( mnModel(filename="output/sdOU_simulation_n100t3.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, total_num_changes) )
 
 

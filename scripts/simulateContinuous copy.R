@@ -5,33 +5,22 @@ library(TESS)
 #source("scripts/readWriteCharacterData.R")
 
 
-# obtain root state
-obtainRootState = function(tree) {
-  edge1d <- rev(postorder(tree))[1]
-  rootState <- names(history$maps[[edge1d]][1])
-  rootState <- as.integer(rootState)
-  return(rootState)
-}
-
-
 treeheight <- function(tree) max(node.depth.edgelength(tree))
-obtainContinuousStates_ver7 = function(tree, halflifeRoot, halflifeAlt,
-                                       thetaRoot, thetaAlt, stationaryvarRoot,
-                                       stationaryvarAlt, initialValue = thetaRoot,
+obtainContinuousStates_ver7 = function(tree, halflife_0, halflife_1,
+                                       theta_0, theta_1, stationaryvar_0,
+                                       stationaryvar_1, initialValue = theta_0,
                                        dt = 0.002) {
   if (missing(dt)){
     dt <- 0.002 * treeheight(history)
   }
   
   ## Re-parameterization
-  alphaRoot <- log(2) / halflifeRoot 
-  alphaAlt <- log(2) / halflifeAlt
-  sigmaRoot <- sqrt(stationaryvarRoot * 2 * alphaRoot)
-  sigmaAlt <- sqrt(stationaryvarAlt * 2 * alphaAlt)
+  alpha_0 <- log(2) / halflife_0 
+  alpha_1 <- log(2) / halflife_1
+  sigma_0 <- sqrt(stationaryvar_0 * 2 * alpha_0)
+  sigma_1 <- sqrt(stationaryvar_1 * 2 * alpha_1)
   
   cont_states <- list()
-  ## obtain root state
-  root_state <- obtainRootState(tree)
   preorder <- rev(postorder(tree))
   edges <- tree$edge
   ntips <- length(tree$tip.label)
@@ -48,21 +37,21 @@ obtainContinuousStates_ver7 = function(tree, halflifeRoot, halflifeAlt,
       dt_length = sub_edges[j] %/% dt
       dt_remainder = sub_edges[j] %% dt
       
-      if (root_state == as.integer(names(sub_edges[j]))) {
+      if (as.integer(names(sub_edges[j])) == 0) {
         for (k in 1:dt_length) {
-          xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt + sigmaRoot * sqrt(dt) * rnorm(1)
+          xt1 <- xt0 + alpha_0 * (theta_0 - xt0) * dt + sigma_0 * sqrt(dt) * rnorm(1)
           xt0 <- xt1
         }
-        xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt_remainder + sigmaRoot * sqrt(dt_remainder) * rnorm(1)
+        xt1 <- xt0 + alpha_0 * (theta_0 - xt0) * dt_remainder + sigma_0 * sqrt(dt_remainder) * rnorm(1)
         xt0 <- xt1
       }
       
       else {
         for (k in 1:dt_length) {
-          xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt + sigmaAlt * sqrt(dt) * rnorm(1)
+          xt1 <- xt0 + alpha_1 * (theta_1 - xt0) * dt + sigma_1 * sqrt(dt) * rnorm(1)
           xt0 <- xt1
         }
-        xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt_remainder + sigmaAlt * sqrt(dt_remainder) * rnorm(1)
+        xt1 <- xt0 + alpha_1 * (theta_1 - xt0) * dt_remainder + sigma_1 * sqrt(dt_remainder) * rnorm(1)
         xt0 <- xt1
       }
     }
@@ -115,9 +104,9 @@ for(i in 1:nrow(grid)) {
               "t", this_tree, "d", this_num_dtraits, "_History.Rda"))
   
   cont_states_ver7 <- obtainContinuousStates_ver7(tree = history,
-                                                  halflifeRoot = 0.35, halflifeAlt = 0.35,
-                                                  thetaRoot = 0.5, thetaAlt = 2,
-                                                  stationaryvarRoot = 0.0625, stationaryvarAlt = 0.0625,
+                                                  halflife_0 = 0.35, halflife_1 = 0.35,
+                                                  theta_0 = 0.5, theta_1 = 2,
+                                                  stationaryvar_0 = 0.0625, stationaryvar_1 = 0.0625,
                                                   initialValue = 0.5, dt = 0.001)
   
   #log_cont_states <- list()
@@ -174,107 +163,3 @@ plot(m0)
 regimeplot(m0)
 summary(m0)
 
-
-data <- c(
-  0.961836956464556,
-  1.10837213261247,
-  1.0926195360605,
-  0.795822732390246,
-  0.985575448959426,
-  1.056369274489,
-  0.987839911351482,
-  1.02218819324461,
-  1.10071874767439,
-  0.603395233048221,
-  0.661391519895569,
-  0.37657223519301,
-  0.662461273470934,
-  0.668882152361772,
-  0.669237004416171,
-  0.472232991425192,
-  0.410034503028078,
-  0.434754645768031,
-  0.420006944134845,
-  0.410643193456357,
-  0.841620923492179,
-  0.750371042573203,
-  0.798478984490198,
-  0.727478313842834,
-  0.873711002012752,
-  0.670507891150641,
-  0.761558968836325,
-  0.85597680360232,
-  1.04395211752431,
-  0.278215670647991,
-  0.275485555652166,
-  0.236342206436231,
-  0.217685246267636,
-  0.338632366667114,
-  0.119557982197699,
-  0.192439486642763,
-  0.261360873939005,
-  0.191497774851475,
-  0.509536352587912,
-  0.431189700959807,
-  0.20460492027561,
-  0.442863085605562,
-  0.755962033137867,
-  0.792988985136037,
-  0.969995910032833,
-  0.531843453340787,
-  0.679893311617496,
-  0.982600975582826,
-  0.913240895438416,
-  0.915677146910292,
-  0.920370483910389,
-  0.678761758755848,
-  1.03970615229784,
-  1.10597754740447,
-  0.98495050131774,
-  1.14621719939735,
-  0.780011663357825,
-  0.81595114952783,
-  0.390736774320853,
-  0.134670575743913,
-  0.131740307603808,
-  0.106820661277778,
-  0.167635437537387,
-  0.594927500762657,
-  0.26929719435948,
-  0.331744483382552,
-  0.803795975541894,
-  0.620092054518424,
-  0.653166440107539,
-  0.740906917658979,
-  0.95685708873794,
-  0.270384118893878,
-  0.271884286149036,
-  0.453650166349657,
-  0.587292024760133,
-  0.601014417343575,
-  0.19733596103397,
-  0.0871656595398915,
-  0.111083621381402,
-  1.06234692978812,
-  1.12856621987065,
-  1.09889154247018,
-  1.16475235900096,
-  0.868691873674262,
-  1.18207992265349,
-  1.14223224068461,
-  1.20518946483718,
-  1.45129709684034,
-  1.31951675810736,
-  1.25048563111712,
-  1.10463954577296,
-  1.27534865419882,
-  1.23131496844669,
-  1.28853437231597,
-  1.08398510081215,
-  1.03030328207124,
-  0.861580913098945,
-  0.338733670467138,
-  0.323339949174712,
-  0.324980035355324
-)
-var(data)
