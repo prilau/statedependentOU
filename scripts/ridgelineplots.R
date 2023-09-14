@@ -18,7 +18,7 @@ cleanDf <- function(path, simID) {
 
 
 
-num_tips   = 500
+num_tips   = c(100, 250, 500)
 tree_reps   = 1
 num_dtraits = 4
 num_ctraits = 5
@@ -59,11 +59,38 @@ for(i in 1:nrow(grid)) {
 looongPosteriorDf %>% 
   filter(parameter == "halfLife") %>% 
   group_by(simulationID) %>% 
-  ggplot(aes(x = value, y = simulationID, fill = simulationID)) +
+  ggplot(aes(x = value, y = simulationID, fill = simulationID, alpha = 0.5)) +
   geom_density_ridges() +
+  xlim(0, 2) +
   theme_ridges() + 
   theme(legend.position = "none")
 
+looongPosteriorDf %>% 
+  filter(parameter == "theta_state1") %>% 
+  group_by(simulationID) %>% 
+  ggplot(aes(x = value, y = simulationID, fill = simulationID, alpha = 0.5)) +
+  geom_density_ridges() +
+  xlim(0, 5) +
+  theme_ridges() + 
+  theme(legend.position = "none")
+
+looongPosteriorDf %>% 
+  filter(parameter == "stationaryVariance") %>% 
+  group_by(simulationID) %>% 
+  ggplot(aes(x = value, y = simulationID, fill = simulationID, alpha = 0.5)) +
+  geom_density_ridges() +
+  xlim(0, 0.25) +
+  theme_ridges() + 
+  theme(legend.position = "none")
+
+looongPosteriorDf %>% 
+  filter(parameter == "theta_state0") %>% 
+  group_by(simulationID) %>% 
+  ggplot(aes(x = value, y = simulationID, fill = simulationID, alpha = 0.5)) +
+  geom_density_ridges() +
+  xlim(-0.1, 1.5) +
+  theme_ridges() + 
+  theme(legend.position = "none")
 
 
 
