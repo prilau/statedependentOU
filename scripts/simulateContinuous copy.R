@@ -9,7 +9,7 @@ treeheight <- function(tree) max(node.depth.edgelength(tree))
 obtainContinuousStates_ver7 = function(tree, halflife_0, halflife_1,
                                        theta_0, theta_1, stationaryvar_0,
                                        stationaryvar_1, initialValue = theta_0,
-                                       dt = 0.002) {
+                                       dt) {
   if (missing(dt)){
     dt <- 0.002 * treeheight(history)
   }

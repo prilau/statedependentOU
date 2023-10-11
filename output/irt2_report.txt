@@ -1,0 +1,39 @@
+<h2>Methods</h2>
+
+<h3>Simulated data</h3>
+Scripts I used to simulate the data are either modified from May and Boore (for phylogenetic trees and discrete trait history) or written by myself (for state-dependent continuous trait information). Simulations were done in R/RStudio. All scripts can be found in Supp. X.
+
+I first simulated 3 phylogenetic trees under a global, time-dependent birth-death process conditioned on the number of taxa sampled using package TESS. The speciation rate and extinction rate constants were set to 1 and 0.5 respectively in all 3 trees. The 3 trees have 100, 250, 500 tips respectively. For the ease of subsequent analyses, the branch lengths were then normalised so that the root-to-tip length equals 1. 
+
+Next, I simulated 4 replicates of binary discrete trait history for each tree. I specified the expected number of state changes to be 10, with equal forward and reverse transition rates, with at least 20% of the tips in each state. 
+
+For each replicate of discrete trait history, 5 replicates of continous traits were simulated. All replicates share the same parameters of half life 0.35, theta = 0.5 and 2, and stationary variance = 0.0625. The initial value was always set to 0.5, I approximated the continous-time evolution by dividing branch lengths into subsections of length 0.001 and run the equation. 
+
+Altogether, 60 continous trait datasets from 12 discrete trait histories from 3 trees were generated for subsequent model testing.
+
+<h3>Model validation</h3>
+Model validation performed in two ways - (1)comparing the results from different MCMC replicates, and (2)5-fold cross-validation. 
+
+
+
+<h3>Model power testing</h3>
+
+
+<h3>Testing with empirical data</h3>
+The Gobiiformes are an order of Actinopterygian fishes. Along with some other 30,000 Actinopterygian fish species, have shown size-by-habitat-use patterns, agreeing to the state-dependent continuous-character evolution hypothesis (Clarke 2021). 
+
+The dataset containing habitat and body length information was a subset of fish trait data used by Clarke 2021 compiled from several sources. A total of 465 Gobiiformes species from 164 genera, 7 families were included in this study. Habitats were categorised into 6 types based on salinity: (i) exclusively marine; (ii) marine-brackish; (iii) exclusively brackish; (iv) freshwater-brackish; (v) exclusively freshwater; and (vi) euryhaline. Species with either total length or standard length measured were all included in this study, undistinguishably as 'body length'. Body lengths were measured in centimeter and I used the natural log of body lengths for subsequent analyses. The tree
+
+Here, I ran the data under the sdOU model to test if it robustly support the size-by-habitat-use hypothesis.
+
+
+
+
+
+
+sim2: n100d1c3 mcmc run1: empty??
+
+!! number of state changes:number of tree tips ratio affects?
+bimodal found~
+mcmc iterations -> not much effect, less bimodal actually
+hb prior? -> halflife too high previously, but still, not satisfactory
