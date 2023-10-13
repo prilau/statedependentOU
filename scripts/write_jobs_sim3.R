@@ -1,4 +1,4 @@
-cat("writing Rev scripts for simulation 1.\n")
+cat("writing Rev scripts for simulation 3.\n")
 
 # settings
 num_tips   = 500
