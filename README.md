@@ -1,6 +1,18 @@
 # statedependentOU
 State-dependent OU model for RevBayes. 
 
+## New! Project Overview
+1. Validation of model implementation
+2. Testing the power of the model<ul>
+    <li>same discrete trait-rates, different tree sizes</li>
+    <li>different discrete trait-rates, same tree sizes</li>
+    <li>discrete trait or continuous trait matters more?</li>
+3. Empirical studies
+
+
+
+
+
 ## Done
 1. Obtained test dataset
     a. Birds (Shiomi 2021, Wright et al. 2022)
