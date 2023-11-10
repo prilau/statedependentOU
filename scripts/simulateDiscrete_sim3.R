@@ -6,7 +6,7 @@ cat("simulating discrete characters.\n")
 
 # simulation parameters
 num_tips = 500
-exp_change = c(5, 10, 20)
+exp_change = c(5, 10, 20, 50, 500)
 num_traits = 4
 
 grid = expand.grid(exp_change=exp_change,

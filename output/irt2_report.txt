@@ -1,7 +1,27 @@
+Initial testing for implementation of state-dependent multi-optima Ornstein–Uhlenbeck model on RevBayes
+
+
+
 <h2>Methods</h2>
 
 <h3>Simulated data</h3>
-Scripts I used to simulate the data are either modified from May and Boore (for phylogenetic trees and discrete trait history) or written by myself (for state-dependent continuous trait information). Simulations were done in R/RStudio. All scripts can be found in Supp. X.
+I simulated phylogenetic trees and corresponding discrete character histories using scripts modified from May and Moore 2020 publication (Supp. 1). I wrote scripts to model continuous character evolution under state-dependent multi-optima Ornstein–Uhlenbeck process (Supp. 2). 
+
+The algorithem traverses the binary tree in preorder. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 I first simulated 3 phylogenetic trees under a global, time-dependent birth-death process conditioned on the number of taxa sampled using package TESS. The speciation rate and extinction rate constants were set to 1 and 0.5 respectively in all 3 trees. The 3 trees have 100, 250, 500 tips respectively. For the ease of subsequent analyses, the branch lengths were then normalised so that the root-to-tip length equals 1. 
 
@@ -37,3 +57,43 @@ sim2: n100d1c3 mcmc run1: empty??
 bimodal found~
 mcmc iterations -> not much effect, less bimodal actually
 hb prior? -> halflife too high previously, but still, not satisfactory
+if discrete affects more - but how? (recent state switch worse?)
+disc vs cont only studied when well sampled
+
+
+
+Simulations under the state-dependent OU process. The process is either in discrete state 0 (blue) or discrete state 1 (orange), where the rate of change between discrete state, half life to reach the optimum, and rate of evolution(?) are equal (⁠q01=q10=1; halflife0=halflife1=0.35; sigma20=sigma21=?⁠), and the optimum of continuous-character evolution is larger when the process is in the orange state (⁠theta0=0.5⁠, theta1=2⁠). A) A single sample path from t=0 to t=1⁠. The process begins and ends in the blue state, but spends some time in the orange state. 
+
+B) The distribution of end states for 10 million simulated realizations. Solid lines represent the simulated joint probability densities of the discrete and continuous states. Dashed lines represent the normal densities with parameters estimated from the simulated end states. Note that the simulated densities depart from the normal densities (both Kolmogorov–Smirnov P−value<2E−16).
+
+
+
+
+figures:
+1. one tree + discrete trait history as example
+2. (tbd) cont trait evo against time (a couple of taxa, showing branching events; needa log cont simulation)
+3. under diff sets of paramters, cont value against time (to illustrate sdOU process; focus on diff optima)
+4. sim2 figure (skeleton done)
+5. sim3 figure (modified from 4.)
+7. empirical figure (posteriors, 2 by 2 facets)
+
+
+
+introduction
+
+Evolution of a trait is not completely random, subject to xxx
+
+
+adaptive evolution in a phylogenetic context
+
+phylogeny poses contraints on trait evolution
+evolution of one trait may be influenced by the state of another trait - co-evolution of traits
+If trait is independent of influences (intrinsic, e.g. choice; and extrinsic, e.g. environmental), should follow brownian motion. -> no!
+
+
+Brownian motion: direction and magnitude of evolution independent of selective pressure
+rate of evolution
+
+Adaptive evolution
+Darwin: modify by descent
+evolution towards an optimum: OU process

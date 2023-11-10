@@ -21,7 +21,7 @@ cleanDf <- function(path, simID) {
 num_tips   = c(100, 250, 500)
 tree_reps   = 1
 num_dtraits = 4
-num_ctraits = 5
+num_ctraits = 4
 
 grid = expand.grid(num_tips=num_tips, tree=1:tree_reps,
                    ctraits=1:num_ctraits, dtraits = 1:num_dtraits,
@@ -43,7 +43,7 @@ for(i in 1:nrow(grid)) {
                       "t", this_tree,
                       "d", this_num_dtraits,
                       "c", this_num_ctraits)
-  this_path = paste0(this_dir, "sdOU_simulation_", this_simID, ".log")
+  this_path = paste0(this_dir, "sdOU_simulation2_", this_simID, ".log")
   clean_df <- cleanDf(this_path, this_simID)
   looongPosteriorDf <- looongPosteriorDf %>% 
     bind_rows(clean_df)
@@ -53,8 +53,21 @@ for(i in 1:nrow(grid)) {
 
 
 
-
 # basic example
+
+mean_parameters <- looongPosteriorDf %>% 
+  group_by(parameter, simulationID) %>% 
+  summarise(mean = mean(value))
+  
+true_values <- tibble(
+  parameter = c("halfLife", "stationaryVariance", "theta_state0", "theta_state1"),
+  value = c(0.35, 0.0625, 0.5, 2.0))
+
+mean_parameters %>% ggplot(aes(x = mean, alpha = 0.5)) +
+  geom_histogram() +
+  facet_wrap(vars(parameter) , scales = "free_x") +
+  geom_vline(aes(xintercept = value), data = true_values)
+
 
 looongPosteriorDf %>% 
   filter(parameter == "halfLife") %>% 
@@ -63,7 +76,7 @@ looongPosteriorDf %>%
   geom_density_ridges() +
   xlim(0, 2) +
   theme_ridges() + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") 
 
 looongPosteriorDf %>% 
   filter(parameter == "theta_state1") %>% 
@@ -91,6 +104,7 @@ looongPosteriorDf %>%
   xlim(-0.1, 1.5) +
   theme_ridges() + 
   theme(legend.position = "none")
+
 
 
 

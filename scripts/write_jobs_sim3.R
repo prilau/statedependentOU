@@ -2,7 +2,7 @@ cat("writing Rev scripts for simulation 3.\n")
 
 # settings
 num_tips   = 500
-exp_change = c(5, 10, 20)
+exp_change = c(5, 10, 20, 50, 500)
 num_dtraits = 4
 num_ctraits = 4
 

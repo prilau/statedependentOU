@@ -7,6 +7,7 @@ State-dependent OU model for RevBayes.
     <li>same discrete trait-rates, different tree sizes</li>
     <li>different discrete trait-rates, same tree sizes</li>
     <li>discrete trait or continuous trait matters more?</li>
+    </ul>
 3. Empirical studies
 
 

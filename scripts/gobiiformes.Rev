@@ -124,8 +124,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="mixed")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=800, tuningInterval=100)
-mymcmc.run(generations=6000, tuningInterval=200)
+mymcmc.burnin(generations=1000, tuningInterval=100)
+mymcmc.run(generations=6000)
 
 
 

@@ -77,7 +77,7 @@ obtainContinuousStates_ver7 = function(tree, halflife_0, halflife_1,
 cat("simulating continuous characters.\n")
 
 num_tips   = 500
-exp_change = c(5, 10, 20)
+exp_change = c(5, 10, 20, 50, 500)
 num_dtraits = 4
 num_ctraits = 4
 

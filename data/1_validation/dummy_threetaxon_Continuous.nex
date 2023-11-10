@@ -1,0 +1,11 @@
+#NEXUS
+
+BEGIN DATA;
+    DIMENSIONS NTAX=3 NCHAR=1;
+    FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=-;
+    MATRIX
+        A           0.1234
+        B           0.2345
+        C           0.3456
+    ;
+END;
