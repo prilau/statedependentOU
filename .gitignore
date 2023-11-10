@@ -1,5 +1,6 @@
-output/
+output/*
 data/.Rhistory
 history.txt
-old/
+old/*
 jobs/*
+old/*/*
