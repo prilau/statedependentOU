@@ -55,3 +55,7 @@ Pomadasys_panamensis                0
 Xenichthys_xantii                   0
 ;
 END;
+[
+	0: non-reef
+	1: reef
+]
