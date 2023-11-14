@@ -1,11 +1,7 @@
-library(RevGadgets)
-library(coda)
 library(ggplot2)
-library(ggtree)
-library(grid)
-library(gridExtra)
 library(ggridges)
 library(tidyverse)
+library(patchwork)
 
 cleanDf <- function(path, simID) {
   messy_df <- read.csv(path, sep = "\t")
@@ -54,20 +50,26 @@ cuteRidgePlot_halfLife <- looongPosteriorDf %>%
   group_by(trait) %>% 
   ggplot(aes(x = value, y = trait, fill = parameter, alpha = 0.5)) +
   geom_density_ridges() +
-  xlim(-0.5, 4) +
+  xlim(0, 3) +
   theme_ridges() + 
-  theme(legend.position = "none") 
-ggsave("figures/haemulidae_halfLife.pdf", cuteRidgePlot_halfLife, width = 200, height = 150, units = "mm")
+  theme(legend.position = "none",
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  ggtitle("half life")
 
 cuteRidgePlot_sigma2 <- looongPosteriorDf %>% 
   filter(parameter %in% c("sigma2.1.", "sigma2.2.")) %>% 
   group_by(trait) %>% 
   ggplot(aes(x = value, y = trait, fill = parameter, alpha = 0.5)) +
   geom_density_ridges() +
-  xlim(-0.1, 4) +
+  xlim(0, 3) +
   theme_ridges() + 
-  theme(legend.position = "none") 
-ggsave("figures/haemulidae_sigma2.pdf", cuteRidgePlot_sigma2, width = 200, height = 150, units = "mm")
+  theme(legend.position = "none",
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  ggtitle("sigma2")
 
 cuteRidgePlot_theta <- looongPosteriorDf %>% 
   filter(parameter %in% c("theta_state0", "theta_state1")) %>% 
@@ -76,5 +78,14 @@ cuteRidgePlot_theta <- looongPosteriorDf %>%
   geom_density_ridges() +
   xlim(-0.4, 80) +
   theme_ridges() + 
-  theme(legend.position = "none") 
-ggsave("figures/haemulidae_theta.pdf", cuteRidgePlot_theta, width = 200, height = 150, units = "mm")
+  theme(legend.position = "none",
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  ggtitle("theta")
+
+
+nested <- (cuteRidgePlot_sigma2|cuteRidgePlot_halfLife|cuteRidgePlot_theta)+
+  plot_annotation(tag_levels = 'A') #add figure labels
+
+ggsave("figures/haemulidae_all_parameters.pdf", nested, width = 400, height = 200, units = "mm")
