@@ -66,9 +66,9 @@ mean_parameters <- looongPosteriorDf %>%
   summarise(mean = mean(value), tree_size = mean(tree_size)) 
 
 true_values <- tibble(
-  parameter = c("halfLife", "stationaryVariance",
+  parameter = c("halfLife", "sigma2",
                 "theta_state0", "theta_state1"),
-  value = c(0.35, 0.0625, 0.5, 2.0))
+  value = c(0.35, 0.0625*2*log(2)/0.35, 0.5, 2.0))
 
 #cuteLegoPlot <- mean_parameters %>% ggplot(aes(x = mean, alpha = 0.5, fill = factor(tree_size))) +
 #  geom_histogram(bins = 10) +
@@ -78,7 +78,7 @@ true_values <- tibble(
 
 
 cuteTetrisPlot <- mean_parameters %>% 
-  filter(parameter %in% c("halfLife", "stationaryVariance",
+  filter(parameter %in% c("halfLife", "sigma2",
                           "theta_state0", "theta_state1")) %>%
   ggplot(aes(x = mean, alpha = 0.5, fill = factor(tree_size))) +
   geom_histogram(bins = 10) +
