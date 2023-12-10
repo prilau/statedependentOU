@@ -2,6 +2,7 @@ library(RevGadgets)
 library(ggplot2)
 library(tidyverse)
 library(patchwork)
+library(tikzDevice)
 
 
 # true values
@@ -429,18 +430,31 @@ sim2_pr <- bind_rows(list(range = sim2_r, perc = sim2_p), .id = "measurement")
 
 parameter_color <- c('#6699CC', '#004488', '#EECC66', '#994455', '#997700', '#EE99AA')
 names(parameter_color) <- levels(sim3_r$parameter)
+parameter_shape <- c(0, 1, 2, 15, 16, 17)
+names(parameter_shape) <- levels(sim3_r$parameter)
+
 
 sim3_level_order <- c('r5', 'r10', 'r20', 'r50', 'r500') 
 
 sim3_rangePlot <- sim3_r %>%
   ggplot(aes(x=factor(rate, level = sim3_level_order), y=log(value),
-             group = parameter, col = parameter, alpha = 0.7)) +
+             group = parameter, col = parameter, shape = parameter)) +
   geom_line() +
   geom_point() +
   xlab("Rate") +
-  ylab("") +
-  scale_colour_manual(name = "parameter",values = parameter_color) +
+  ylab("$\\ln$ (size of 95% credible interval)") +
+  scale_colour_manual(name = "Parameter",
+                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                      values = parameter_color) +
+  scale_shape_manual(name = "Parameter",
+                     labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                     values = parameter_shape) +
   theme_bw()
+
+#scale_fill_discrete(labels=c())
+
 
 sim3_percPlot <- sim3_p %>%
   ggplot(aes(x=factor(rate, level = sim3_level_order), y=value,
@@ -505,5 +519,5 @@ nested <- ((sim2_percPlot + sim2_rangePlot)/(sim3_percPlot + sim3_rangePlot)) +
   plot_annotation(tag_levels = 'A')
 
 
-ggsave("figures/sims_posterior_summary.pdf", nested, width = 800, height = 450, units = "mm")
+ggsave("figures/sims_posterior_summary.pdf", nested, width = 400, height = 300, units = "mm")
 
