@@ -6,6 +6,8 @@ library(grid)
 library(gridExtra)
 library(tidyverse)
 library(patchwork)
+library(tikzDevice)
+
 
 file <- "output/4_empirical_gobiiformes.log"
 
@@ -40,15 +42,85 @@ trace_quant[[1]][956] <- mutate(trace_quant[[1]][956], log(trace_quant[[1]][956]
 trace_quant[[1]][957] <- mutate(trace_quant[[1]][957], log(trace_quant[[1]][957]))
 trace_quant[[1]][958] <- mutate(trace_quant[[1]][958], log(trace_quant[[1]][958]))
 
-color_scale <- c('#4477AA', '#EE6677', '#228833', '#CCBB44', '#66CCEE', '#AA3377')
+color_scale <- c('#6699CC', '#004488', '#EECC66', '#994455', '#997700', '#EE99AA')
 names(color_scale) <- c("halfLife[1]","halfLife[2]","halfLife[3]","halfLife[4]", "halfLife[5]", "halfLife[6]")
 
-log_halfLife <- plotTrace(trace = trace_quant, vars = c("halfLife[1]","halfLife[2]","halfLife[3]","halfLife[4]", "halfLife[5]", "halfLife[6]"))[[1]]
-log_sigma2 <- plotTrace(trace = trace_quant, vars = c("sigma2[1]","sigma2[2]","sigma2[3]","sigma2[4]", "sigma2[5]", "sigma2[6]"))[[1]]
-theta <- plotTrace(trace = trace_quant, vars = c("theta[1]","theta[2]","theta[3]","theta[4]", "theta[5]", "theta[6]"))[[1]]
-log_alpha <-  plotTrace(trace = trace_quant, vars = c("alpha[1]","alpha[2]","alpha[3]","alpha[4]", "alpha[5]", "alpha[6]"))[[1]]
-log_stV <-  plotTrace(trace = trace_quant, vars = c("stationaryVariance[1]","stationaryVariance[2]","stationaryVariance[3]","stationaryVariance[4]", "stationaryVariance[5]", "stationaryVariance[6]"))[[1]]
+log_halfLife <- plotTrace(trace = trace_quant,
+                          vars = c("halfLife[1]", "halfLife[2]", "halfLife[3]",
+                                   "halfLife[4]", "halfLife[5]", "halfLife[6]"), color = color_scale)[[1]] +
+  scale_colour_manual(name = "Habitats",
+                      labels = c("Brackish", "Diadromous", "Lacustrine and Riverine", "Exclusively Lacustrine", "Exclusively Marine", "Exclusively Riverine"),
+                      values = color_scale) +
+  theme(legend.position = "none") +
+  ggtitle("$\\ln t_{1/2}$")
+
+names(color_scale) <- c("sigma2[1]","sigma2[2]","sigma2[3]","sigma2[4]", "sigma2[5]", "sigma2[6]")
+log_sigma2 <- plotTrace(trace = trace_quant,
+                        vars = c("sigma2[1]","sigma2[2]","sigma2[3]","sigma2[4]", "sigma2[5]", "sigma2[6]"), color = color_scale)[[1]] +
+  scale_colour_manual(name = "Habitats",
+                      labels = c("Brackish", "Diadromous", "Lacustrine and Riverine", "Exclusively Lacustrine", "Exclusively Marine", "Exclusively Riverine"),
+                      values = color_scale) +
+  theme(legend.position = "none") +
+  ggtitle("$\\ln \\sigma^2$")
+
+
+names(color_scale) <- c("theta[1]","theta[2]","theta[3]",
+                        "theta[4]", "theta[5]", "theta[6]")
+theta <- plotTrace(trace = trace_quant,
+                   vars = c("theta[1]","theta[2]","theta[3]",
+                            "theta[4]", "theta[5]", "theta[6]"), color = color_scale)[[1]] +
+  scale_colour_manual(name = "Habitats",
+                      labels = c("Brackish", "Diadromous", "Lacustrine and Riverine", "Exclusively Lacustrine", "Exclusively Marine", "Exclusively Riverine"),
+                      values = color_scale) +
+  theme(legend.position = "none") +
+  ggtitle("$\\theta$")
+
+
+names(color_scale) <- c("alpha[1]","alpha[2]","alpha[3]",
+                        "alpha[4]", "alpha[5]", "alpha[6]")
+log_alpha <-  plotTrace(trace = trace_quant,
+                        vars = c("alpha[1]","alpha[2]","alpha[3]",
+                                 "alpha[4]", "alpha[5]", "alpha[6]"), color = color_scale)[[1]] +
+  scale_color_manual(name = "Habitats",
+                      labels = c("Brackish",
+                                 "Diadromous",
+                                 "Lacustrine and Riverine",
+                                 "Exclusively Lacustrine",
+                                 "Exclusively Marine",
+                                 "Exclusively Riverine"),
+                      values = color_scale) +
+  theme(legend.position = "none") +
+  ggtitle("$\\ln \\alpha$")
+
+
+
+names(color_scale) <- c("stationaryVariance[1]",
+                        "stationaryVariance[2]",
+                        "stationaryVariance[3]",
+                        "stationaryVariance[4]",
+                        "stationaryVariance[5]",
+                        "stationaryVariance[6]")
+log_stV <-  plotTrace(trace = trace_quant,
+                      vars = c("stationaryVariance[1]",
+                               "stationaryVariance[2]",
+                               "stationaryVariance[3]",
+                               "stationaryVariance[4]",
+                               "stationaryVariance[5]",
+                               "stationaryVariance[6]"), color = color_scale)[[1]] +
+  scale_colour_manual(name = "Habitats",
+                      labels = c("Brackish", "Diadromous",
+                                 "Lacustrine and Riverine",
+                                 "Exclusively Lacustrine",
+                                 "Exclusively Marine", "Exclusively Riverine"),
+                      values = color_scale) +
+  ggtitle("$V_{st}$")
 
 nested <- ((log_halfLife|log_alpha)/(log_sigma2|log_stV)/theta)+
   plot_annotation(tag_levels = 'A') #add figure labels
-ggsave("figures/gobiiformes_trace.pdf", nested, width = 400, height = 200, units = "mm")
+
+tikzDevice::tikz(file = "figures/gobiiformes.tex", width = 4, height = 3)
+nested
+dev.off()
+
+
+#ggsave("figures/gobiiformes_trace.pdf", nested, width = 400, height = 200, units = "mm")

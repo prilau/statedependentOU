@@ -449,7 +449,7 @@ sim3_rangePlot <- sim3_r %>%
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
                      values = parameter_shape) +
   theme_bw() +
-  ggtitle("Size of 95% credible interval")
+  ggtitle("Size of 95 $\\%$ credible interval")
 
 
 
@@ -470,7 +470,7 @@ sim3_percPlot <- sim3_p %>%
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
                      values = parameter_shape) + 
   theme_bw() +
-  ggtitle("Frequency of true parameter values falling within $\\newline$ 95% credible interval")
+  ggtitle("Frequency of true parameter values falling within  $\\newline 95\\%$ credible interval")
 
 
 nested_sim3 <- (sim3_percPlot + sim3_rangePlot) +
@@ -483,8 +483,6 @@ dev.off()
 
 
 sim2_level_order <- c('n100', 'n250', 'n500') 
-
-
 sim2_rangePlot <- sim2_r %>%
   ggplot(aes(x=factor(num_tips, level = sim2_level_order), y=log(value),
              group = parameter, col = parameter, shape = parameter)) +
@@ -500,7 +498,7 @@ sim2_rangePlot <- sim2_r %>%
                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
                      values = parameter_shape) +   theme_bw() +
-  ggtitle("Size of 95% credible interval")
+  ggtitle("Size of 95 $\\%$ credible interval")
 
 sim2_percPlot <- sim2_p %>%
   ggplot(aes(x=factor(num_tips, level = sim2_level_order), y=value,
@@ -516,12 +514,13 @@ sim2_percPlot <- sim2_p %>%
   scale_shape_manual(name = "Parameter",
                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
-                     values = parameter_shape) +   ggtitle("Frequency of true values falling within $\\newline$ 95% credible interval") +
+                     values = parameter_shape) +   ggtitle("Frequency of true values falling within $\\newline 95\\%$ credible interval") +
   theme_bw()
-
 
 nested_sim2 <- (sim2_percPlot + sim2_rangePlot) +
   plot_annotation(tag_levels = 'A')
+
+
 
 tikzDevice::tikz(file = "figures/sim2.tex", width = 5, height = 3)
 nested_sim2
