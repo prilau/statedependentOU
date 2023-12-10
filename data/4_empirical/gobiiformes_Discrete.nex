@@ -471,4 +471,11 @@ BEGIN DATA;
     Zosterisessor_ophiocephalus           1
   ;
 END;
-
+[
+  1:	Brackish
+  2:	Diadromous
+  3:	Lac.and.Riv
+  4:	Lacustrine
+	5:	Marine
+  6:	Riverine
+]
