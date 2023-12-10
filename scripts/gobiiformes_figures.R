@@ -118,7 +118,7 @@ log_stV <-  plotTrace(trace = trace_quant,
 nested <- ((log_halfLife|log_alpha)/(log_sigma2|log_stV)/theta)+
   plot_annotation(tag_levels = 'A') #add figure labels
 
-tikzDevice::tikz(file = "figures/gobiiformes.tex", width = 4, height = 3)
+tikzDevice::tikz(file = "figures/gobiiformes.tex", width = 8, height = 6)
 nested
 dev.off()
 
