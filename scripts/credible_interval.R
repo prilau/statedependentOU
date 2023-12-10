@@ -421,13 +421,10 @@ sim3_r <- bind_rows(list(r5 = r_CI_r5, r10 = r_CI_r10, r20 = r_CI_r20,
                          r50 = r_CI_r50, r500 = r_CI_r500), .id = "rate")
 sim3_p <- bind_rows(list(r5 = p_CI_r5, r10 = p_CI_r10, r20 = p_CI_r20,
                          r50 = p_CI_r50, r500 = p_CI_r500), .id = "rate")
-sim3_pr <- bind_rows(list(range = sim3_r, perc = sim3_p), .id = "measurement")
 sim2_r <- bind_rows(list(n100 = r_CI_100, n250 = r_CI_250, n500 = r_CI_500),
                     .id = "num_tips")
 sim2_p <- bind_rows(list(n100 = p_CI_100, n250 = p_CI_250, n500 = p_CI_500),
                     .id = "num_tips")
-sim2_pr <- bind_rows(list(range = sim2_r, perc = sim2_p), .id = "measurement")
-
 parameter_color <- c('#6699CC', '#004488', '#EECC66', '#994455', '#997700', '#EE99AA')
 names(parameter_color) <- levels(sim3_r$parameter)
 parameter_shape <- c(0, 1, 2, 15, 16, 17)
@@ -442,7 +439,7 @@ sim3_rangePlot <- sim3_r %>%
   geom_line() +
   geom_point() +
   xlab("Rate") +
-  ylab("$\\ln$ (size of 95% credible interval)") +
+  ylab("$\\ln$ (size)") +
   scale_colour_manual(name = "Parameter",
                       labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
                                  "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
@@ -451,72 +448,84 @@ sim3_rangePlot <- sim3_r %>%
                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
                      values = parameter_shape) +
-  theme_bw()
+  theme_bw() +
+  ggtitle("Size of 95% credible interval")
 
-#scale_fill_discrete(labels=c())
+
 
 
 sim3_percPlot <- sim3_p %>%
   ggplot(aes(x=factor(rate, level = sim3_level_order), y=value,
-             group = parameter, col = parameter, alpha = 0.7)) +
+             group = parameter, col = parameter, shape = parameter)) +
   geom_line() +
   geom_point() +
   xlab("Rate") +
   ylab("") +
-  scale_colour_manual(name = "parameter",values = parameter_color) +
-  theme_bw()
+  scale_colour_manual(name = "Parameter",
+                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                      values = parameter_color) +
+  scale_shape_manual(name = "Parameter",
+                     labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                     values = parameter_shape) + 
+  theme_bw() +
+  ggtitle("Frequency of true parameter values falling within $\\newline$ 95% credible interval")
 
-## Combined range and percentage plot for sim3
-#sim3_pr %>%
-#  ggplot(aes(x=factor(rate, level = sim3_level_order), y=value,
-#             group = parameter, col = parameter, alpha = 0.7)) +
-#  geom_line() +
-#  geom_point() +
-#  xlab("Rate") +
-#  ylab("") +
-#  scale_colour_manual(name = "parameter",values = parameter_color) +
-#  theme_bw() +
-#  facet_grid(rows = vars(measurement))
+
+nested_sim3 <- (sim3_percPlot + sim3_rangePlot) +
+  plot_annotation(tag_levels = 'A')
+
+tikzDevice::tikz(file = "figures/sim3.tex", width = 5, height = 3)
+nested_sim3
+dev.off()
+
+
 
 sim2_level_order <- c('n100', 'n250', 'n500') 
 
-#sim2_pr %>%
-#  ggplot(aes(x=factor(num_tips, level = sim2_level_order), y=value, group = parameter, col = parameter)) +
-#  geom_line() +
-#  geom_point() +
-#  xlab("Rate") +
-#  ylab("") +
-#  scale_colour_manual(name = "parameter",values = parameter_color) +
-#  theme_bw() +
-#  facet_grid(rows = vars(measurement))
 
 sim2_rangePlot <- sim2_r %>%
   ggplot(aes(x=factor(num_tips, level = sim2_level_order), y=log(value),
-             group = parameter, col = parameter, alpha = 0.7)) +
+             group = parameter, col = parameter, shape = parameter)) +
   geom_line() +
   geom_point() +
   xlab("Number of tips") +
-  ylab("") +
-  scale_colour_manual(name = "parameter",values = parameter_color) +
-  theme_bw() +
-  ggtitle("Log-transformed average size of 95% credible interval")
+  ylab("$\\ln$ (size)") +
+  scale_colour_manual(name = "Parameter",
+                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                      values = parameter_color) +
+  scale_shape_manual(name = "Parameter",
+                     labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                     values = parameter_shape) +   theme_bw() +
+  ggtitle("Size of 95% credible interval")
 
 sim2_percPlot <- sim2_p %>%
   ggplot(aes(x=factor(num_tips, level = sim2_level_order), y=value,
-             group = parameter, col = parameter, alpha = 0.7)) +
+             group = parameter, col = parameter, shape = parameter)) +
   geom_line() +
   geom_point() +
   xlab("Number of tips") +
   ylab("") +
-  scale_colour_manual(name = "parameter",values = parameter_color) +
-  ggtitle("Frequency of true value falling within 95% credible interval") +
+  scale_colour_manual(name = "Parameter",
+                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                      values = parameter_color) +
+  scale_shape_manual(name = "Parameter",
+                     labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
+                                "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
+                     values = parameter_shape) +   ggtitle("Frequency of true values falling within $\\newline$ 95% credible interval") +
   theme_bw()
 
 
-
-
-nested <- ((sim2_percPlot + sim2_rangePlot)/(sim3_percPlot + sim3_rangePlot)) +
+nested_sim2 <- (sim2_percPlot + sim2_rangePlot) +
   plot_annotation(tag_levels = 'A')
+
+tikzDevice::tikz(file = "figures/sim2.tex", width = 5, height = 3)
+nested_sim2
+dev.off()
 
 
 ggsave("figures/sims_posterior_summary.pdf", nested, width = 400, height = 300, units = "mm")
