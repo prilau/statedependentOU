@@ -51,7 +51,10 @@ log_halfLife <- plotTrace(trace = trace_quant,
   scale_colour_manual(name = "Habitats",
                       labels = c("Brackish", "Diadromous", "Lacustrine and Riverine", "Exclusively Lacustrine", "Exclusively Marine", "Exclusively Riverine"),
                       values = color_scale) +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 20),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 10)) +
   ggtitle("$\\ln t_{1/2}$")
 
 names(color_scale) <- c("sigma2[1]","sigma2[2]","sigma2[3]","sigma2[4]", "sigma2[5]", "sigma2[6]")
@@ -60,7 +63,10 @@ log_sigma2 <- plotTrace(trace = trace_quant,
   scale_colour_manual(name = "Habitats",
                       labels = c("Brackish", "Diadromous", "Lacustrine and Riverine", "Exclusively Lacustrine", "Exclusively Marine", "Exclusively Riverine"),
                       values = color_scale) +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 20),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 10)) +
   ggtitle("$\\ln \\sigma^2$")
 
 
@@ -72,7 +78,10 @@ theta <- plotTrace(trace = trace_quant,
   scale_colour_manual(name = "Habitats",
                       labels = c("Brackish", "Diadromous", "Lacustrine and Riverine", "Exclusively Lacustrine", "Exclusively Marine", "Exclusively Riverine"),
                       values = color_scale) +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 20),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 10)) +
   ggtitle("$\\theta$")
 
 
@@ -89,7 +98,10 @@ log_alpha <-  plotTrace(trace = trace_quant,
                                  "Exclusively Marine",
                                  "Exclusively Riverine"),
                       values = color_scale) +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 20),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 10)) +
   ggtitle("$\\ln \\alpha$")
 
 
@@ -113,12 +125,24 @@ log_stV <-  plotTrace(trace = trace_quant,
                                  "Exclusively Lacustrine",
                                  "Exclusively Marine", "Exclusively Riverine"),
                       values = color_scale) +
+  theme(legend.title = element_text(size = 18),
+        legend.text = element_text(size = 16),
+        plot.title = element_text(size = 20),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 10)) +
   ggtitle("$V_{st}$")
 
-nested <- ((log_halfLife|log_alpha)/(log_sigma2|log_stV)/theta)+
-  plot_annotation(tag_levels = 'A') #add figure labels
 
-tikzDevice::tikz(file = "figures/gobiiformes.tex", width = 8, height = 6)
+
+
+nested <- ((log_halfLife|log_alpha)/(log_sigma2|log_stV)/theta)
+
+
+jpeg("figures/testing.jpg", width = 5.8, height = 3.26, units = "in", res = 480)
+nested
+dev.off()
+
+tikzDevice::tikz(file = "figures/gobiiformes.tex", width = 16, height = 9)
 nested
 dev.off()
 
