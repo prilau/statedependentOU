@@ -64,7 +64,7 @@ END;
 	5: ascending process -> log transformation
 	6: raker length -> log transformation
 	7: eye width -> log transformation
-	8: sunction index -> no transformation
+	8: suction index -> no transformation
 	9: buccal length -> log transformation
 	10: buccal width -> log transformation
 	11: head height -> log transformation

@@ -449,6 +449,11 @@ sim3_rangePlot <- sim3_r %>%
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
                      values = parameter_shape) +
   theme_bw() +
+  theme(legend.title = element_text(size = 6),
+        legend.text = element_text(size = 4),
+        plot.title = element_text(size = 6),
+        axis.title = element_text(size = 6),
+        axis.text = element_text(size = 6)) +
   ggtitle("Size of 95 $\\%$ credible interval")
 
 
@@ -470,13 +475,21 @@ sim3_percPlot <- sim3_p %>%
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
                      values = parameter_shape) + 
   theme_bw() +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 6),
+        axis.title = element_text(size = 6),
+        axis.text = element_text(size = 6)) +
   ggtitle("Frequency of true parameter values falling within  $\\newline 95\\%$ credible interval")
 
 
-nested_sim3 <- (sim3_percPlot + sim3_rangePlot) +
-  plot_annotation(tag_levels = 'A')
+nested_sim3 <- (sim3_percPlot + sim3_rangePlot)
 
-tikzDevice::tikz(file = "figures/sim3.tex", width = 5, height = 3)
+jpeg("figures/testing.jpg", width = 5.8, height = 3.26, units = "in", res = 480)
+nested_sim3
+dev.off()
+
+
+tikzDevice::tikz(file = "figures/sim3.tex", width = 5.8, height = 3.26)
 nested_sim3
 dev.off()
 
@@ -497,7 +510,13 @@ sim2_rangePlot <- sim2_r %>%
   scale_shape_manual(name = "Parameter",
                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
-                     values = parameter_shape) +   theme_bw() +
+                     values = parameter_shape) +
+  theme_bw() +
+  theme(legend.title = element_text(size = 6),
+        legend.text = element_text(size = 4),
+        plot.title = element_text(size = 6),
+        axis.title = element_text(size = 6),
+        axis.text = element_text(size = 6)) +
   ggtitle("Size of 95 $\\%$ credible interval")
 
 sim2_percPlot <- sim2_p %>%
@@ -506,7 +525,7 @@ sim2_percPlot <- sim2_p %>%
   geom_line() +
   geom_point() +
   xlab("Number of tips") +
-  ylab("") +
+  ylab("Frequency") +
   scale_colour_manual(name = "Parameter",
                       labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
                                  "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
@@ -514,18 +533,27 @@ sim2_percPlot <- sim2_p %>%
   scale_shape_manual(name = "Parameter",
                      labels = c("$\\alpha$", "$t_{1/2}$", "$\\sigma^2$",
                                 "$V_{st}$", "$\\theta_0$", "$\\theta_1$"),
-                     values = parameter_shape) +   ggtitle("Frequency of true values falling within $\\newline 95\\%$ credible interval") +
-  theme_bw()
+                     values = parameter_shape) +
+  theme_bw() +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 6),
+        axis.title = element_text(size = 6),
+        axis.text = element_text(size = 6)) +
+  ggtitle("Frequency of true parameter values falling within  $\\newline 95\\%$ credible interval")
 
-nested_sim2 <- (sim2_percPlot + sim2_rangePlot) +
-  plot_annotation(tag_levels = 'A')
+nested_sim2 <- (sim2_percPlot + sim2_rangePlot)
 
-
-
-tikzDevice::tikz(file = "figures/sim2.tex", width = 5, height = 3)
+#for testing
+jpeg("figures/testing.jpg", width = 5.8, height = 3.26, units = "in", res = 480)
 nested_sim2
 dev.off()
 
 
-ggsave("figures/sims_posterior_summary.pdf", nested, width = 400, height = 300, units = "mm")
+
+tikzDevice::tikz(file = "figures/sim2.tex", width = 5.8, height = 3.26)
+nested_sim2
+dev.off()
+
+
+#ggsave("figures/sims_posterior_summary.pdf", nested, width = 400, height = 300, units = "mm")
 
