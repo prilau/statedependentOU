@@ -5,8 +5,8 @@ library(tikzDevice)
 
 
 num_tips = c('100', '250', '500')
-parameters = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$")
-#parameters <- factor(parameters, levels = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$"))
+#parameters = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$")
+parameters <- factor(parameters, levels = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$"))
 shape = c("unimodal", "multimodal")
 count = 0
 
@@ -94,7 +94,7 @@ dev.off()
 
 
 rates = c('5', '10', '20', '50', '500')
-parameters = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$")
+#parameters = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$")
 shape = c("unimodal", "multimodal")
 count = 0
 
