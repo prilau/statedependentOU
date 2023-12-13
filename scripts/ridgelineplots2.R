@@ -114,7 +114,7 @@ for (i in 1:5) {
       ggtitle("$\\alpha$")
     V_st[[i]] <- V_st[[i]] +
       theme(plot.title = element_text(size = 7)) +
-      ggtitle("$\\V_{st}$")
+      ggtitle("$V_{st}$")
     sigma2[[i]] <- sigma2[[i]] +
       theme(plot.title = element_text(size = 7)) +
       ggtitle("$\\sigma^2$")
