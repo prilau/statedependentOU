@@ -6,6 +6,7 @@ library(tikzDevice)
 
 num_tips = c('100', '250', '500')
 parameters = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$")
+#parameters <- factor(parameters, levels = c("$t_{1/2}$", "$\\alpha$", "$V_{st}$", "$\\sigma^2$", "$\\theta_0$", "$\\theta_1$"))
 shape = c("unimodal", "multimodal")
 count = 0
 
@@ -53,7 +54,7 @@ grid$count[35] = 14
 grid$count[36] = 2
 
 grid <- grid %>% mutate(count = count/16)
-grid <- grid %>% rename(frequency = count)
+grid <- grid %>% rename(Frequency = count)
 
 
 shape_color <- c('#004488', '#DDAA33')
@@ -65,7 +66,7 @@ level_order <- c('100', '250', '500')
 
 
 sim2_shape <- ggplot(grid, aes(x = factor(num_tips, levels = level_order),
-                               y = frequency, fill = shape)) +
+                               y = Frequency, fill = shape)) +
   geom_bar(position = position_stack(reverse = FALSE), stat='identity') +
   theme(legend.position = "right") +
   scale_fill_manual(name = "Shape of distribution",values = shape_color) +
@@ -129,7 +130,7 @@ grid$count[24] = 0
 
 grid$count[25] = 13
 grid$count[26] = 3
-grid$count[27] = 12
+grid$count[27] = 10
 grid$count[28] = 6
 grid$count[29] = 14
 grid$count[30] = 2
@@ -171,24 +172,23 @@ grid$count[60] = 15
 
 
 grid <- grid %>% mutate(count = count/16)
-grid <- grid %>% rename(frequency = count)
-
+grid <- grid %>% rename(Frequency = count)
 
 shape_color <- c('#004488', '#DDAA33')
 names(shape_color) <- unique(grid$shape)
-level_order <- c('100', '250', '500') 
+level_order <- c('5', '10', '20', '50', '500') 
 
 
 
 
 
-sim2_shape <- ggplot(grid, aes(x = factor(num_tips, levels = level_order),
-                               y = frequency, fill = shape)) +
+sim3_shape <- ggplot(grid, aes(x = factor(rates, levels = level_order),
+                               y = Frequency, fill = shape)) +
   geom_bar(position = position_stack(reverse = FALSE), stat='identity') +
   theme(legend.position = "right") +
   scale_fill_manual(name = "Shape of distribution",values = shape_color) +
   facet_wrap(facets = vars(parameters)) +
-  xlab("Number of tree tips") +
+  xlab("Rate of discrete trait evolution") +
   ylab("Frequency") +
   theme(legend.title = element_text(size = 8),
       legend.text = element_text(size = 6),
@@ -199,11 +199,11 @@ sim2_shape <- ggplot(grid, aes(x = factor(num_tips, levels = level_order),
 
 
 jpeg("figures/testing.jpg", width = 5.8, height = 5, units = "in", res = 480)
-sim2_shape
+sim3_shape
 dev.off()
 
-tikzDevice::tikz(file = "figures/sim2_shape.tex", width = 5.8, height = 5)
-sim2_shape
+tikzDevice::tikz(file = "figures/sim3_shape.tex", width = 5.8, height = 5)
+sim3_shape
 dev.off()
 
 #ggsave("figures/sim2_shape.pdf", sim2_shape,
