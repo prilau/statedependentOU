@@ -1,57 +1,37 @@
+library(ape)
+tree <- read.tree("data/1_validation/dummy_threetaxon_stateless.tre")
+plot(tree)
+
 a = 0.1234
 b = 0.2345
 c = 0.3456
-theta0 = 0.5
-theta1 = 2
-halflife = 0.35
-alpha = log( 2 ) / halflife
-stV = 0.0625
-sigma2 = 2 * alpha * stV
+alpha = 0.1
+theta = 0.1
+sigma2 = 0.1
 
-#branch A
-vL = sigma2 / ( 2 * alpha ) * ( exp(2 * alpha * 0.7) - 1 )
-dL = 0
-varL = vL + dL * exp(2 * alpha * 0.7)
-dL = varL
-muL = exp(0.7 * alpha) * (a  - theta0)  + theta0
+Ya = theta * ( 1 - exp(alpha * 0.7)) + exp( alpha * 0.7 ) * a
+Yb = theta * ( 1 - exp(alpha * 0.7)) + exp( alpha * 0.7 ) * b
+Va = sigma2 / 2 / alpha * ( exp( 2 * alpha * 0.7) - 1 ) + exp( alpha * 0.7 ) * 0
+Vb = sigma2 / 2 / alpha * ( exp( 2 * alpha * 0.7) - 1 ) + exp( alpha * 0.7 ) * 0
+contrast_ab = Ya - Yb
+VarC_ab = Va + Vb
+lnl_ab = log(exp( alpha * 0.7 + alpha * 0.7 - contrast_ab^2 / 2 / VarC_ab ) / sqrt( 2 * pi * VarC_ab ))
 
+ab = ( Ya * Vb + Yb * Va ) / ( Va + Vb )
+V_pre_ab = ( Va * Vb ) / ( Va + Vb )
 
-#branch B 
-vR = sigma2 / ( 2 * alpha ) * ( exp(2 * alpha * 0.7) - 1 )
-dR = 0
-varR = vR + dR * exp(2 * alpha * 0.7)
-dR = varR
-muR = exp(0.7 * alpha) * (b  - theta0)  + theta0
+Yc = theta * ( 1 - exp( alpha * 1.0 )) + exp( alpha * 1.0 ) * c
+Yab = theta * ( 1 - exp( alpha * 0.3 )) + exp( alpha * 0.3 ) * ab
+Vc = sigma2 / 2 / alpha * ( exp( 2 * alpha * 1.0 ) - 1 ) + exp( alpha * 1.0 ) * 0
+Vab = sigma2 / 2 / alpha * ( exp( 2 * alpha * 0.3) - 1 ) + exp( alpha * 0.3 ) * V_pre_ab
+contrast_abc = Yc - Yab
+VarC_abc = Vc + Vab
+lnl_ab_c = log(exp( alpha * 1.0 + alpha * 0.3 - contrast_abc^2 / 2 / VarC_abc ) / sqrt( 2 * pi * VarC_abc ))
 
-mu_nAB = ( muL * varR + muR * varL ) / ( varL + varR )
-mu_contrast = muL - muR
+lnl_a_b_c = lnl_ab + lnl_ab_c
 
-zL = 1
-zR = 1
-z_nAB = exp( alpha * 0.7 + alpha * 0.7 ) / ( zL * zR ) * exp( -mu_contrast^2 / ( 2 * ( varL + varR ) ) ) / sqrt( 2 * pi ) / sqrt( varL + varR )
-lnl_nAB = log(z_nAB)
+root = ( Yc * Vab + Yc * Vab ) / ( Vc + Vab )
+Vroot = ( Vc * Vab ) / ( Vc + Vab )
 
-#branch AB
-vL = sigma2 / ( 2 * alpha ) * ( exp(2 * alpha * 0.3) - 1 )
-varL = vL + dL * exp(2 * alpha * 0.3)
-dL = varL
-muL = exp(0.3 * alpha) * (mu_nAB  - theta0)  + theta0
-
-#branch C
-dR = 0
-vR = sigma2 / ( 2 * alpha ) * ( exp(2 * alpha * 0.5) - 1 )
-varR = vR + dR * exp(2 * alpha * 0.5)
-dR = varR
-muR = exp(0.5 * alpha) * (c  - theta1)  + theta1
-vR = sigma2 / ( 2 * alpha ) * ( exp(2 * alpha * 0.5) - 1 )
-varR = vR + dR * exp(2 * alpha * 0.5)
-dR = varR
-muR = exp(0.5 * alpha) * (muR  - theta0)  + theta0
-
-
-mu_nABC = ( muL * varR + muR * varL ) / ( varL + varR )
-mu_contrast = muL - muR
-zL = 1
-zR = 1
-z_nABC = exp( alpha * 1.0 + alpha * 1.0 ) / ( zL * zR ) * exp( -mu_contrast^2 / ( 2 * ( varL + varR ) ) ) / sqrt( 2 * pi ) / sqrt( varL + varR )
-lnl_nABC = log(z_nABC) + lnl_nAB
+lnproot = log(exp(( root - theta )^2 / ( 2 * Vroot )) / sqrt( 2 * pi * Vroot ))
+lnl_everything = proot + lnl_a_b_c
