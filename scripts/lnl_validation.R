@@ -11,8 +11,8 @@ sigma2 = 0.1
 
 Ya = theta * ( 1 - exp(alpha * 0.7)) + exp( alpha * 0.7 ) * a
 Yb = theta * ( 1 - exp(alpha * 0.7)) + exp( alpha * 0.7 ) * b
-Va = sigma2 / 2 / alpha * ( exp( 2 * alpha * 0.7) - 1 ) + exp( alpha * 0.7 ) * 0
-Vb = sigma2 / 2 / alpha * ( exp( 2 * alpha * 0.7) - 1 ) + exp( alpha * 0.7 ) * 0
+Va = sigma2 / 2 / alpha * ( exp( 2 * alpha * 0.7) - 1 ) + exp(2 * alpha * 0.7 ) * 0
+Vb = sigma2 / 2 / alpha * ( exp( 2 * alpha * 0.7) - 1 ) + exp(2 * alpha * 0.7 ) * 0
 contrast_ab = Ya - Yb
 VarC_ab = Va + Vb
 lnl_ab = log(exp( alpha * 0.7 + alpha * 0.7 - contrast_ab^2 / 2 / VarC_ab ) / sqrt( 2 * pi * VarC_ab ))
@@ -34,4 +34,4 @@ root = ( Yc * Vab + Yc * Vab ) / ( Vc + Vab )
 Vroot = ( Vc * Vab ) / ( Vc + Vab )
 
 lnproot = log(exp(( root - theta )^2 / ( 2 * Vroot )) / sqrt( 2 * pi * Vroot ))
-lnl_everything = proot + lnl_a_b_c
+lnl_everything = lnproot + lnl_a_b_c

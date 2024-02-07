@@ -1,0 +1,127 @@
+library(tidyverse)
+raker$value <- c(
+  1.04731899428056,
+  1.48160454092422,
+  0.741937344729377,
+  1.28923264827676,
+  1.41098697371026,
+  1.84054963339749,
+  1.17248213723457,
+  1.32707500145992,
+  1.17248213723457,
+  0.78845736036427,
+  1.30833281965018,
+  1.30833281965018,
+  1.44691898293633,
+  1.14740245283754,
+  1.54756250871601,
+  1.04731899428056,
+  1.06471073699243,
+  1.19392246847243,
+  1.63510565918268,
+  0.974559639998131,
+  0.916290731874155,
+  1.14103300455206,
+  0.916290731874155,
+  0.854415328156068,
+  1.33500106673234,
+  1.62924053973028,
+  1.24415459395877,
+  1.68639895357023,
+  1.38629436111989,
+  1.1314021114911,
+  1.48160454092422,
+  1.3609765531356,
+  1.43508452528932,
+  0.955511445027436,
+  2.01089499914473,
+  1.38629436111989,
+  1.54756250871601,
+  1.26694760348732,
+  1.64865862558738,
+  1.22377543162212,
+  1.16315080980568,
+  1.26694760348732,
+  1.10856261952128,
+  1.54756250871601,
+  1.73165554515835,
+  1.79175946922805,
+  0.53062825106217,
+  1.56861591791385,
+  1.86717610851281
+)
+raker$sp <- c(
+  "Haemulon_carbonarium",
+  "Haemulon_macrostomum",
+  "Haemulon_flavolineatum",
+  "Haemulon_plumierii",
+  "Haemulon_sciurus",
+  "Haemulon_flaviguttatum",
+  "Haemulon_maculicauda",
+  "Haemulon_boschmae",
+  "Haemulon_steindachneri_Pacific",
+  "Haemulon_steindachneri_Atlantic",
+  "Haemulon_scudderii",
+  "Haemulon_spB",
+  "Haemulon_sexfasciatum",
+  "Haemulon_bonariense",
+  "Haemulon_parra",
+  "Haemulon_album",
+  "Haemulon_melanurum",
+  "Haemulon_striatum",
+  "Haemulon_vittatum",
+  "Haemulon_aurolineatum"	,
+  "Haemulon_chrysargyreum",
+  "Anisotremus_dovii",
+  "Anisotremus_pacifici",
+  "Anisotremus_caesius",
+  "Anisotremus_virginicus",
+  "Anisotremus_davidsonii",
+  "Anisotremus_interruptus",
+  "Anisotremus_surinamensis",
+  "Anisotremus_scapularis",
+  "Anisotremus_moricandi",
+  "Haemulopsis_axillaris",
+  "Haemulopsis_elongatus",
+  "Haemulopsis_leuciscus",
+  "Haemulopsis_nitidus",
+  "Xenichthys_xantii",
+  "Conodon_nobilis",
+  "Conodon_serrifer",
+  "Pomadasys_branickii",
+  "Pomadasys_crocro",
+  "Orthopristis_chalceus",
+  "Orthopristis_reddingi",
+  "Orthopristis_ruber",
+  "Orthopristis_chrysoptera",
+  "Microlepidotus_brevipinnis",
+  "Microlepidotus_inornatus",
+  "Isacia_conceptionis",
+  "Emellichthyops_atlanticus",
+  "Pomadasys_macracanthus",
+  "Pomadasys_panamensis"
+)
+max(raker$value)
+min(raker$value)
+raker$value <- (raker$value - min(raker$value)) / (max(raker$value) - min(raker$value))
+raker$value <- round(raker$value, 2) *100 + 1
+hist(raker$value, breaks = 100)
+color_cont <- colorRampPalette(c("#44AA99", "#AA4499"))
+color_cont <- color_cont(101)
+for (i in 1:length(raker$sp)) {
+  raker$color_code[i] <- color_cont[raker$value[i]]
+}
+raker_tibble <- as.tibble(raker)
+
+
+pdf("raker_color_gradient.pdf")
+plot(rep(1,100),
+     col=(color_cont),
+     pch=15,
+     cex=5,
+     xaxt='n',
+     yaxt='n',
+     bty="n",
+     ann=FALSE)
+dev.off() 
+
