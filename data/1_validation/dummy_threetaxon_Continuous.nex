@@ -4,8 +4,8 @@ BEGIN DATA;
     DIMENSIONS NTAX=3 NCHAR=1;
     FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=-;
     MATRIX
-        A           0.1234
-        B           0.2345
-        C           0.3456
+        A   3
+        B   6
+        C   9
     ;
 END;
