@@ -1,8 +1,15 @@
 library(ape)
 library(phytools)
-library(knitr)
+library(slouch)
 
-## Postorder function
+###################################################
+#                                                 #
+#               Stateless pruning                 #
+#           !! σ2, α, θ are numeric !!            #   
+#                                                 #
+###################################################
+
+## Postorder function (stateless)
 postorder <- function(node_index, edge, tree, continuousChar,
                       μ, V, log_norm_factor, branch_lengths, σ2, α, θ){
   ntip = length(tree$tip.label)
@@ -116,17 +123,211 @@ logL_pruning <- function(tree, continuousChar, σ2, α, θ){
 }
 
 
+###################################################
+#                                                 #
+#            State-dependent pruning              #
+# !! σ2, α, θ are vectors of length = #states !!  #   
+#                                                 #
+###################################################
+
+sd_postorder <- function(node_index, edge, tree, continuousChar,
+                      μ, V, log_norm_factor, subedges_lengths, σ2, α, θ){
+  ntip = length(tree$tip.label)
+
+  # if is internal node
+  if (node_index > ntip){
+    
+    left_edge  = which(edge[,1] == node_index)[1] # index of left child edge
+    right_edge = which(edge[,1] == node_index)[2] # index of right child edge
+    left = edge[left_edge,2] # index of left child node
+    right = edge[right_edge,2] # index of right child node
+    
+    output_left <- sd_postorder(left, edge, tree, continuousChar,
+                             μ, V, log_norm_factor, subedges_lengths, σ2, α, θ)
+    μ <- output_left[[1]]
+    V <- output_left[[2]]
+    log_norm_factor <- output_left[[3]]
+    
+    output_right <- sd_postorder(right, edge, tree, continuousChar,
+                              μ, V, log_norm_factor, subedges_lengths, σ2, α, θ)
+    μ <- output_right[[1]]
+    V <- output_right[[2]]
+    log_norm_factor <- output_right[[3]]
+    
+    
+    sub_bl_left = subedges_lengths[left_edge][[1]] # all subedges of left child edge
+    sub_bl_right = subedges_lengths[right_edge][[1]] # all subedges of right child edge
+    
+    # for the sake of readability, computation of variance, mean, and log_nf are done in separate loops
+    # 1) variance of the normal variable: this branch (v_left) and the subtree (V[left])
+    ## Is 'delta_left* exp(2.0 * α * bl_left)' added in each sub-edge?
+    
+    delta_left = V[left]
+    v_left = 0 # initialise v_left
+    for (i in rev(1:length(sub_bl_left))){
+      state <- as.integer(names(sub_bl_left[i]))
+      v_left = σ2[state][[1]]/(2*α[state][[1]]) *expm1(2.0*α[state][[1]]
+                                                       *sub_bl_left[i][[1]])
+      delta_left = v_left + delta_left * exp(2.0 * α[state][[1]] * sub_bl_left[i][[1]])
+    }
+    
+    delta_right = V[right]
+    v_right = 0 # initialise v_right
+    for (i in rev(1:length(sub_bl_right))){
+      state <- as.integer(names(sub_bl_right[i]))
+      v_right = σ2[state][[1]]/(2*α[state][[1]]) *expm1(2.0*α[state][[1]]*sub_bl_right[i][[1]])
+      delta_right = v_right + delta_right * exp(2.0 * α[state][[1]] * sub_bl_right[i][[1]])
+    }
+    
+    var_left = delta_left
+    var_right = delta_right
+    
+    # 2) mean of the normal variable
+    mean_left = μ[left]
+    for (i in rev(1:length(sub_bl_left))){
+      state <- as.integer(names(sub_bl_left[i]))
+      mean_left = exp(α[state][[1]]*sub_bl_left[i][[1]])*(mean_left - θ[state][[1]]) + θ[state][[1]]
+    }
+    
+    mean_right = μ[right]
+    for (i in rev(1:length(sub_bl_right))){
+      state <- as.integer(names(sub_bl_right[i]))
+      mean_right = exp(α[state][[1]]*sub_bl_right[i][[1]])*(mean_right - θ[state][[1]]) + θ[state][[1]]
+    }
+    
+    
+    ## compute the mean and variance of the node
+    mean_ancestor = (mean_left * var_right + mean_right * var_left) / (var_left + var_right)
+    μ[node_index] = mean_ancestor
+    var_node = (var_left * var_right) / (var_left + var_right)
+    V[node_index] = var_node
+    
+    ## compute the normalizing factor, the left-hand side of the pdf of the normal variable
+    ## this is the problem. I think in RevBayes we compute log_nf with the oldest sub-edge only
+    log_nf_left = 0
+    for (i in rev(1:length(sub_bl_left))){
+      state <- as.integer(names(sub_bl_left[i]))
+      log_nf_left = log_nf_left + sub_bl_left[i][[1]] * α[state]
+    }
+    
+    log_nf_right = 0
+    for (i in rev(1:length(sub_bl_right))){
+      state <- as.integer(names(sub_bl_right[i]))
+      log_nf_right = log_nf_right + sub_bl_right[i][[1]] * α[state]
+    }
+    
+    contrast = mean_left - mean_right
+    a = -(contrast*contrast / (2*(var_left+var_right)))
+    b = log(2*pi*(var_left+var_right))/2.0
+    #b = log(2*pi)/2.0 + log(var_left+var_right)/2.0
+    log_nf = log_nf_left + log_nf_right + a - b
+    log_norm_factor[node_index] = log_nf
+    
+    return(list(μ, V, log_norm_factor))
+  }
+  
+  
+  # if is tip
+  else{
+    species = tree$tip.label[node_index]
+    
+    μ[node_index] = as.numeric(continuousChar[which(names(continuousChar) == species)][[1]])
+    V[node_index] = 0.0 ## if there is no observation error
+    
+    return(list(μ, V, log_norm_factor))
+  }
+}
+
+sd_logL_pruning <- function(tree, continuousChar, σ2, α, θ){
+  ntip = length(tree$tip.label) # number of tips
+  edge = tree$edge # equals tree[:edge] in Julia
+  n_edges = length(edge[,1]) # number of edges
+  max_node_index = max(tree$edge) # total number of nodes
+  
+  V = numeric(max_node_index)
+  μ = numeric(max_node_index)
+  log_norm_factor = numeric(max_node_index)
+  
+  subedges_lengths = tree$maps
+  
+  root_index = ntip + 1
+  
+  output <- sd_postorder(root_index, edge, tree, continuousChar,
+                         μ, V, log_norm_factor, subedges_lengths, σ2, α, θ)
+  μ <- output[[1]]
+  V <- output[[2]]
+  log_norm_factor <- output[[3]]
+  
+  ## assume root value equal to theta
+  μ_root = μ[root_index]
+  v_root = V[root_index]
+  left_edge_from_root <- which(edge[,1] == ntip+1)[1] # obtain left child edge index of root node
+  left_subedges_from_root <- subedges_lengths[left_edge_from_root] # obtain sub-edge lengths
+  root_state = as.integer(names(tail(left_subedges_from_root)[[1]])) # obtain root state, assuming it equals last state at left child edge
+  lnl = dnorm(θ[root_state], mean = μ_root, sd = sqrt(v_root), log = TRUE)
+  
+  ## add norm factor
+  for (log_nf in log_norm_factor){
+    lnl = lnl + log_nf
+  }
+  return(lnl)
+}
 
 
-# reading in tree in simmap format
+###################################################
+#                                                 #
+#                  Stateless vcv                  #
+#                                                 #   
+#                                                 #
+###################################################
+logL_vcv <- function(){}
+
+###################################################
+#                                                 #
+#               State-dependent vcv               #
+#                                                 #   
+#                                                 #
+###################################################
+sd_logL_vcv <- function(){}
+
+
+###################################################
+#                                                 #
+#                     Testing...                  #   
+#                                                 #
+###################################################
+
+# test with slouch data set
+# compare stateless_vcv and stateless_pruning
+data("artiodactyla")
+data("neocortex")
+
+# convert continuous data to read.nexus.data() format
+brain <- list()
+for (i in 1:length(neocortex$brain_mass_g_log_mean)){
+  sp <- neocortex$species[i]
+  brain[sp] <- list(neocortex$brain_mass_g_log_mean[i])
+}
+
+lnl_brain <- logL_pruning(artiodactyla, brain, σ2 = 0.1, α = 0.1, θ = 5.04)
+
+
+# test with 3-taxon dummy data
+# compare stateless_pruning and state_dependent_pruning
 tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap.tre",format="phylip",version=1)
 
-#reading in continuous character (somehow it recognise 0.1234 as 6 characters so I read in manually)
+#reading in continuous character (read.nexus.data() recognises 0.1234 as 6 characters)
 continuousChar <- read.nexus.data("data/1_validation/dummy_threetaxon_Continuous.nex")
+
 
 logL_pruning(tree, continuousChar,
              σ2 = 2,
              α = 1,
              θ = 6)
+
+sd_logL_pruning(tree, continuousChar,
+             σ2 = c(2,2),
+             α = c(1,1),
+             θ = c(6,6))
 
 
