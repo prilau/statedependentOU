@@ -1,4 +1,5 @@
 library(ape)
+library(pracma)
 library(phytools)
 library(slouch)
 
@@ -280,7 +281,47 @@ sd_logL_pruning <- function(tree, continuousChar, σ2, α, θ){
 #                                                 #   
 #                                                 #
 ###################################################
-logL_vcv <- function(){}
+logL_vcv <- function(tree, σ2, α, θ){
+  ntip <- length(tree$tip.label)
+  mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
+  times <- ape::node.depth.edgelength(tree) # get time at each node from root
+  ta <- matrix(times[mrca1], nrow=ntip, dimnames = list(tree$tip.label, tree$tip.label)) # get time of divergence for each pair of tips
+  T.term <- times[1:ntip] # get time at tips
+  tia <- times[1:ntip] - ta
+  tja <- t(tia)
+  tij <- tja + tia # distance in time unit between two tips
+  
+  vy = σ2 / (2*α)
+  
+  #V = vy * (1 - exp(-2 * α * ta)) * exp(-α * tij)
+  V = vy * -1 * expm1(-2 * α * ta) * exp(-α * tij)
+  
+  X = matrix(1, ntip)
+  
+  C = chol(V) # upper triangular matrix
+  L = t(C) # lower triangular matrix
+  log_det_V = 0
+  for (i in 1:ntip){
+    log_det_V = log_det_V + log(L[i,i])
+  }
+  log_det_V = log_det_V *2.0 # equals to julia implementation to 12 sig. fig.
+  
+  y = NULL
+  for (species in tree$tip.label){
+    y[species] = as.numeric(continuousChar[species])
+  }
+  
+  r = solve(L) %*% y - solve(L) %*% X * θ # what does de-correlated residuals mean?
+  
+  # res = - (n/2) * log(2*pi) - 0.5 * log_det_V - 0.5 * dot(r, r)
+  #     = exp(-n/2)^(2*pi) * exp(-0.5)^det_V * exp(-0.5)^dot(r, r) ?
+  res = 0.0
+  res = res - (ntip/2) * log(2*pi)
+  res = res - 0.5 * log_det_V
+  res = res - 0.5 * dot(r, r) # is it dot product? what is dot product of r?
+  
+  return(res)
+}
 
 ###################################################
 #                                                 #
@@ -309,8 +350,8 @@ for (i in 1:length(neocortex$brain_mass_g_log_mean)){
   brain[sp] <- list(neocortex$brain_mass_g_log_mean[i])
 }
 
-lnl_brain <- logL_pruning(artiodactyla, brain, σ2 = 0.1, α = 0.1, θ = 5.04)
-
+lnl_brain_pruning <- logL_pruning(artiodactyla, brain, σ2 = 0.1, α = 0.1, θ = 5.04)
+lnl_brain_vcv <- logL_vcv(artiodactyla, σ2 = 0.1, α = 0.1, θ = 5.04)
 
 # test with 3-taxon dummy data
 # compare stateless_pruning and state_dependent_pruning
