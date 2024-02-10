@@ -16,10 +16,18 @@ postorder <- function(node_index, edge, tree, continuousChar,
     left = edge[left_edge,2] # index of left child node
     right = edge[right_edge,2] # index of right child node
     
-    postorder(left, edge, tree, continuousChar,
-              μ, V, log_norm_factor, branch_lengths, σ2, α, θ)
-    postorder(right, edge, tree, continuousChar,
-              μ, V, log_norm_factor, branch_lengths, σ2, α, θ)
+    output_left <- postorder(left, edge, tree, continuousChar,
+                         μ, V, log_norm_factor, branch_lengths, σ2, α, θ)
+    μ <- output_left[[1]]
+    V <- output_left[[2]]
+    log_norm_factor <- output_left[[3]]
+    
+    output_right <- postorder(right, edge, tree, continuousChar,
+                             μ, V, log_norm_factor, branch_lengths, σ2, α, θ)
+    μ <- output_right[[1]]
+    V <- output_right[[2]]
+    log_norm_factor <- output_right[[3]]
+    
     
     bl_left = branch_lengths[left_edge] # all branch of left child edge
     bl_right = branch_lengths[right_edge] # all branch of right child edge
@@ -43,7 +51,6 @@ postorder <- function(node_index, edge, tree, continuousChar,
     V[node_index] = var_node
     
     ## compute the normalizing factor, the left-hand side of the pdf of the normal variable
-    ## this is the problem. I think in RevBayes we compute log_nf with the oldest sub-edge only
     log_nf_left = bl_left * α
     log_nf_right = bl_right * α
 
@@ -53,6 +60,9 @@ postorder <- function(node_index, edge, tree, continuousChar,
     #b = log(2*pi)/2.0 + log(var_left+var_right)/2.0
     log_nf = log_nf_left + log_nf_right + a - b
     log_norm_factor[node_index] = log_nf
+    
+    
+    return(list(μ, V, log_norm_factor))
   }
   
   
@@ -64,6 +74,8 @@ postorder <- function(node_index, edge, tree, continuousChar,
     
     μ[node_index] = as.numeric(continuousChar[which(names(continuousChar) == species)][[1]])
     V[node_index] = 0.0 ## if there is no observation error
+    
+    return(list(μ, V, log_norm_factor))
   }
 }
 
@@ -82,13 +94,19 @@ logL_pruning <- function(tree, continuousChar, σ2, α, θ){
   
   root_index = ntip + 1
   
-  postorder(root_index, edge, tree, continuousChar,
-            μ, V, log_norm_factor, branch_lengths, σ2, α, θ)
+  
+  
+  
+  output <- postorder(root_index, edge, tree, continuousChar,
+                      μ, V, log_norm_factor, branch_lengths, σ2, α, θ)
+  μ <- output[[1]]
+  V <- output[[2]]
+  log_norm_factor <- output[[3]]
   
   ## assume root value equal to theta
-  μ = μ[root_index]
-  v = V[root_index]
-  lnl = dnorm(θ, mean = μ, sd = sqrt(v), log = TRUE) # are \theta and \mu in correct positions?
+  μ_root = μ[root_index]
+  v_root = V[root_index]
+  lnl = dnorm(θ, mean = μ_root, sd = sqrt(v_root), log = TRUE) # are \theta and \mu in correct positions?
   
   ## add norm factor
   for (log_nf in log_norm_factor){
@@ -108,7 +126,7 @@ continuousChar <- read.nexus.data("data/1_validation/dummy_threetaxon_Continuous
 
 logL_pruning(tree, continuousChar,
              σ2 = 2,
-             α = 1.5,
-             θ = 4)
+             α = 1,
+             θ = 6)
 
 
