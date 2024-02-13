@@ -281,7 +281,7 @@ sd_logL_pruning <- function(tree, continuousChar, σ2, α, θ){
 #                                                 #   
 #                                                 #
 ###################################################
-logL_vcv <- function(tree, σ2, α, θ){
+logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   ntip <- length(tree$tip.label)
   mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
   times <- ape::node.depth.edgelength(tree) # get time at each node from root
@@ -316,9 +316,9 @@ logL_vcv <- function(tree, σ2, α, θ){
   # res = - (n/2) * log(2*pi) - 0.5 * log_det_V - 0.5 * dot(r, r)
   #     = exp(-n/2)^(2*pi) * exp(-0.5)^det_V * exp(-0.5)^dot(r, r) ?
   res = 0.0
-  res = res - (ntip/2) * log(2*pi)
+  res = res - 0.5 * ntip * log(2*pi)
   res = res - 0.5 * log_det_V
-  res = res - 0.5 * dot(r, r) # is it dot product? what is dot product of r?
+  res = res - 0.5 * dot(r, r) # what is r and what is  dot product of r?
   
   return(res)
 }
@@ -329,7 +329,105 @@ logL_vcv <- function(tree, σ2, α, θ){
 #                                                 #   
 #                                                 #
 ###################################################
-sd_logL_vcv <- function(){}
+
+# find parent node by providing child node
+parentNode <- function(tree, x){
+  m <- which(tree$edge[, 2] == x)
+  return(tree$edge[m, 1])
+}
+
+# find nodes along a lineage towards root node by providing initial child (presumably tip) node
+nodesAlongLineage <- function(tree, x){
+  k <- x
+  N <- length(tree$tip.label)
+  while(x != N + 1){
+    k <- c(k, parentNode(tree, x))
+    x <- tail(k, n = 1)
+  }
+  return(k)
+}
+
+lineage.constructor <- function(tree, e, regimes, states){
+  nodes <- nodesAlongLineage(tree, e)
+  min_age <- min(ape::node.depth.edgelength(tree)[nodes]) # root age always equal zero?
+
+  ## Simmap splits up each edge into sub-edges, depending on the split. So, we use edges instead of nodes, and introduce sub-edges
+  edges <- which(tree$edge[,2] %in% nodes) # from tip to root
+  subedges <- unlist(lapply(edges, function(i) tree$maps[[i]])) # somehow from root to tip
+  state_changes <- rev(names(subedges)) # from tip to root
+  
+  which.state <- lapply(states, function(x) {res <- match(state_changes, x); res[is.na(res)] <- 0; return(res)})
+  # Problem. simmap does not provide root state. Assuming root state is equal to the oldest branch state
+  root <- lapply(which.state, function(e) tail(e, n= 1))
+  which.state <- lapply(seq_along(states), function(x) c(which.state[[x]], root[[x]])) # add root state to the state sequence
+  
+  timeflip <- cumsum(c(min_age, unname(subedges)))
+  times <- rev(timeflip)
+  
+  # save the regimes in this lineage
+  states_along_lineage <- names(subedges) # from root to tip
+  
+  #stop()
+  names(which.state) <- states
+  
+  t_end <- tail(times, n = -1) ## Time from tip to end of segment(s)
+  t_begin <- head(times, n = -1) ## Time from tip to beginning of segment(s)
+  time_at_states <- c(t_end - t_begin, min_age) # negative
+  
+  return(list(nodes = nodes, 
+              times = times,
+              t_end = t_end,
+              t_begin = t_begin,
+              time_at_states = time_at_states,
+              which.state = which.state,
+              states_along_lineage = states_along_lineage))
+}
+
+sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
+  ntip <- length(tree$tip.label)
+  mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
+  times <- ape::node.depth.edgelength(tree) # get time at each node from root
+  ta <- matrix(times[mrca1], nrow=ntip, dimnames = list(tree$tip.label, tree$tip.label)) # get time of divergence for each pair of tips
+  T.term <- times[1:ntip] # get time at tips
+  tia <- times[1:ntip] - ta
+  tja <- t(tia)
+  tij <- tja + tia # distance in time unit between two tips
+  
+  #states = c(1:length(σ2))
+  #vy = σ2[states] / (2*α[states])
+  vy = σ2 / (2*α)
+
+  #V = vy * (1 - exp(-2 * α * ta)) * exp(-α * tij)
+  V = vy * -1 * expm1(-2 * α * ta) * exp(-α * tij)
+  
+  X = matrix(1, ntip)
+  
+  ## Why do we decompose it but not directly use V?
+  C = chol(V) # upper triangular matrix
+  L = t(C) # lower triangular matrix
+  log_det_V = 0
+  for (i in 1:ntip){
+    log_det_V = log_det_V + log(L[i,i])
+  }
+  log_det_V = log_det_V *2.0 # equals to julia implementation to 12 sig. fig.
+  
+  y = NULL
+  for (species in tree$tip.label){
+    y[species] = as.numeric(continuousChar[species])
+  }
+  
+  # inverse of L
+  r = solve(L) %*% y - solve(L) %*% X * θ # what does de-correlated residuals mean?
+  
+  # res = - (n/2) * log(2*pi) - 0.5 * log_det_V - 0.5 * dot(r, r)
+  #     = exp(-n/2)^(2*pi) * exp(-0.5)^det_V * exp(-0.5)^dot(r, r) ?
+  res = 0.0
+  res = res - (ntip/2) * log(2*pi)
+  res = res - 0.5 * log_det_V
+  res = res - 0.5 * dot(r, r) # is it dot product? what is dot product of r?
+  
+  return(res)
+}
 
 
 ###################################################
@@ -355,7 +453,8 @@ lnl_brain_vcv <- logL_vcv(artiodactyla, σ2 = 0.1, α = 0.1, θ = 5.04)
 
 # test with 3-taxon dummy data
 # compare stateless_pruning and state_dependent_pruning
-tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap.tre",format="phylip",version=1)
+tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap.tre",
+                    format="phylip",version=1)
 
 #reading in continuous character (read.nexus.data() recognises 0.1234 as 6 characters)
 continuousChar <- read.nexus.data("data/1_validation/dummy_threetaxon_Continuous.nex")
@@ -372,3 +471,10 @@ sd_logL_pruning(tree, continuousChar,
              θ = c(6,6))
 
 
+###################################################
+#                                                 #
+#                   Improvements                  #   
+#                                                 #
+###################################################
+
+# states can be 0, but R index starts as 1 (incorporate the situation if state 0 is present)
