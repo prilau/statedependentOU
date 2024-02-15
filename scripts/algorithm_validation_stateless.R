@@ -2,6 +2,8 @@ library(ape)
 library(pracma)
 library(phytools)
 library(slouch)
+library(tibble) 
+library(tidyverse)
 
 ###################################################
 #                                                 #
@@ -347,41 +349,56 @@ nodesAlongLineage <- function(tree, x){
   return(k)
 }
 
-lineage.constructor <- function(tree, e, regimes, states){
+lineage.constructor <- function(tree, e){
   nodes <- nodesAlongLineage(tree, e)
-  min_age <- min(ape::node.depth.edgelength(tree)[nodes]) # root age always equal zero?
-
+  
   ## Simmap splits up each edge into sub-edges, depending on the split. So, we use edges instead of nodes, and introduce sub-edges
   edges <- which(tree$edge[,2] %in% nodes) # from tip to root
-  subedges <- unlist(lapply(edges, function(i) tree$maps[[i]])) # somehow from root to tip
-  state_changes <- rev(names(subedges)) # from tip to root
+  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
+
+  #all_states <- colnames(tree$mapped.edge)
+
+  state_changes <- names(subedge_lengths) # from tip to root
+  state_changes <- c(state_changes, state_changes[length(state_changes)]) # add root state, assuming root state equals the state of the closest subedge
   
-  which.state <- lapply(states, function(x) {res <- match(state_changes, x); res[is.na(res)] <- 0; return(res)})
-  # Problem. simmap does not provide root state. Assuming root state is equal to the oldest branch state
-  root <- lapply(which.state, function(e) tail(e, n= 1))
-  which.state <- lapply(seq_along(states), function(x) c(which.state[[x]], root[[x]])) # add root state to the state sequence
+  #lineage$state_indicator <- lapply(all_states, function(x) {res <- match(lineage$state_changes, x); res[is.na(res)] <- 0; return(res)})
+  #names(lineage$state_indicator) <- all_states
   
-  timeflip <- cumsum(c(min_age, unname(subedges)))
-  times <- rev(timeflip)
+  # recording time-related numbers of each subedge (root is a subedge with length = 0)
+  time_point <- cumsum(c(0, unname(subedge_lengths))) # tip
+  time_begin <- c(tail(time_point, n = -1), tail(time_point, n = 1)) ## older end of subedge
+  time_end <- time_point ## younger end of subedge
+  time_span <- c(unname(subedge_lengths), 0) # time at root and each subedge
   
-  # save the regimes in this lineage
-  states_along_lineage <- names(subedges) # from root to tip
   
-  #stop()
-  names(which.state) <- states
-  
-  t_end <- tail(times, n = -1) ## Time from tip to end of segment(s)
-  t_begin <- head(times, n = -1) ## Time from tip to beginning of segment(s)
-  time_at_states <- c(t_end - t_begin, min_age) # negative
-  
-  return(list(nodes = nodes, 
-              times = times,
-              t_end = t_end,
-              t_begin = t_begin,
-              time_at_states = time_at_states,
-              which.state = which.state,
-              states_along_lineage = states_along_lineage))
+  return(tibble(state_changes = state_changes,
+                time_begin = time_begin,
+                time_end = time_end,
+                time_span = time_span))
 }
+
+# not yet finished - weight matrix function
+weight_matrix.constructor <- function(named_alpha, lineage){
+  lineage[["alpha"]] = named_alpha[lineage[["state_changes"]]]
+  lineage_with_alpha <- lineage %>% mutate(exp_1 = exp(-alpha * time_begin) - exp(-alpha * time_end),
+                     exp_2 = alpha * lineage$time_span) # did i mix up time_begin and time_end?
+  weight_ancestral = lineage_with_alpha %>%
+    summarise(ancestral = exp(-1 * sum(exp_2))) %>% 
+    unlist()
+  
+  weights <- lineage_with_alpha %>%
+    group_by(state_changes) %>% 
+    summarise(weight = sum(exp_1) * exp(-1 * sum(exp_2)))
+  weight_states <- weights$weight
+  names(weight_states) <- weights$state_changes
+
+  weight_matrix <- as.matrix(c(weight_ancestral, weight_states), nrow = 1)
+  #weight_matrix = weight_matrix / sum(weight_matrix)
+  
+  return(weight_matrix)
+}
+
+
 
 sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   ntip <- length(tree$tip.label)
@@ -396,7 +413,7 @@ sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   #states = c(1:length(σ2))
   #vy = σ2[states] / (2*α[states])
   vy = σ2 / (2*α)
-
+  
   #V = vy * (1 - exp(-2 * α * ta)) * exp(-α * tij)
   V = vy * -1 * expm1(-2 * α * ta) * exp(-α * tij)
   
@@ -428,6 +445,32 @@ sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   
   return(res)
 }
+
+
+
+
+#weights_regimes <- function(a, lineage) {
+#  #nt <- lineage$nodes_time
+#  res <- weights_segments(a, lineage) ## Rcpp wrapper, equivalent to above commented out code
+#  w <- vapply(lineage$which.regimes, function(e) sum(e*res), FUN.VALUE = 0) ## Sum coefficients for which the respective regime is equal
+#  return(w)
+#}
+#
+#weight.matrix <- function(phy, a, lineages){
+#  if(a > 300000000000) a <- 300000000000
+#  res <- t(vapply(lineages, function(x) weights_regimes(a, x), 
+#                  FUN.VALUE = numeric(length(lineages[[1]]$which.regimes))) ## Specify type of output
+#  )
+#  
+#  rownames(res) <- phy$tip.label
+#  return(res)
+#}
+
+
+
+
+
+
 
 
 ###################################################
