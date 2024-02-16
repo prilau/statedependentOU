@@ -378,28 +378,49 @@ lineage.constructor <- function(tree, e){
 }
 
 # not yet finished - weight matrix function
-weight_matrix.constructor <- function(named_alpha, lineage){
+weights.lineage <- function(tree, named_alpha, e){
+  lineage <- lineage.constructor(tree, e)
   lineage[["alpha"]] = named_alpha[lineage[["state_changes"]]]
-  lineage_with_alpha <- lineage %>% mutate(exp_1 = exp(-alpha * time_begin) - exp(-alpha * time_end),
+  lineage <- lineage %>% mutate(exp_1 = exp(-alpha * time_begin) - exp(-alpha * time_end),
                      exp_2 = alpha * lineage$time_span) # did i mix up time_begin and time_end?
-  weight_ancestral = lineage_with_alpha %>%
+  weight_ancestral = lineage %>%
     summarise(ancestral = exp(-1 * sum(exp_2))) %>% 
-    unlist()
+    unlist() %>% 
+    unname()
   
-  weights <- lineage_with_alpha %>%
+  weights <- lineage %>%
     group_by(state_changes) %>% 
     summarise(weight = sum(exp_1) * exp(-1 * sum(exp_2)))
   weight_states <- weights$weight
   names(weight_states) <- weights$state_changes
 
-  weight_matrix <- as.matrix(c(weight_ancestral, weight_states), nrow = 1)
   #weight_matrix = weight_matrix / sum(weight_matrix)
-  
+  weight_matrix <- matrix(nrow = length(named_alpha) + 1)
+  rownames(weight_matrix) <- c("ancestral", names(named_alpha))
+  for (rowname in rownames(weight_matrix)){
+    if (rowname %in% weights$state_changes){
+      weight_matrix[rowname,] = weights$weight[which(weights$state_changes == rowname)]
+    }
+    else {
+      weight_matrix[rowname,] = 0
+    }
+  }
+  weight_matrix[1] <- weight_ancestral
   return(weight_matrix)
 }
 
-
-
+weightMatrix.constructor <- function(tree, named_alpha){
+  ntip = length(tree$tip.label)
+  weight_matrix = matrix(nrow = ntip, ncol = length(named_alpha) + 1)
+  rownames(weight_matrix) <- c(1:ntip)
+  colnames(weight_matrix) <- c("anc", names(named_alpha))
+  for (i in 1:ntip){
+    weight_matrix[i,] <- weights.lineage(tree, named_alpha, i)
+  }
+  return(weight_matrix)
+}
+  
+# α has to be named
 sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   ntip <- length(tree$tip.label)
   mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
@@ -410,6 +431,9 @@ sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   tja <- t(tia)
   tij <- tja + tia # distance in time unit between two tips
   
+  
+  
+  
   #states = c(1:length(σ2))
   #vy = σ2[states] / (2*α[states])
   vy = σ2 / (2*α)
@@ -417,7 +441,7 @@ sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   #V = vy * (1 - exp(-2 * α * ta)) * exp(-α * tij)
   V = vy * -1 * expm1(-2 * α * ta) * exp(-α * tij)
   
-  X = matrix(1, ntip)
+  W = weightMatrix.constructor(tree, α)
   
   ## Why do we decompose it but not directly use V?
   C = chol(V) # upper triangular matrix
@@ -434,7 +458,7 @@ sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   }
   
   # inverse of L
-  r = solve(L) %*% y - solve(L) %*% X * θ # what does de-correlated residuals mean?
+  r = solve(L) %*% y - solve(L) %*% W * θ # what does de-correlated residuals mean?
   
   # res = - (n/2) * log(2*pi) - 0.5 * log_det_V - 0.5 * dot(r, r)
   #     = exp(-n/2)^(2*pi) * exp(-0.5)^det_V * exp(-0.5)^dot(r, r) ?
