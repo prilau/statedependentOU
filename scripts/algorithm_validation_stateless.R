@@ -349,6 +349,7 @@ nodesAlongLineage <- function(tree, x){
   return(k)
 }
 
+# find subedges of a lineage
 lineage.constructor <- function(tree, e){
   nodes <- nodesAlongLineage(tree, e)
   
@@ -381,22 +382,27 @@ lineage.constructor <- function(tree, e){
 weights.lineage <- function(tree, named_alpha, e){
   lineage <- lineage.constructor(tree, e)
   lineage[["alpha"]] = named_alpha[lineage[["state_changes"]]]
-  lineage <- lineage %>% mutate(exp_1 = exp(-alpha * time_begin) - exp(-alpha * time_end),
-                     exp_2 = alpha * lineage$time_span) # did i mix up time_begin and time_end?
+  lineage <- lineage %>% mutate(exp_1 = exp(-alpha * time_end) - exp(-alpha * time_begin),
+                     exp_2 = alpha * lineage$time_span)
+  ancestral_state <- lineage$state_changes[length(lineage$state_changes)]
   weight_ancestral = lineage %>%
     summarise(ancestral = exp(-1 * sum(exp_2))) %>% 
-    unlist() %>% 
-    unname()
+    unlist()
+  names(weight_ancestral) <- ancestral_state
   
   weights <- lineage %>%
     group_by(state_changes) %>% 
     summarise(weight = sum(exp_1) * exp(-1 * sum(exp_2)))
-  weight_states <- weights$weight
-  names(weight_states) <- weights$state_changes
-
+  weights$weight[which(weights$state_changes == ancestral_state)] = weights$weight[which(weights$state_changes == ancestral_state)] + weight_ancestral
+  
+  
+  #weight_states <- weights$weight
+  #names(weight_states) <- weights$state_changes
+  #weight_states[which(names(weight_states) == ancestral_state)] = weight_states[which(names(weight_states) == ancestral_state)] + weight_ancestral
+  
   #weight_matrix = weight_matrix / sum(weight_matrix)
-  weight_matrix <- matrix(nrow = length(named_alpha) + 1)
-  rownames(weight_matrix) <- c("ancestral", names(named_alpha))
+  weight_matrix <- matrix(nrow = length(named_alpha))
+  rownames(weight_matrix) <- c(names(named_alpha))
   for (rowname in rownames(weight_matrix)){
     if (rowname %in% weights$state_changes){
       weight_matrix[rowname,] = weights$weight[which(weights$state_changes == rowname)]
@@ -405,52 +411,131 @@ weights.lineage <- function(tree, named_alpha, e){
       weight_matrix[rowname,] = 0
     }
   }
-  weight_matrix[1] <- weight_ancestral
+  
+  # normalise the weights so that sum(weights) == 1
+  weight_matrix = weight_matrix/sum(weight_matrix)
+  
   return(weight_matrix)
 }
 
-weightMatrix.constructor <- function(tree, named_alpha){
+# combine to form weight matrix
+weight.matrix <- function(tree, named_alpha){
   ntip = length(tree$tip.label)
-  weight_matrix = matrix(nrow = ntip, ncol = length(named_alpha) + 1)
+  weight_matrix = matrix(nrow = ntip, ncol = length(named_alpha))
   rownames(weight_matrix) <- c(1:ntip)
-  colnames(weight_matrix) <- c("anc", names(named_alpha))
+  colnames(weight_matrix) <- c(names(named_alpha))
   for (i in 1:ntip){
     weight_matrix[i,] <- weights.lineage(tree, named_alpha, i)
   }
   return(weight_matrix)
 }
+
+
+
+nodesBeforeDiverge <- function(tree, tip1, tip2){
+  k <- ape::mrca(tree)[tip1, tip2]
+  x <- k
+  common_nodes <- c()
   
-# α has to be named
-sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
+  N <- length(tree$tip.label)
+  while(x != N + 1){
+    k <- c(x, parentNode(tree, k))
+    x <- tail(k, n = 1)
+  }
+  return(k)
+}
+
+v.sum2 <- function(tree, tip, named_alpha){
+  nodes <- nodesAlongLineage(tree, tip)
+  
+  #nodes1 <- output[[1]]
+  #nodes_common <- output[[3]]
+  
+  edges <- which(tree$edge[,2] %in% nodes) # from tip to root
+  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
+  
+  subedge_lengths <- tibble(time_span = subedge_lengths,
+                            alpha = named_alpha[names(subedge_lengths)])
+  #edges_common <- which(tree$edge[,2] %in% nodes_common) # from tip to root
+  #subedge_lengths_common <- rev(unlist(lapply(edges_common, function(i) tree$maps[[i]])))
+  
+  
+  sum2 <- subedge_lengths %>% 
+    mutate(sum2 = time_span * alpha) %>% 
+    reframe(sum = sum(sum2)) %>% 
+    unlist() %>% 
+    unname()
+    
+  return(sum2)
+}
+
+v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
+  nodes <- nodesBeforeDiverge(tree, tip1, tip2)
+  edges <- which(tree$edge[,2] %in% nodes) # from tip to root
+  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
+  
+  age_root0tip1 <- ape::node.depth.edgelength(tree)
+  mcra_time <- max(age_root0tip1) - age_root0tip1[nodes[1]]
+  
+  time_point <- cumsum(c(mcra_time, unname(subedge_lengths))) # tip
+  tb <- c(tail(time_point, n = -1)) ## older end of subedge
+  te <- c(head(time_point, n = -1)) ## younger end of subedge
+  times <- tibble(time_span = unname(subedge_lengths),
+                  time_begin = tb,
+                  time_end = te,
+                  alpha = named_alpha[names(subedge_lengths)],
+                  sigma2 = named_sigma2[names(subedge_lengths)])
+  sum1 <- times %>% 
+    mutate(exp = sigma2 / (2 * alpha) * (exp(2 * alpha * time_begin) - exp(2 * alpha * time_end))) %>% 
+    reframe(sum1 = sum(exp)) %>% 
+    unlist() %>% 
+    unname()
+}
+
+vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
+  sum2_tip1 <- v.sum2(tree, tip1, named_alpha)
+  sum2_tip2 <- v.sum2(tree, tip2, named_alpha)
+  exp2 <- exp(-1 * (sum2_tip1 + sum2_tip2))
+  
+  sum1 <- v.sum1(tree, tip1, tip2, named_alpha, named_sigma2)
+  
+  v_ij <- exp2 * sum1
+  
+  return(v_ij)
+}
+
+
+## issues:
+## values should be non-negative!!
+##
+vcv.matrix <- function(tree, named_alpha, named_sigma2){
   ntip <- length(tree$tip.label)
-  mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
-  times <- ape::node.depth.edgelength(tree) # get time at each node from root
-  ta <- matrix(times[mrca1], nrow=ntip, dimnames = list(tree$tip.label, tree$tip.label)) # get time of divergence for each pair of tips
-  T.term <- times[1:ntip] # get time at tips
-  tia <- times[1:ntip] - ta
-  tja <- t(tia)
-  tij <- tja + tia # distance in time unit between two tips
+  V <- matrix(nrow = ntip, ncol = ntip)
+  j = ntip
+  while (j != 0){
+    for (i in 1:ntip){
+      V[i,j] <- vcv.pairwise(tree, named_alpha, named_sigma2, i, j)
+      V[j,i] <- V[i,j]
+    }
+    j = j-1
+  }
+  return(V)
+}
+
+
+# α has to be named
+sd_logL_vcv <- function(tree, continuousChar, named_alpha, named_sigma2, named_theta){
+  V = vcv.matrix(tree, named_alpha, named_sigma2)
   
+  W = weight.matrix(tree, named_alpha)
   
-  
-  
-  #states = c(1:length(σ2))
-  #vy = σ2[states] / (2*α[states])
-  vy = σ2 / (2*α)
-  
-  #V = vy * (1 - exp(-2 * α * ta)) * exp(-α * tij)
-  V = vy * -1 * expm1(-2 * α * ta) * exp(-α * tij)
-  
-  W = weightMatrix.constructor(tree, α)
-  
-  ## Why do we decompose it but not directly use V?
   C = chol(V) # upper triangular matrix
   L = t(C) # lower triangular matrix
   log_det_V = 0
   for (i in 1:ntip){
     log_det_V = log_det_V + log(L[i,i])
   }
-  log_det_V = log_det_V *2.0 # equals to julia implementation to 12 sig. fig.
+  log_det_V = log_det_V * 2.0 # equals to julia implementation to 12 sig. fig.
   
   y = NULL
   for (species in tree$tip.label){
@@ -469,30 +554,6 @@ sd_logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   
   return(res)
 }
-
-
-
-
-#weights_regimes <- function(a, lineage) {
-#  #nt <- lineage$nodes_time
-#  res <- weights_segments(a, lineage) ## Rcpp wrapper, equivalent to above commented out code
-#  w <- vapply(lineage$which.regimes, function(e) sum(e*res), FUN.VALUE = 0) ## Sum coefficients for which the respective regime is equal
-#  return(w)
-#}
-#
-#weight.matrix <- function(phy, a, lineages){
-#  if(a > 300000000000) a <- 300000000000
-#  res <- t(vapply(lineages, function(x) weights_regimes(a, x), 
-#                  FUN.VALUE = numeric(length(lineages[[1]]$which.regimes))) ## Specify type of output
-#  )
-#  
-#  rownames(res) <- phy$tip.label
-#  return(res)
-#}
-
-
-
-
 
 
 
