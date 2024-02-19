@@ -280,9 +280,9 @@ sd_logL_pruning <- function(tree, continuousChar, σ2, α, θ){
 ###################################################
 #                                                 #
 #                  Stateless vcv                  #
-#                                                 #   
 #                                                 #
 ###################################################
+
 logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   ntip <- length(tree$tip.label)
   mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
@@ -328,7 +328,6 @@ logL_vcv <- function(tree, continuousChar, σ2, α, θ){
 ###################################################
 #                                                 #
 #               State-dependent vcv               #
-#                                                 #   
 #                                                 #
 ###################################################
 
@@ -435,11 +434,10 @@ weight.matrix <- function(tree, named_alpha){
 nodesBeforeDiverge <- function(tree, tip1, tip2){
   k <- ape::mrca(tree)[tip1, tip2]
   x <- k
-  common_nodes <- c()
-  
+
   N <- length(tree$tip.label)
   while(x != N + 1){
-    k <- c(x, parentNode(tree, k))
+    k <- c(k, parentNode(tree, x))
     x <- tail(k, n = 1)
   }
   return(k)
@@ -556,8 +554,6 @@ sd_logL_vcv <- function(tree, continuousChar, named_alpha, named_sigma2, named_t
 }
 
 
-
-
 ###################################################
 #                                                 #
 #                     Testing...                  #   
@@ -601,8 +597,17 @@ sd_logL_pruning(tree, continuousChar,
 
 ###################################################
 #                                                 #
-#                   Improvements                  #   
+#                   Dummy data                    #   
 #                                                 #
 ###################################################
+
+neocortex <- neocortex[match(artiodactyla$tip.label, neocortex$species), ]
+diet <- as.character(neocortex$diet)
+names(diet) <- neocortex$species
+set.seed(123)
+tree <- make.simmap(artiodactyla, diet)
+plot(tree)
+
+
 
 # states can be 0, but R index starts as 1 (incorporate the situation if state 0 is present)
