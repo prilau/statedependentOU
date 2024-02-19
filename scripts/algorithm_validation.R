@@ -426,6 +426,7 @@ weight.matrix <- function(tree, named_alpha){
   for (i in 1:ntip){
     weight_matrix[i,] <- weights.lineage(tree, named_alpha, i)
   }
+  names(weight_matrix) <- tree$tip.label
   return(weight_matrix)
 }
 
@@ -443,11 +444,14 @@ nodesBeforeDiverge <- function(tree, tip1, tip2){
   return(k)
 }
 
-v.sum2 <- function(tree, tip, named_alpha){
+
+#only after diverge!!!!
+v.sum2 <- function(tree, tip, named_alpha, mcra_node){
   nodes <- nodesAlongLineage(tree, tip)
   
-  #nodes1 <- output[[1]]
-  #nodes_common <- output[[3]]
+  index <- which(nodes == mcra_node) - 2
+  
+  nodes <- head(nodes, n = -index) # retain the nodes from mcra to tip
   
   edges <- which(tree$edge[,2] %in% nodes) # from tip to root
   subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
@@ -491,8 +495,10 @@ v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
 }
 
 vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
-  sum2_tip1 <- v.sum2(tree, tip1, named_alpha)
-  sum2_tip2 <- v.sum2(tree, tip2, named_alpha)
+  mcra_node <- ape::mrca(tree)[tip1, tip2]
+  sum2_tip1 <- v.sum2(tree, tip1, named_alpha, mcra_node)
+  sum2_tip2 <- v.sum2(tree, tip2, named_alpha, mcra_node)
+  
   exp2 <- exp(-1 * (sum2_tip1 + sum2_tip2))
   
   sum1 <- v.sum1(tree, tip1, tip2, named_alpha, named_sigma2)
@@ -502,10 +508,6 @@ vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
   return(v_ij)
 }
 
-
-## issues:
-## values should be non-negative!!
-##
 vcv.matrix <- function(tree, named_alpha, named_sigma2){
   ntip <- length(tree$tip.label)
   V <- matrix(nrow = ntip, ncol = ntip)
@@ -517,6 +519,8 @@ vcv.matrix <- function(tree, named_alpha, named_sigma2){
     }
     j = j-1
   }
+  colnames(V) <- tree$tip.label
+  rownames(V) <- tree$tip.label
   return(V)
 }
 
