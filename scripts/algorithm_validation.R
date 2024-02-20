@@ -8,7 +8,6 @@ library(tidyverse)
 ###################################################
 #                                                 #
 #                 Stateless pruning               #
-#                σ2, α, θ are scalar              #   
 #                                                 #
 ###################################################
 
@@ -131,7 +130,6 @@ logL_pruning <- function(tree, continuousChar, σ2, α, θ){
 ###################################################
 #                                                 #
 #            State-dependent pruning              #
-# !! σ2, α, θ are vectors of length = #states !!  #   
 #                                                 #
 ###################################################
 
