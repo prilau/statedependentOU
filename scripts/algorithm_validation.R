@@ -7,8 +7,8 @@ library(tidyverse)
 
 ###################################################
 #                                                 #
-#               Stateless pruning                 #
-#           !! σ2, α, θ are numeric !!            #   
+#                 Stateless pruning               #
+#                σ2, α, θ are scalar              #   
 #                                                 #
 ###################################################
 
@@ -82,12 +82,13 @@ postorder <- function(node_index, edge, tree, continuousChar,
     #subedge = tree$maps[[edge_index]]
     species = tree$tip.label[node_index]
     
-    μ[node_index] = as.numeric(continuousChar[which(names(continuousChar) == species)][[1]])
+    μ[node_index] = as.numeric(continuousChar[[which(names(continuousChar) == species)]])
     V[node_index] = 0.0 ## if there is no observation error
     
     return(list(μ, V, log_norm_factor))
   }
 }
+
 
 ## Pruning method (stateless)
 logL_pruning <- function(tree, continuousChar, σ2, α, θ){
@@ -126,6 +127,7 @@ logL_pruning <- function(tree, continuousChar, σ2, α, θ){
 }
 
 
+
 ###################################################
 #                                                 #
 #            State-dependent pruning              #
@@ -158,8 +160,8 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
     log_norm_factor <- output_right[[3]]
     
     
-    sub_bl_left = subedges_lengths[left_edge][[1]] # all subedges of left child edge
-    sub_bl_right = subedges_lengths[right_edge][[1]] # all subedges of right child edge
+    sub_bl_left = subedges_lengths[[left_edge]] # all subedges of left child edge
+    sub_bl_right = subedges_lengths[[right_edge]] # all subedges of right child edge
     
     # for the sake of readability, computation of variance, mean, and log_nf are done in separate loops
     # 1) variance of the normal variable: this branch (v_left) and the subtree (V[left])
@@ -168,18 +170,18 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
     delta_left = V[left]
     v_left = 0 # initialise v_left
     for (i in rev(1:length(sub_bl_left))){
-      state <- as.integer(names(sub_bl_left[i]))
-      v_left = σ2[state][[1]]/(2*α[state][[1]]) *expm1(2.0*α[state][[1]]
-                                                       *sub_bl_left[i][[1]])
-      delta_left = v_left + delta_left * exp(2.0 * α[state][[1]] * sub_bl_left[i][[1]])
+      state <- names(sub_bl_left[i])
+      v_left = σ2[[state]]/(2*α[[state]]) *expm1(2.0*α[[state]]
+                                                       *sub_bl_left[[i]])
+      delta_left = v_left + delta_left * exp(2.0 * α[[state]] * sub_bl_left[[i]])
     }
     
     delta_right = V[right]
     v_right = 0 # initialise v_right
     for (i in rev(1:length(sub_bl_right))){
-      state <- as.integer(names(sub_bl_right[i]))
-      v_right = σ2[state][[1]]/(2*α[state][[1]]) *expm1(2.0*α[state][[1]]*sub_bl_right[i][[1]])
-      delta_right = v_right + delta_right * exp(2.0 * α[state][[1]] * sub_bl_right[i][[1]])
+      state <- names(sub_bl_right[i])
+      v_right = σ2[[state]]/(2*α[[state]]) *expm1(2.0*α[[state]]*sub_bl_right[[i]])
+      delta_right = v_right + delta_right * exp(2.0 * α[[state]] * sub_bl_right[[i]])
     }
     
     var_left = delta_left
@@ -188,14 +190,14 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
     # 2) mean of the normal variable
     mean_left = μ[left]
     for (i in rev(1:length(sub_bl_left))){
-      state <- as.integer(names(sub_bl_left[i]))
-      mean_left = exp(α[state][[1]]*sub_bl_left[i][[1]])*(mean_left - θ[state][[1]]) + θ[state][[1]]
+      state <- names(sub_bl_left[i])
+      mean_left = exp(α[[state]]*sub_bl_left[[i]])*(mean_left - θ[[state]]) + θ[[state]]
     }
     
     mean_right = μ[right]
     for (i in rev(1:length(sub_bl_right))){
-      state <- as.integer(names(sub_bl_right[i]))
-      mean_right = exp(α[state][[1]]*sub_bl_right[i][[1]])*(mean_right - θ[state][[1]]) + θ[state][[1]]
+      state <- names(sub_bl_right[i])
+      mean_right = exp(α[[state]]*sub_bl_right[[i]])*(mean_right - θ[[state]]) + θ[[state]]
     }
     
     
@@ -209,14 +211,14 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
     ## this is the problem. I think in RevBayes we compute log_nf with the oldest sub-edge only
     log_nf_left = 0
     for (i in rev(1:length(sub_bl_left))){
-      state <- as.integer(names(sub_bl_left[i]))
-      log_nf_left = log_nf_left + sub_bl_left[i][[1]] * α[state]
+      state <- names(sub_bl_left[i])
+      log_nf_left = log_nf_left + sub_bl_left[[i]] * α[[state]]
     }
     
     log_nf_right = 0
     for (i in rev(1:length(sub_bl_right))){
-      state <- as.integer(names(sub_bl_right[i]))
-      log_nf_right = log_nf_right + sub_bl_right[i][[1]] * α[state]
+      state <- names(sub_bl_right[i])
+      log_nf_right = log_nf_right + sub_bl_right[[i]] * α[[state]]
     }
     
     contrast = mean_left - mean_right
@@ -234,7 +236,7 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
   else{
     species = tree$tip.label[node_index]
     
-    μ[node_index] = as.numeric(continuousChar[which(names(continuousChar) == species)][[1]])
+    μ[node_index] = as.numeric(continuousChar[[which(names(continuousChar) == species)]])
     V[node_index] = 0.0 ## if there is no observation error
     
     return(list(μ, V, log_norm_factor))
@@ -264,10 +266,11 @@ sd_logL_pruning <- function(tree, continuousChar, σ2, α, θ){
   ## assume root value equal to theta
   μ_root = μ[root_index]
   v_root = V[root_index]
-  left_edge_from_root <- which(edge[,1] == ntip+1)[1] # obtain left child edge index of root node
-  left_subedges_from_root <- subedges_lengths[left_edge_from_root] # obtain sub-edge lengths
-  root_state = as.integer(names(tail(left_subedges_from_root)[[1]])) # obtain root state, assuming it equals last state at left child edge
-  lnl = dnorm(θ[root_state], mean = μ_root, sd = sqrt(v_root), log = TRUE)
+  left_edge_from_root <- which(edge[,1] == root_index)[1] # obtain left child edge index of root node
+  left_subedges_from_root <- subedges_lengths[[left_edge_from_root]] # obtain sub-edge lengths
+  ### note here
+  root_state = names(tail(left_subedges_from_root, 1)) # obtain root state, assuming it equals last state at left child edge
+  lnl = dnorm(θ[[root_state]], mean = μ_root, sd = sqrt(v_root), log = TRUE)
   
   ## add norm factor
   for (log_nf in log_norm_factor){
@@ -275,6 +278,7 @@ sd_logL_pruning <- function(tree, continuousChar, σ2, α, θ){
   }
   return(lnl)
 }
+
 
 
 ###################################################
@@ -324,6 +328,7 @@ logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   
   return(res)
 }
+
 
 ###################################################
 #                                                 #
@@ -378,9 +383,9 @@ lineage.constructor <- function(tree, e){
 }
 
 # not yet finished - weight matrix function
-weights.lineage <- function(tree, named_alpha, e){
+weights.lineage <- function(tree, named_α, e){
   lineage <- lineage.constructor(tree, e)
-  lineage[["alpha"]] = named_alpha[lineage[["state_changes"]]]
+  lineage[["alpha"]] = named_α[lineage[["state_changes"]]]
   lineage <- lineage %>% mutate(exp_1 = exp(-alpha * time_end) - exp(-alpha * time_begin),
                      exp_2 = alpha * lineage$time_span)
   ancestral_state <- lineage$state_changes[length(lineage$state_changes)]
@@ -400,8 +405,8 @@ weights.lineage <- function(tree, named_alpha, e){
   #weight_states[which(names(weight_states) == ancestral_state)] = weight_states[which(names(weight_states) == ancestral_state)] + weight_ancestral
   
   #weight_matrix = weight_matrix / sum(weight_matrix)
-  weight_matrix <- matrix(nrow = length(named_alpha))
-  rownames(weight_matrix) <- c(names(named_alpha))
+  weight_matrix <- matrix(nrow = length(named_α))
+  rownames(weight_matrix) <- c(names(named_α))
   for (rowname in rownames(weight_matrix)){
     if (rowname %in% weights$state_changes){
       weight_matrix[rowname,] = weights$weight[which(weights$state_changes == rowname)]
@@ -418,13 +423,13 @@ weights.lineage <- function(tree, named_alpha, e){
 }
 
 # combine to form weight matrix
-weight.matrix <- function(tree, named_alpha){
+weight.matrix <- function(tree, named_α){
   ntip = length(tree$tip.label)
-  weight_matrix = matrix(nrow = ntip, ncol = length(named_alpha))
+  weight_matrix = matrix(nrow = ntip, ncol = length(named_α))
   rownames(weight_matrix) <- tree$tip.label
-  colnames(weight_matrix) <- c(names(named_alpha))
+  colnames(weight_matrix) <- c(names(named_α))
   for (i in 1:ntip){
-    weight_matrix[i,] <- weights.lineage(tree, named_alpha, i)
+    weight_matrix[i,] <- weights.lineage(tree, named_α, i)
   }
   return(weight_matrix)
 }
@@ -444,7 +449,7 @@ nodesBeforeDiverge <- function(tree, tip1, tip2){
 }
 
 # after diverge
-v.sum2 <- function(tree, tip, named_alpha, mcra_node){
+v.sum2 <- function(tree, tip, named_α, mcra_node){
   nodes <- nodesAlongLineage(tree, tip)
   index <- which(nodes == mcra_node)
   nodes <- head(nodes, n = index-1) # retain the nodes from mcra to tip
@@ -456,7 +461,7 @@ v.sum2 <- function(tree, tip, named_alpha, mcra_node){
     subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
     
     subedge_lengths <- tibble(time_span = subedge_lengths,
-                              alpha = named_alpha[names(subedge_lengths)])
+                              alpha = named_α[names(subedge_lengths)])
     #edges_common <- which(tree$edge[,2] %in% nodes_common) # from tip to root
     #subedge_lengths_common <- rev(unlist(lapply(edges_common, function(i) tree$maps[[i]])))
     
@@ -472,7 +477,7 @@ v.sum2 <- function(tree, tip, named_alpha, mcra_node){
 }
 
 #before diverge
-v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
+v.sum1 <- function(tree, tip1, tip2, named_α, named_σ2){
   nodes <- nodesBeforeDiverge(tree, tip1, tip2)
   if (length(nodes) == 1){
     return(sum1 = 0)
@@ -487,8 +492,8 @@ v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
     te <- c(head(time_point, n = -1)) ## younger end of subedge (larger positive value)
     times <- tibble(time_begin = tb,
                     time_end = te,
-                    alpha = named_alpha[names(subedge_lengths)],
-                    sigma2 = named_sigma2[names(subedge_lengths)])
+                    alpha = named_α[names(subedge_lengths)],
+                    sigma2 = named_σ2[names(subedge_lengths)])
     sum1 <- times %>% 
       mutate(exp = sigma2 / (2 * alpha) * (exp(-2 * alpha * time_begin) - exp(-2 * alpha * time_end))) %>% 
       reframe(sum1 = sum(exp)) %>% 
@@ -498,27 +503,27 @@ v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
   }
 }
 
-vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
+vcv.pairwise <- function(tree, named_α, named_σ2, tip1, tip2){
   mcra_node <- ape::mrca(tree)[tip1, tip2]
-  sum2_tip1 <- v.sum2(tree, tip1, named_alpha, mcra_node)
-  sum2_tip2 <- v.sum2(tree, tip2, named_alpha, mcra_node)
+  sum2_tip1 <- v.sum2(tree, tip1, named_α, mcra_node)
+  sum2_tip2 <- v.sum2(tree, tip2, named_α, mcra_node)
   
   exp2 <- exp(-1 * (sum2_tip1 + sum2_tip2))
   
-  sum1 <- v.sum1(tree, tip1, tip2, named_alpha, named_sigma2)
+  sum1 <- v.sum1(tree, tip1, tip2, named_α, named_σ2)
   
   v_ij <- exp2 * sum1
   
   return(v_ij)
 }
 
-vcv.matrix <- function(tree, named_alpha, named_sigma2){
+vcv.matrix <- function(tree, named_α, named_σ2){
   ntip <- length(tree$tip.label)
   V <- matrix(nrow = ntip, ncol = ntip)
   j = ntip
   while (j != 0){
     for (i in 1:ntip){
-      V[i,j] <- vcv.pairwise(tree, named_alpha, named_sigma2, i, j)
+      V[i,j] <- vcv.pairwise(tree, named_α, named_σ2, i, j)
       V[j,i] <- V[i,j]
     }
     j = j-1
@@ -529,12 +534,11 @@ vcv.matrix <- function(tree, named_alpha, named_sigma2){
 }
 
 
-# α has to be named
-sd_logL_vcv <- function(tree, continuousChar, named_alpha, named_sigma2, named_theta){
+sd_logL_vcv <- function(tree, continuousChar, named_α, named_σ2, named_θ){
   ntip <- length(tree$tip.label)
-  V = vcv.matrix(tree, named_alpha, named_sigma2)
+  V = vcv.matrix(tree, named_α, named_σ2)
   
-  W = weight.matrix(tree, named_alpha)
+  W = weight.matrix(tree, named_α)
   
   C = chol(V) # upper triangular matrix
   L = t(C) # lower triangular matrix
@@ -550,7 +554,7 @@ sd_logL_vcv <- function(tree, continuousChar, named_alpha, named_sigma2, named_t
   }
   
   # inverse of L
-  r = solve(L) %*% y - solve(L) %*% W %*% named_theta # what does de-correlated residuals mean?
+  r = solve(L) %*% y - solve(L) %*% W %*% named_θ # what does de-correlated residuals mean?
   
   # res = - (n/2) * log(2*pi) - 0.5 * log_det_V - 0.5 * dot(r, r)
   #     = exp(-n/2)^(2*pi) * exp(-0.5)^det_V * exp(-0.5)^dot(r, r) ?
@@ -563,70 +567,105 @@ sd_logL_vcv <- function(tree, continuousChar, named_alpha, named_sigma2, named_t
 }
 
 
+
 ###################################################
 #                                                 #
-#                     Testing...                  #   
+#                 Load test data                  #   
 #                                                 #
 ###################################################
 
-# test with slouch data set
-# compare stateless_vcv and stateless_pruning
+# From slouch
 data("artiodactyla")
 data("neocortex")
-
-# convert continuous data to read.nexus.data() format
-brain <- list()
-for (i in 1:length(neocortex$brain_mass_g_log_mean)){
-  sp <- neocortex$species[i]
-  brain[sp] <- list(neocortex$brain_mass_g_log_mean[i])
-}
-
-lnl_brain_pruning <- logL_pruning(artiodactyla, brain, σ2 = 0.1, α = 0.1, θ = 5.04)
-lnl_brain_vcv <- logL_vcv(artiodactyla, σ2 = 0.1, α = 0.1, θ = 5.04)
-
-# test with 3-taxon dummy data
-# compare stateless_pruning and state_dependent_pruning
-tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap.tre",
-                    format="phylip",version=1)
-
-#reading in continuous character (read.nexus.data() recognises 0.1234 as 6 characters)
-continuousChar <- read.nexus.data("data/1_validation/dummy_threetaxon_Continuous.nex")
-
-
-logL_pruning(tree, continuousChar,
-             σ2 = 2,
-             α = 1,
-             θ = 6)
-
-sd_logL_pruning(tree, continuousChar,
-             σ2 = c(2,2,2),
-             α = c(1,1,1),
-             θ = c(6,6,6))
-
-named_sigma2 <- c("MF" = 2, "Gr" = 2, "Br" = 2)
-named_alpha <- c("MF" = 1, "Gr" = 1, "Br" = 1)
-named_theta <- c("MF" = 6, "Gr" = 6, "Br" = 6)
-
-
-
-logL_vcv(artiodactyla, brain, σ2 = 2, α = 1, θ = 6)
-sd_logL_vcv(tree, continuousChar, named_alpha, named_sigma2, named_theta)
-
-
-
-###################################################
-#                                                 #
-#                   Dummy data                    #   
-#                                                 #
-###################################################
-
 neocortex <- neocortex[match(artiodactyla$tip.label, neocortex$species), ]
+
+# From local
+dummy_tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap.tre",
+                          format="phylip",version=1)
+
+# read.nexus.data() gives lists of species with character values, need to change to input format for our functions
+char <- read.nexus.data("data/1_validation/dummy_threetaxon_Continuous.nex")
+continuousChar <- c()
+for (species in char){
+  continuousChar <- append(continuousChar, as.numeric(species))
+}
+names(continuousChar) <- names(char)
+
+
+###################################################
+#                                                 #
+#         Guideline for logL_pruning()            #   
+#                                                 #
+###################################################
+
+logL_pruning(smaptree, brain, σ2 = 2, α = 1, θ = 6)
+
+
+###################################################
+#                                                 #
+#       Guideline for sd_logL_pruning()           #   
+#                                                 #
+###################################################
+
+sd_logL_pruning(smaptree, brain, σ2 = named_sigma2, α = named_alpha, θ = named_theta)
+
+
+
+###################################################
+#                                                 #
+#             Guideline for logL_vcv()            #   
+#                                                 #
+###################################################
+
+# INPUT
+# tree: a tree
+# continuousChar: a vector with names of elements == species name
+# α, σ2, θ: scalars
+
+# Example
+## tree
+tree <- artiodactyla
+
+## continuousChar
+brain <- neocortex$brain_mass_g_log_mean
+names(brain) <- smaptree$tip.label
+
+# RUN
+logL_vcv(tree, brain, named_sigma2[[1]], named_alpha[[1]], named_theta[[1]])
+
+
+
+###################################################
+#                                                 #
+#         Guideline for sd_logL_vcv()             #   
+#                                                 #
+###################################################
+
+# INPUT
+# tree: a mapped tree
+# continuousChar: a vector with names of elements == species name
+# named_α, named_σ2, named_θ: vectors with names of elements == names of discrete character states
+
+# Example
+## tree and dummy discrete character history
 diet <- as.character(neocortex$diet)
 names(diet) <- neocortex$species
 set.seed(123)
-tree <- make.simmap(artiodactyla, diet)
-plot(tree)
+smaptree <- make.simmap(artiodactyla, diet)
+plot(smaptree)
 
+## continuousChar
+brain <- neocortex$brain_mass_g_log_mean
+names(brain) <- smaptree$tip.label
 
+## parameters
+### option 1: set up parameter values and name it after
+discrete_states <- unique(diet)
+named_σ2 <- c(2.1, 2.2, 2.3)
+names(named_σ2) <- discrete_states
+# option 2: match parameter values and discrete states in one line
+named_α <- c("MF" = 1.1, "Gr" = 1.2, "Br" = 1.3)
+named_θ <- c("MF" = 6.1, "Gr" = 6.2, "Br" = 6.3)
 
-# states can be 0, but R index starts as 1 (incorporate the situation if state 0 is present)
+# RUN
+sd_logL_vcv(smaptree, brain, named_α, named_σ2, named_θ)
