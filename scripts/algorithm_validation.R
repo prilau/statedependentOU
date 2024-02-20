@@ -296,7 +296,7 @@ logL_vcv <- function(tree, continuousChar, σ2, α, θ){
   vy = σ2 / (2*α)
   
   #V = vy * (1 - exp(-2 * α * ta)) * exp(-α * tij)
-  V = vy * -1 * expm1(-2 * α * ta) * exp(-α * tij)
+  V = vy * -1 * expm1(-2 * α * ta) * exp(-α * tij) ### ta = time tgt; tij = time not tgt (sum of two branches)
   
   X = matrix(1, ntip)
   
@@ -421,12 +421,11 @@ weights.lineage <- function(tree, named_alpha, e){
 weight.matrix <- function(tree, named_alpha){
   ntip = length(tree$tip.label)
   weight_matrix = matrix(nrow = ntip, ncol = length(named_alpha))
-  rownames(weight_matrix) <- c(1:ntip)
+  rownames(weight_matrix) <- tree$tip.label
   colnames(weight_matrix) <- c(names(named_alpha))
   for (i in 1:ntip){
     weight_matrix[i,] <- weights.lineage(tree, named_alpha, i)
   }
-  names(weight_matrix) <- tree$tip.label
   return(weight_matrix)
 }
 
@@ -444,54 +443,59 @@ nodesBeforeDiverge <- function(tree, tip1, tip2){
   return(k)
 }
 
-
-#only after diverge!!!!
+# after diverge
 v.sum2 <- function(tree, tip, named_alpha, mcra_node){
   nodes <- nodesAlongLineage(tree, tip)
-  
-  index <- which(nodes == mcra_node) - 2
-  
-  nodes <- head(nodes, n = -index) # retain the nodes from mcra to tip
-  
-  edges <- which(tree$edge[,2] %in% nodes) # from tip to root
-  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
-  
-  subedge_lengths <- tibble(time_span = subedge_lengths,
-                            alpha = named_alpha[names(subedge_lengths)])
-  #edges_common <- which(tree$edge[,2] %in% nodes_common) # from tip to root
-  #subedge_lengths_common <- rev(unlist(lapply(edges_common, function(i) tree$maps[[i]])))
-  
-  
-  sum2 <- subedge_lengths %>% 
-    mutate(sum2 = time_span * alpha) %>% 
-    reframe(sum = sum(sum2)) %>% 
-    unlist() %>% 
-    unname()
+  index <- which(nodes == mcra_node)
+  nodes <- head(nodes, n = index-1) # retain the nodes from mcra to tip
+  if (length(nodes) == 0){
+    return(sum2 = 0)
+  }
+  else{
+    edges <- which(tree$edge[,2] %in% nodes) # from tip to mcra_node
+    subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
     
-  return(sum2)
+    subedge_lengths <- tibble(time_span = subedge_lengths,
+                              alpha = named_alpha[names(subedge_lengths)])
+    #edges_common <- which(tree$edge[,2] %in% nodes_common) # from tip to root
+    #subedge_lengths_common <- rev(unlist(lapply(edges_common, function(i) tree$maps[[i]])))
+    
+    
+    sum2 <- subedge_lengths %>% 
+      mutate(sum2 = time_span * alpha) %>% 
+      reframe(sum = sum(sum2)) %>% 
+      unlist() %>% 
+      unname()
+    
+    return(sum2)
+  }
 }
 
+#before diverge
 v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
   nodes <- nodesBeforeDiverge(tree, tip1, tip2)
-  edges <- which(tree$edge[,2] %in% nodes) # from tip to root
-  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
-  
-  age_root0tip1 <- ape::node.depth.edgelength(tree)
-  mcra_time <- max(age_root0tip1) - age_root0tip1[nodes[1]]
-  
-  time_point <- cumsum(c(mcra_time, unname(subedge_lengths))) # tip
-  tb <- c(tail(time_point, n = -1)) ## older end of subedge
-  te <- c(head(time_point, n = -1)) ## younger end of subedge
-  times <- tibble(time_span = unname(subedge_lengths),
-                  time_begin = tb,
-                  time_end = te,
-                  alpha = named_alpha[names(subedge_lengths)],
-                  sigma2 = named_sigma2[names(subedge_lengths)])
-  sum1 <- times %>% 
-    mutate(exp = sigma2 / (2 * alpha) * (exp(2 * alpha * time_begin) - exp(2 * alpha * time_end))) %>% 
-    reframe(sum1 = sum(exp)) %>% 
-    unlist() %>% 
-    unname()
+  if (length(nodes) == 1){
+    return(sum1 = 0)
+  }
+  else{
+    edges <- which(tree$edge[,2] %in% nodes) # from tip to root
+    subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from mcra_node to root
+    
+    mcra_time <- sum(subedge_lengths)
+    time_point <- cumsum(c(mcra_time, unname(-subedge_lengths))) # from mcra_node to root
+    tb <- c(tail(time_point, n = -1)) ## older end of subedge (smaller positive value)
+    te <- c(head(time_point, n = -1)) ## younger end of subedge (larger positive value)
+    times <- tibble(time_begin = tb,
+                    time_end = te,
+                    alpha = named_alpha[names(subedge_lengths)],
+                    sigma2 = named_sigma2[names(subedge_lengths)])
+    sum1 <- times %>% 
+      mutate(exp = sigma2 / (2 * alpha) * (exp(-2 * alpha * time_begin) - exp(-2 * alpha * time_end))) %>% 
+      reframe(sum1 = sum(exp)) %>% 
+      unlist() %>% 
+      unname()
+    return(sum1)
+  }
 }
 
 vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
@@ -527,6 +531,7 @@ vcv.matrix <- function(tree, named_alpha, named_sigma2){
 
 # α has to be named
 sd_logL_vcv <- function(tree, continuousChar, named_alpha, named_sigma2, named_theta){
+  ntip <- length(tree$tip.label)
   V = vcv.matrix(tree, named_alpha, named_sigma2)
   
   W = weight.matrix(tree, named_alpha)
@@ -545,7 +550,7 @@ sd_logL_vcv <- function(tree, continuousChar, named_alpha, named_sigma2, named_t
   }
   
   # inverse of L
-  r = solve(L) %*% y - solve(L) %*% W * θ # what does de-correlated residuals mean?
+  r = solve(L) %*% y - solve(L) %*% W %*% named_theta # what does de-correlated residuals mean?
   
   # res = - (n/2) * log(2*pi) - 0.5 * log_det_V - 0.5 * dot(r, r)
   #     = exp(-n/2)^(2*pi) * exp(-0.5)^det_V * exp(-0.5)^dot(r, r) ?
@@ -594,9 +599,19 @@ logL_pruning(tree, continuousChar,
              θ = 6)
 
 sd_logL_pruning(tree, continuousChar,
-             σ2 = c(2,2),
-             α = c(1,1),
-             θ = c(6,6))
+             σ2 = c(2,2,2),
+             α = c(1,1,1),
+             θ = c(6,6,6))
+
+named_sigma2 <- c("MF" = 2, "Gr" = 2, "Br" = 2)
+named_alpha <- c("MF" = 1, "Gr" = 1, "Br" = 1)
+named_theta <- c("MF" = 6, "Gr" = 6, "Br" = 6)
+
+
+
+logL_vcv(artiodactyla, brain, σ2 = 2, α = 1, θ = 6)
+sd_logL_vcv(tree, continuousChar, named_alpha, named_sigma2, named_theta)
+
 
 
 ###################################################
