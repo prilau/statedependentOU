@@ -485,18 +485,21 @@ v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
     subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from mcra_node to root
     
     mcra_time <- sum(subedge_lengths)
-    time_point <- cumsum(c(mcra_time, unname(-subedge_lengths))) # from mcra_node to root
-    tb <- c(tail(time_point, n = -1)) ## older end of subedge (smaller positive value)
-    te <- c(head(time_point, n = -1)) ## younger end of subedge (larger positive value)
+    root_time <- 0.0
+    time_point <- c(root_time, cumsum(subedge_lengths))
+    #time_point <- cumsum(c(mcra_time, unname(-subedge_lengths))) # from mcra_node to root
+    tb <- c(head(time_point, n = -1)) ## older end of subedge (smaller positive value)
+    te <- c(tail(time_point, n = -1)) ## younger end of subedge (larger positive value)
     times <- tibble(time_begin = tb,
                     time_end = te,
                     alpha = named_alpha[names(subedge_lengths)],
                     sigma2 = named_sigma2[names(subedge_lengths)])
     sum1 <- times %>% 
-      mutate(exp = sigma2 / (2 * alpha) * (exp(-2 * alpha * time_begin) - exp(-2 * alpha * time_end))) %>% 
+      mutate(exp = sigma2 / (2 * alpha) * (exp(2 * alpha * time_end) - exp(2 * alpha * time_begin))) %>% 
       reframe(sum1 = sum(exp)) %>% 
       unlist() %>% 
       unname()
+    #stop()
     return(sum1)
   }
 }
@@ -578,7 +581,7 @@ data("neocortex")
 neocortex <- neocortex[match(artiodactyla$tip.label, neocortex$species), ]
 
 # From local
-dummy_tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap.tre",
+dummy_tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap2.tre",
                           format="phylip",version=1)
 
 # read.nexus.data() gives lists of species with character values, need to change to input format for our functions
@@ -622,7 +625,7 @@ brain <- neocortex$brain_mass_g_log_mean
 names(brain) <- smaptree$tip.label
 
 # RUN
-logL_vcv(tree, brain, named_sigma2[[1]], named_alpha[[1]], named_theta[[1]])
+logL_vcv(smaptree, brain, named_sigma2[[1]], named_alpha[[1]], named_theta[[1]])
 ###################################################
 #                                                 #
 #         Guideline for sd_logL_vcv()             #   
@@ -657,3 +660,47 @@ named_theta <- c("MF" = 6.1, "Gr" = 6.2, "Br" = 6.3)
 
 # RUN
 sd_logL_vcv(smaptree, brain, named_alpha, named_sigma2, named_theta)
+
+sd_logL_pruning(smaptree, brain, named_alpha, named_sigma2, named_theta)
+#sd_logL_pruning(smaptree, brain, c("MF" = ), named_sigma2, named_theta)
+
+## debug
+foobar <- function(phy, a, sigma2){
+  mrca1 <- ape::mrca(phy)
+  times <- ape::node.depth.edgelength(phy)
+  n <- length(phy$tip.label)
+  ta <- matrix(times[mrca1], nrow=n, dimnames = list(phy$tip.label, phy$tip.label))
+  T.term <- times[1:n]
+  tia <- times[1:n] - ta
+  tja <- t(tia)
+  tij <- tja + tia
+  vy <- sigma2 / (2*a)
+  
+  V <- vy * (1 - exp(-2 * a * ta)) * exp(-a * tij)
+  return(V)
+}
+
+V <- foobar(tree, 0.1, 0.1)
+
+vcv.pairwise(dummy_tree, 
+             c("1" = 0.1, "2" = 0.1), 
+             c("1" = 0.1, "2" = 0.1), 1, 2)
+
+v.sum1(dummy_tree, 1, 2,
+       c("1" = 0.1, "2" = 0.1), 
+       c("1" = 0.1, "2" = 0.1))
+
+
+
+
+V[1,2]
+
+
+
+
+
+
+
+
+
+
