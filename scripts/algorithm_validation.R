@@ -357,22 +357,23 @@ lineage.constructor <- function(tree, e){
   
   ## Simmap splits up each edge into sub-edges, depending on the split. So, we use edges instead of nodes, and introduce sub-edges
   edges <- which(tree$edge[,2] %in% nodes) # from tip to root
-  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
+  subedge_lengths <- unlist(lapply(edges, function(i) tree$maps[[i]])) # from root to tip
 
   #all_states <- colnames(tree$mapped.edge)
 
   state_changes <- names(subedge_lengths) # from tip to root
-  state_changes <- c(state_changes, state_changes[length(state_changes)]) # add root state, assuming root state equals the state of the closest subedge
+  #state_changes <- c(state_changes[1], state_changes) # add root state, assuming root state equals the state of the closest subedge
   
   #lineage$state_indicator <- lapply(all_states, function(x) {res <- match(lineage$state_changes, x); res[is.na(res)] <- 0; return(res)})
   #names(lineage$state_indicator) <- all_states
   
   # recording time-related numbers of each subedge (root is a subedge with length = 0)
-  time_point <- cumsum(c(0, unname(subedge_lengths))) # tip
-  time_begin <- c(tail(time_point, n = -1), tail(time_point, n = 1)) ## older end of subedge
-  time_end <- time_point ## younger end of subedge
-  time_span <- c(unname(subedge_lengths), 0) # time at root and each subedge
+  times <- cumsum(unname(subedge_lengths))
+  time_tip <- tail(times, n = 1)
   
+  time_begin <- time_tip - c(0, head(times, n = -1))
+  time_end <- time_tip - times
+  time_span <- time_begin - time_end
   
   return(tibble(state_changes = state_changes,
                 time_begin = time_begin,
@@ -384,40 +385,42 @@ lineage.constructor <- function(tree, e){
 weights.lineage <- function(tree, named_alpha, e){
   lineage <- lineage.constructor(tree, e)
   lineage[["alpha"]] = named_alpha[lineage[["state_changes"]]]
-  lineage <- lineage %>% mutate(exp_1 = exp(-alpha * time_end) - exp(-alpha * time_begin),
-                     exp_2 = alpha * lineage$time_span)
-  ancestral_state <- lineage$state_changes[length(lineage$state_changes)]
-  weight_ancestral = lineage %>%
-    summarise(ancestral = exp(-1 * sum(exp_2))) %>% 
-    unlist()
-  names(weight_ancestral) <- ancestral_state
+  lineage <- lineage %>%
+    mutate(
+    exp_1 = exp(-alpha * time_end) - exp(-alpha * time_begin),
+    exp_2 = exp(-alpha * lineage$time_span)
+    )
+  weights <- numeric(nrow(lineage))
   
-  weights <- lineage %>%
-    group_by(state_changes) %>% 
-    summarise(weight = sum(exp_1) * exp(-1 * sum(exp_2)))
-  weights$weight[which(weights$state_changes == ancestral_state)] = weights$weight[which(weights$state_changes == ancestral_state)] + weight_ancestral
-  
-  
-  #weight_states <- weights$weight
-  #names(weight_states) <- weights$state_changes
-  #weight_states[which(names(weight_states) == ancestral_state)] = weight_states[which(names(weight_states) == ancestral_state)] + weight_ancestral
-  
-  #weight_matrix = weight_matrix / sum(weight_matrix)
-  weight_matrix <- matrix(nrow = length(named_alpha))
-  rownames(weight_matrix) <- c(names(named_alpha))
-  for (rowname in rownames(weight_matrix)){
-    if (rowname %in% weights$state_changes){
-      weight_matrix[rowname,] = weights$weight[which(weights$state_changes == rowname)]
-    }
-    else {
-      weight_matrix[rowname,] = 0
+  if (nrow(lineage) == 1){
+    weights[1] <- 1.0
+  }else{
+    weights[1] <- exp(-sum(tail(lineage[["alpha"]], n = -1) * tail(lineage$time_span, n = -1)))
+    
+    for (i in 2:nrow(lineage)){
+      weights[i] <- 1 - exp(-lineage[["alpha"]][i] * lineage$time_span[i])
+      idx <- 2:nrow(lineage)
+      
+      number_of_segments <- nrow(lineage)
+      segment_indices = seq_along(1:number_of_segments)
+      
+      df <- tail(lineage, n = - i)
+      if (nrow(df) > 0){
+        weights[i] <- weights[i] * exp(-sum(df$alpha * df$time_span))
+      }
     }
   }
   
-  # normalise the weights so that sum(weights) == 1
-  weight_matrix = weight_matrix/sum(weight_matrix)
+  lineage$w <- weights
+
+  W <- lineage %>%
+    group_by(state_changes) %>%
+    summarise("w" = sum(w))
+
+  w <- W$w
+  names(w) <- W$state_changes
   
-  return(weight_matrix)
+  return(w)
 }
 
 # combine to form weight matrix
@@ -446,16 +449,16 @@ nodesBeforeDiverge <- function(tree, tip1, tip2){
   return(k)
 }
 
-# after diverge
-v.sum2 <- function(tree, tip, named_alpha, mcra_node){
+## the whole lineage
+v.sum2 <- function(tree, tip, named_alpha, mrca_node){
   nodes <- nodesAlongLineage(tree, tip)
-  index <- which(nodes == mcra_node)
+  index <- which(nodes == mrca_node)
   nodes <- head(nodes, n = index-1) # retain the nodes from mcra to tip
   if (length(nodes) == 0){
     return(sum2 = 0)
   }
   else{
-    edges <- which(tree$edge[,2] %in% nodes) # from tip to mcra_node
+    edges <- which(tree$edge[,2] %in% nodes) # from tip to mrca_node
     subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from tip to root
     
     subedge_lengths <- tibble(time_span = subedge_lengths,
@@ -485,29 +488,26 @@ v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
     subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from mcra_node to root
     
     mcra_time <- sum(subedge_lengths)
-    root_time <- 0.0
-    time_point <- c(root_time, cumsum(subedge_lengths))
-    #time_point <- cumsum(c(mcra_time, unname(-subedge_lengths))) # from mcra_node to root
-    tb <- c(head(time_point, n = -1)) ## older end of subedge (smaller positive value)
-    te <- c(tail(time_point, n = -1)) ## younger end of subedge (larger positive value)
+    time_point <- cumsum(c(mcra_time, unname(-subedge_lengths))) # from mcra_node to root
+    tb <- c(tail(time_point, n = -1)) ## older end of subedge (smaller positive value)
+    te <- c(head(time_point, n = -1)) ## younger end of subedge (larger positive value)
     times <- tibble(time_begin = tb,
                     time_end = te,
                     alpha = named_alpha[names(subedge_lengths)],
                     sigma2 = named_sigma2[names(subedge_lengths)])
     sum1 <- times %>% 
-      mutate(exp = sigma2 / (2 * alpha) * (exp(2 * alpha * time_end) - exp(2 * alpha * time_begin))) %>% 
+      mutate(exp = sigma2 / (2 * alpha) * (exp(-2 * alpha * time_begin) - exp(-2 * alpha * time_end))) %>% 
       reframe(sum1 = sum(exp)) %>% 
       unlist() %>% 
       unname()
-    #stop()
     return(sum1)
   }
 }
 
 vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
-  mcra_node <- ape::mrca(tree)[tip1, tip2]
-  sum2_tip1 <- v.sum2(tree, tip1, named_alpha, mcra_node)
-  sum2_tip2 <- v.sum2(tree, tip2, named_alpha, mcra_node)
+  mrca_node <- ape::mrca(tree)[tip1, tip2]
+  sum2_tip1 <- v.sum2(tree, tip1, named_alpha, mrca_node)
+  sum2_tip2 <- v.sum2(tree, tip2, named_alpha, mrca_node)
   
   exp2 <- exp(-1 * (sum2_tip1 + sum2_tip2))
   
@@ -662,7 +662,6 @@ named_theta <- c("MF" = 6.1, "Gr" = 6.2, "Br" = 6.3)
 sd_logL_vcv(smaptree, brain, named_alpha, named_sigma2, named_theta)
 
 sd_logL_pruning(smaptree, brain, named_alpha, named_sigma2, named_theta)
-#sd_logL_pruning(smaptree, brain, c("MF" = ), named_sigma2, named_theta)
 
 ## debug
 foobar <- function(phy, a, sigma2){
@@ -681,16 +680,59 @@ foobar <- function(phy, a, sigma2){
 }
 
 V <- foobar(tree, 0.1, 0.1)
-
+V[1,2]
 vcv.pairwise(dummy_tree, 
-             c("1" = 0.1, "2" = 0.1), 
+             c("1" = 0.1, "2" = 0.2), 
              c("1" = 0.1, "2" = 0.1), 1, 2)
 
-v.sum1(dummy_tree, 1, 2,
+v.sum1(dummy_tree, 1, 3,
        c("1" = 0.1, "2" = 0.1), 
        c("1" = 0.1, "2" = 0.1))
 
+vcv.matrix(dummy_tree, 
+          c("1" = 0.1, "2" = 0.1), 
+          c("1" = 0.1, "2" = 0.1))
 
+vcv.matrix()
+
+
+
+v.sum2(dummy_tree, 3, c("1" = 0.1, "2" = 0.1))
+v.sum1(dummy_tree, 1, 3, c("1" = 0.1, "2" = 0.1))
+
+
+
+weights.lineage(dummy_tree, c("1" = 0.1, "2" = 0.2), 1)
+
+weight.matrix(dummy_tree, c("1" = 0.1, "2" = 0.2))
+
+
+sd_logL_vcv(dummy_tree, continuousChar,  
+            c("1" = 0.1, "2" = 0.1), 
+            c("1" = 0.1, "2" = 0.1), 
+            c("1" = 0.1, "2" = 0.2))
+
+sd_logL_pruning(dummy_tree, continuousChar,  
+            c("1" = 0.1, "2" = 0.1), 
+            c("1" = 0.1, "2" = 0.1), 
+            c("1" = 0.1, "2" = 0.2))
+
+vcv.matrix(dummy_tree,  
+           c("1" = 0.1, "2" = 0.1), 
+           c("1" = 0.1, "2" = 0.1) )
+
+
+
+
+x3 <- sd_logL_vcv(dummy_tree, continuousChar,  
+            c("1" = 0.1, "2" = 0.3), 
+            c("1" = 0.1, "2" = 0.3), 
+            c("1" = 0.1, "2" = 0.3))
+
+x4 <- sd_logL_pruning(dummy_tree, continuousChar,
+                c("1" = 0.1, "2" = 0.3), 
+                c("1" = 0.1, "2" = 0.3), 
+                c("1" = 0.1, "2" = 0.3))
 
 
 V[1,2]
