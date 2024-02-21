@@ -13,7 +13,7 @@ library(tidyverse)
 
 ## Postorder function (stateless)
 postorder <- function(node_index, edge, tree, continuousChar,
-                      μ, V, log_norm_factor, branch_lengths, sigma2, alpha, theta){
+                      μ, V, log_norm_factor, branch_lengths, alpha, sigma2, theta){
   ntip = length(tree$tip.label)
   #root_node = ntip + 1
   
@@ -26,13 +26,13 @@ postorder <- function(node_index, edge, tree, continuousChar,
     right = edge[right_edge,2] # index of right child node
     
     output_left <- postorder(left, edge, tree, continuousChar,
-                         μ, V, log_norm_factor, branch_lengths, sigma2, alpha, theta)
+                         μ, V, log_norm_factor, branch_lengths, alpha, sigma2, theta)
     μ <- output_left[[1]]
     V <- output_left[[2]]
     log_norm_factor <- output_left[[3]]
     
     output_right <- postorder(right, edge, tree, continuousChar,
-                             μ, V, log_norm_factor, branch_lengths, sigma2, alpha, theta)
+                             μ, V, log_norm_factor, branch_lengths, alpha, sigma2, theta)
     μ <- output_right[[1]]
     V <- output_right[[2]]
     log_norm_factor <- output_right[[3]]
@@ -90,7 +90,7 @@ postorder <- function(node_index, edge, tree, continuousChar,
 
 
 ## Pruning method (stateless)
-logL_pruning <- function(tree, continuousChar, sigma2, alpha, theta){
+logL_pruning <- function(tree, continuousChar, alpha, sigma2, theta){
   ntip = length(tree$tip.label) # number of tips
   edge = tree$edge # equals tree[:edge] in Julia
   n_edges = length(edge[,1]) # number of edges
@@ -108,7 +108,7 @@ logL_pruning <- function(tree, continuousChar, sigma2, alpha, theta){
   
   
   output <- postorder(root_index, edge, tree, continuousChar,
-                      μ, V, log_norm_factor, branch_lengths, sigma2, alpha, theta)
+                      μ, V, log_norm_factor, branch_lengths, alpha, sigma2, theta)
   μ <- output[[1]]
   V <- output[[2]]
   log_norm_factor <- output[[3]]
@@ -134,7 +134,7 @@ logL_pruning <- function(tree, continuousChar, sigma2, alpha, theta){
 ###################################################
 
 sd_postorder <- function(node_index, edge, tree, continuousChar,
-                      μ, V, log_norm_factor, subedges_lengths, sigma2, alpha, theta){
+                      μ, V, log_norm_factor, subedges_lengths, alpha, sigma2, theta){
   ntip = length(tree$tip.label)
 
   # if is internal node
@@ -146,13 +146,13 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
     right = edge[right_edge,2] # index of right child node
     
     output_left <- sd_postorder(left, edge, tree, continuousChar,
-                             μ, V, log_norm_factor, subedges_lengths, sigma2, alpha, theta)
+                             μ, V, log_norm_factor, subedges_lengths, alpha, sigma2, theta)
     μ <- output_left[[1]]
     V <- output_left[[2]]
     log_norm_factor <- output_left[[3]]
     
     output_right <- sd_postorder(right, edge, tree, continuousChar,
-                              μ, V, log_norm_factor, subedges_lengths, sigma2, alpha, theta)
+                              μ, V, log_norm_factor, subedges_lengths, alpha, sigma2, theta)
     μ <- output_right[[1]]
     V <- output_right[[2]]
     log_norm_factor <- output_right[[3]]
@@ -241,7 +241,7 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
   }
 }
 
-sd_logL_pruning <- function(tree, continuousChar, sigma2, alpha, theta){
+sd_logL_pruning <- function(tree, continuousChar, alpha, sigma2, theta){
   ntip = length(tree$tip.label) # number of tips
   edge = tree$edge # equals tree[:edge] in Julia
   n_edges = length(edge[,1]) # number of edges
@@ -256,7 +256,7 @@ sd_logL_pruning <- function(tree, continuousChar, sigma2, alpha, theta){
   root_index = ntip + 1
   
   output <- sd_postorder(root_index, edge, tree, continuousChar,
-                         μ, V, log_norm_factor, subedges_lengths, sigma2, alpha, theta)
+                         μ, V, log_norm_factor, subedges_lengths, alpha, sigma2, theta)
   μ <- output[[1]]
   V <- output[[2]]
   log_norm_factor <- output[[3]]
@@ -285,7 +285,7 @@ sd_logL_pruning <- function(tree, continuousChar, sigma2, alpha, theta){
 #                                                 #
 ###################################################
 
-logL_vcv <- function(tree, continuousChar, sigma2, alpha, theta){
+logL_vcv <- function(tree, continuousChar, alpha, sigma2, theta){
   ntip <- length(tree$tip.label)
   mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
   times <- ape::node.depth.edgelength(tree) # get time at each node from root
@@ -609,7 +609,7 @@ logL_pruning(smaptree, brain, sigma2 = 2, alpha = 1, theta = 6)
 #       Guideline for sd_logL_pruning()           #   
 #                                                 #
 ###################################################
-sd_logL_pruning(smaptree, brain, sigma2 = named_sigma2, alpha = named_alpha, theta = named_theta)
+sd_logL_pruning(smaptree, brain, sigma2 = named_alpha, sigma2 = named_alpha, theta = named_theta)
 ###################################################
 #                                                 #
 #             Guideline for logL_vcv()            #   
@@ -660,7 +660,7 @@ discrete_states <- unique(diet)
 named_sigma2 <- c(2.1, 2.2, 2.3)
 names(named_sigma2) <- discrete_states
 # option 2: match parameter values and discrete states in one line
-named_alpha <- c("MF" = 1.1, "Gr" = 1.2, "Br" = 1.3)
+named_alpha <- c("MF" = 1.1, "Gr" = 1.1, "Br" = 1.1)
 named_theta <- c("MF" = 6.1, "Gr" = 6.2, "Br" = 6.3)
 
 # RUN
