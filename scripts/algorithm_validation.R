@@ -426,11 +426,14 @@ weights.lineage <- function(tree, named_alpha, e){
 # combine to form weight matrix
 weight.matrix <- function(tree, named_alpha){
   ntip = length(tree$tip.label)
-  weight_matrix = matrix(nrow = ntip, ncol = length(named_alpha))
+  weight_matrix = matrix(0, nrow = ntip, ncol = length(named_alpha))
   rownames(weight_matrix) <- tree$tip.label
   colnames(weight_matrix) <- c(names(named_alpha))
   for (i in 1:ntip){
-    weight_matrix[i,] <- weights.lineage(tree, named_alpha, i)
+    w <- weights.lineage(tree, named_alpha, i)
+    for (state in names(w)){
+      weight_matrix[i, state] <- w[state]
+    }
   }
   return(weight_matrix)
 }
@@ -468,7 +471,7 @@ v.sum2 <- function(tree, tip, named_alpha, mrca_node){
     
     
     sum2 <- subedge_lengths %>% 
-      mutate(sum2 = time_span * alpha) %>% 
+      mutate(sum2 = time_span * -alpha) %>% 
       reframe(sum = sum(sum2)) %>% 
       unlist() %>% 
       unname()
@@ -489,6 +492,7 @@ v.sum1 <- function(tree, tip1, tip2, named_alpha, named_sigma2){
     
     mcra_time <- sum(subedge_lengths)
     time_point <- cumsum(c(mcra_time, unname(-subedge_lengths))) # from mcra_node to root
+    time_point[length(time_point)] = 0
     tb <- c(tail(time_point, n = -1)) ## older end of subedge (smaller positive value)
     te <- c(head(time_point, n = -1)) ## younger end of subedge (larger positive value)
     times <- tibble(time_begin = tb,
@@ -509,7 +513,7 @@ vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
   sum2_tip1 <- v.sum2(tree, tip1, named_alpha, mrca_node)
   sum2_tip2 <- v.sum2(tree, tip2, named_alpha, mrca_node)
   
-  exp2 <- exp(-1 * (sum2_tip1 + sum2_tip2))
+  exp2 <- exp(sum2_tip1 + sum2_tip2)
   
   sum1 <- v.sum1(tree, tip1, tip2, named_alpha, named_sigma2)
   
@@ -517,6 +521,7 @@ vcv.pairwise <- function(tree, named_alpha, named_sigma2, tip1, tip2){
   
   return(v_ij)
 }
+
 
 vcv.matrix <- function(tree, named_alpha, named_sigma2){
   ntip <- length(tree$tip.label)
@@ -622,7 +627,7 @@ tree <- artiodactyla
 
 ## continuousChar
 brain <- neocortex$brain_mass_g_log_mean
-names(brain) <- smaptree$tip.label
+names(brain) <- tree$tip.label
 
 # RUN
 logL_vcv(smaptree, brain, named_sigma2[[1]], named_alpha[[1]], named_theta[[1]])
@@ -674,13 +679,14 @@ foobar <- function(phy, a, sigma2){
   tja <- t(tia)
   tij <- tja + tia
   vy <- sigma2 / (2*a)
-  
-  V <- vy * (1 - exp(-2 * a * ta)) * exp(-a * tij)
+  V <- vy * (1 - exp(-2 * a * ta))
+  #V <- vy * (1 - exp(-2 * a * ta)) * exp(-a * tij)
   return(V)
 }
 
 V <- foobar(tree, 0.1, 0.1)
-V[1,2]
+
+V[5,15]
 vcv.pairwise(dummy_tree, 
              c("1" = 0.1, "2" = 0.2), 
              c("1" = 0.1, "2" = 0.1), 1, 2)
@@ -735,10 +741,12 @@ x4 <- sd_logL_pruning(dummy_tree, continuousChar,
                 c("1" = 0.1, "2" = 0.3))
 
 
-V[1,2]
+V[5,5]
 
 
+sd_logL_vcv(smaptree, brain, named_alpha, named_sigma2, named_theta)
 
+sd_logL_pruning(smaptree, brain, named_alpha, named_sigma2, named_theta)
 
 
 
