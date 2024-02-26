@@ -577,8 +577,8 @@ neocortex <- neocortex[match(artiodactyla$tip.label, neocortex$species), ]
 
 # Example
 tree <- artiodactyla
-continuousChar <- neocortex$brain_mass_g_log_mean
-names(continuousChar) <- tree$tip.label
+brain <- neocortex$brain_mass_g_log_mean
+names(brain) <- tree$tip.label
 
 
 ## Guideline for state-dependent methods
@@ -589,12 +589,13 @@ names(continuousChar) <- tree$tip.label
 # Example
 diet <- as.character(neocortex$diet)
 names(diet) <- neocortex$species
+discrete_states <- unique(diet)
 set.seed(123)
 tree <- make.simmap(artiodactyla, diet)
 plot(tree)
 
-alpha = c(rep(rgamma(n=1, shape=1, rate=10), 3))
-#alpha = rgamma(n=3, shape=1, rate=10)
+#alpha = c(rep(rgamma(n=1, shape=1, rate=10), 3))
+alpha = rgamma(n=3, shape=1, rate=10)
 names(alpha) = discrete_states
 
 #sigma2 = c(rep(rgamma(n=1, shape=2, rate=10), 3))
@@ -623,11 +624,10 @@ sd_logL_pruning(tree, brain, alpha, sigma2, theta)
 ###################################################
 
 likelihood_difference = c()
-for (i in 1:3){
+for (i in 1:20){
   alpha = rgamma(n=3, shape=1, rate=10)
   sigma2 = rgamma(n=3, shape=2, rate=10)
-  #theta = rnorm(3, mean = 0, sd = 3)
-  theta = c(rep(rnorm(1, mean = 0, sd = 3), 3))
+  theta = rnorm(3, mean = 0, sd = 3)
   names(alpha) = discrete_states
   names(sigma2) = discrete_states
   names(theta) = discrete_states
@@ -635,3 +635,6 @@ for (i in 1:3){
   l2 = sd_logL_pruning(tree, brain, alpha, sigma2, theta)
   likelihood_difference[i] = l1 - l2
 }
+
+ggplot(as.data.frame(likelihood_difference)) +
+  geom_point(aes(x = 1:20, y = likelihood_difference))
