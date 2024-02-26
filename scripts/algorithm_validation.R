@@ -353,8 +353,8 @@ nodesAlongLineage <- function(tree, old_node, young_node){
 # find subedges of a lineage
 lineage.constructor <- function(tree, root_node, e){
   nodes <- nodesAlongLineage(tree, root_node, e)
-  edges <- which(tree$edge[,2] %in% nodes) # from tip to root
-  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]])))
+  edges <- which(tree$edge[,2] %in% nodes) # from root to tip
+  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # tip to root
 
   state_changes <- names(subedge_lengths) # from tip to root
   #state_changes <- c(state_changes[1], state_changes) # add root state, assuming root state equals the state of the closest subedge
@@ -390,7 +390,7 @@ weights.lineage <- function(tree, alpha, e){
     lineage <- lineage %>%
       mutate(
         exp1 = -1 * expm1(-1 * alpha * time_span),
-        sum2_temp = -alpha * time_span)
+        sum2_temp = -1 * alpha * time_span)
     lineage$exp1[length(lineage$exp1)] = 1
     lineage$sum2 = 0
 
@@ -511,6 +511,7 @@ sd_logL_vcv <- function(tree, continuousChar, alpha, sigma2, theta){
   alpha = alpha[sort(names(alpha))]
   sigma2 = sigma2[sort(names(sigma2))]
   theta = theta[sort(names(theta))]
+  theta = as.matrix(theta, nrow = 3)
   
   ntip <- length(tree$tip.label)
   V = vcv.matrix(tree, alpha, sigma2)
@@ -592,16 +593,16 @@ set.seed(123)
 tree <- make.simmap(artiodactyla, diet)
 plot(tree)
 
-#alpha = c(rep(rgamma(n=1, shape=1, rate=10), 3))
-alpha = rgamma(n=3, shape=1, rate=10)
+alpha = c(rep(rgamma(n=1, shape=1, rate=10), 3))
+#alpha = rgamma(n=3, shape=1, rate=10)
 names(alpha) = discrete_states
 
 #sigma2 = c(rep(rgamma(n=1, shape=2, rate=10), 3))
 sigma2 = rgamma(n=3, shape=2, rate=10)
 names(sigma2) = discrete_states
 
-theta = c(rep(rnorm(1, mean = 0, sd = 3), 3))
-#theta = rnorm(3, mean = 0, sd = 3)
+#theta = c(rep(rnorm(1, mean = 0, sd = 3), 3))
+theta = rnorm(3, mean = 0, sd = 3)
 names(theta) = discrete_states
 
 
@@ -625,7 +626,8 @@ likelihood_difference = c()
 for (i in 1:3){
   alpha = rgamma(n=3, shape=1, rate=10)
   sigma2 = rgamma(n=3, shape=2, rate=10)
-  theta = rnorm(3, mean = 0, sd = 3)
+  #theta = rnorm(3, mean = 0, sd = 3)
+  theta = c(rep(rnorm(1, mean = 0, sd = 3), 3))
   names(alpha) = discrete_states
   names(sigma2) = discrete_states
   names(theta) = discrete_states
@@ -633,5 +635,3 @@ for (i in 1:3){
   l2 = sd_logL_pruning(tree, brain, alpha, sigma2, theta)
   likelihood_difference[i] = l1 - l2
 }
-
-
