@@ -1,0 +1,130 @@
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+characterCont <- 1
+characterDisc <- 1
+
+### Read in the tree
+tree <- readTrees("data/kubo_2019/tree_wo_footpads.tre")[1]
+ntips <- tree.ntips()
+nbranches <- 2 * ntips - 2
+
+### Read in the continuous-character data
+cont <- readContinuousCharacterData("data/kubo_2019/cont_bodymass_wo_footpads.nex")
+cont.excludeAll()
+cont.includeCharacter(characterCont)
+
+### Read in the discrete-character data
+disc <- readDiscreteCharacterData("data/kubo_2019/disc_footpostures_wo_footpads.nex")
+num_disc_states <- disc.getStateDescriptions().size()
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+Q <- fnJC(num_disc_states)
+
+# make the transition rate parameter
+lambda ~ dnLoguniform(1e-3, 2)
+moves.append( mvScale(lambda, weight=1.0) )
+
+# make the data-augmented CTCM model
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X.clamp(disc)
+
+# include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=20.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=20.0) )
+
+# keep track of the number of transitions
+for(i in 1:nbranches) {
+    num_changes[i] := sum(X.numCharacterChanges(i))
+}
+total_num_changes := sum(num_changes)
+
+
+###############################
+# Specify priors for OU model #
+###############################
+
+
+##########################################
+# state-dependent theta                  #
+##########################################
+
+root_age := tree.rootAge()
+## mvScale for strictly positive parameters, Bactrian for bimodal
+
+
+#sigma2Stateless ~ dnLognormal(1.145535, 0.587)
+#moves.append( mvScale(sigma2Stateless, weight=2.0) )
+
+
+
+for (i in 1:num_disc_states){
+  alpha[i] ~ dnGamma(3, root_age*2)
+  moves.append( mvScaleBactrian(alpha[i], weight=2.0) )
+  
+  
+  #sigma2[i] := sigma2Stateless
+  sigma2[i] ~ dnLognormal(1.145535, 0.587)
+  moves.append( mvScale(sigma2[i], weight=2.0) )
+
+  theta[i] ~ dnUniform(-2.75, 3.08)
+  moves.append( mvSlide(theta[i], weight=2.0) )
+
+  halfLife[i] := ln(2) / alpha[i]
+  stationaryVariance[i] := sigma2[i] / (2 * alpha[i])
+  
+}
+
+
+
+##########################
+# Specify the OU process #
+##########################
+
+Y ~ dnPhyloOUSD(tree, X, theta=theta, alpha=alpha, sigma=sigma2^0.5)
+Y.clamp(cont)
+
+
+
+#############
+# The Model #
+#############
+
+mymodel = model(Q)
+
+### set up the monitors that will output parameter values to file and screen
+#    monitors.append( mnModel(filename="output/sdOU_simulation_n100t3.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, total_num_changes) )
+
+
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="mixed")
+
+
+### run the MCMC ###
+mymcmc.burnin(generations=2500, tuningInterval=100)
+mymcmc.run(generations=50000)
+
+
+
+## quit ##
+q()

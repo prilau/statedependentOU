@@ -610,11 +610,11 @@ names(theta) = discrete_states
 
 
 # RUN
-logL_vcv(tree, brain, alpha[[1]], sigma2[[1]], theta[[1]])
-logL_pruning(tree, brain, alpha[[1]], sigma2[[1]], theta[[1]])
+l1 <- logL_vcv(tree, brain, alpha[[1]], sigma2[[1]], theta[[1]])
+l2 <- logL_pruning(tree, brain, alpha[[1]], sigma2[[1]], theta[[1]])
 
-sd_logL_vcv(tree, brain, alpha, sigma2, theta)
-sd_logL_pruning(tree, brain, alpha, sigma2, theta)
+l3 <- sd_logL_vcv(tree, brain, alpha, sigma2, theta)
+l4 <- sd_logL_pruning(tree, brain, alpha, sigma2, theta)
 
 
 ###################################################
@@ -624,17 +624,23 @@ sd_logL_pruning(tree, brain, alpha, sigma2, theta)
 ###################################################
 
 likelihood_difference = c()
-for (i in 1:20){
+bar = txtProgressBar(style=3, width=40)
+for (i in 1:100){
   alpha = rgamma(n=3, shape=1, rate=10)
   sigma2 = rgamma(n=3, shape=2, rate=10)
   theta = rnorm(3, mean = 0, sd = 3)
   names(alpha) = discrete_states
   names(sigma2) = discrete_states
   names(theta) = discrete_states
-  l1 = sd_logL_vcv(tree, brain, alpha, sigma2, theta)
   l2 = sd_logL_pruning(tree, brain, alpha, sigma2, theta)
-  likelihood_difference[i] = l1 - l2
+  l1 = sd_logL_vcv(tree, brain, alpha, sigma2, theta)
+  likelihood_difference[i] = abs(l1 - l2)
+  setTxtProgressBar(bar, i / 100)
 }
 
+
+hist(log(likelihood_difference), breaks = 20)
+
 ggplot(as.data.frame(likelihood_difference)) +
-  geom_point(aes(x = 1:20, y = likelihood_difference))
+  geom_histogram(aes(likelihood_difference))
+ggsave("Desktop/likelihood_difference_hist.pdf")
