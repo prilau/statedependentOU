@@ -7,7 +7,7 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-tree <- readTrees("data/kubo_2019/tree_wo_footpads.tre")[1]
+tree <- readTrees("data/kubo_2019/tree.nex")[1]
 ntips <- tree.ntips()
 nbranches <- 2 * ntips - 2
 
@@ -106,7 +106,7 @@ Y.clamp(cont)
 mymodel = model(Q)
 
 ### set up the monitors that will output parameter values to file and screen
-#    monitors.append( mnModel(filename="output/sdOU_simulation_n100t3.log", printgen=10) )
+monitors.append( mnModel(filename="output/kubo_2019_ast.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, total_num_changes) )
 
 
@@ -117,7 +117,7 @@ monitors.append( mnScreen(printgen=1000, total_num_changes) )
 ################
 
 ### workspace mcmc ###
-mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="mixed")
+mymcmc = mcmc(mymodel, monitors, moves, nruns=5, combine="mixed")
 
 
 ### run the MCMC ###
