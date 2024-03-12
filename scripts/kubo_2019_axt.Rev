@@ -66,25 +66,20 @@ root_age := tree.rootAge()
 ## mvScale for strictly positive parameters, Bactrian for bimodal
 
 
-#sigma2Stateless ~ dnLognormal(1.145535, 0.587)
-#moves.append( mvScale(sigma2Stateless, weight=2.0) )
-
-
+diffusion ~ dnLognormal(1.145535, 0.587)
+moves.append( mvScale(diffusion, weight=2.0) )
 
 for (i in 1:num_disc_states){
   alpha[i] ~ dnGamma(3, root_age*2)
   moves.append( mvScaleBactrian(alpha[i], weight=2.0) )
   
-  
-  #sigma2[i] := sigma2Stateless
-  sigma2[i] ~ dnLognormal(1.145535, 0.587)
-  moves.append( mvScale(sigma2[i], weight=2.0) )
+  sigma2[i] := diffusion
 
   theta[i] ~ dnUniform(-2.75, 3.08)
   moves.append( mvSlide(theta[i], weight=2.0) )
 
   halfLife[i] := ln(2) / alpha[i]
-  stationaryVariance[i] := sigma2[i] / (2 * alpha[i])
+  stationaryVariance[i] := diffusion / (2 * alpha[i])
   
 }
 
@@ -106,7 +101,7 @@ Y.clamp(cont)
 mymodel = model(Q)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/kubo_2019_ast.log", printgen=10) )
+monitors.append( mnModel(filename="output/kubo_2019_axt.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, total_num_changes) )
 
 
