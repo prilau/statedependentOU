@@ -1,0 +1,51 @@
+#NEXUS
+BEGIN DATA;
+  DIMENSIONS NTAX=43 NCHAR=1;
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123456789";
+  MATRIX
+    Antilocapra_americana                           MF
+    Addax_nasomaculatus                             MF
+    Aepyceros_melampus                              MF
+    Alcelaphus_buselaphus_buselaphus                Gr
+    Antidorcas_marsupialis                          MF
+    Antilope_cervicapra                             MF
+    Cephalophus_natalensis                          Br
+    Cephalophus_nigrifrons                          Br
+    Madoqua_kirkii                                  Br
+    Connochaetes_gnou                               Gr
+    Connochaetes_taurinus_1                         Gr
+    Eudorcas_rufifrons_2                            MF
+    Gazella_dorcas_pelzelnii                        MF
+    Hippotragus_equinus                             Gr
+    Hippotragus_niger                               Gr
+    Kobus_ellipsiprymnus                            MF
+    Kobus_leche                                     MF
+    Litocranius_walleri                             Br
+    Nanger_dama                                     MF
+    Nanger_granti                                   MF
+    Nesotragus_moschatus                            Br
+    Oreotragus_oreotragus                           MF
+    Oryx_dammah                                     MF
+    Oryx_gazella                                    MF
+    Ourebia_ourebi                                  MF
+    Philantomba_monticola_1                         Br
+    Rahicerus_campestris                            MF
+    Redunca_arundinum                               Gr
+    Redunca_fulvorufula                             Gr
+    Rupicapra_rupicapra_FJ207538                    MF
+    Saiga_tatarica                                  MF
+    Sylvicapra_grimmia                              Br
+    Syncerus_caffer                                 Gr
+    Tragelaphus_oryx                                MF
+    Tragelaphus_angasii                             Br
+    Tragelaphus_eurycerus                           MF
+    Tragelaphus_imberbis                            MF
+    Tragelaphus_scriptus_3                          Br
+    Tragelaphus_spekii                              MF
+    Tragelaphus_strepsiceros                        Br
+    Capreolus_capreolus                             Br
+    Giraffa_camelopardalis_angolensis_NC012100      Br
+    Okapia_johnstoni                                Br
+  ;
+END;
+
