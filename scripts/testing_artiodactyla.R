@@ -207,6 +207,15 @@ sd_logL_pruning <- function(tree, continuousChar, alpha, sigma2, theta){
 
 
 # read data
+data("artiodactyla")
+data("neocortex")
+neocortex <- neocortex[match(artiodactyla$tip.label, neocortex$species), ]
+tree <- artiodactyla
+brain <- neocortex$brain_mass_g_log_mean
+names(brain) <- tree$tip.label
+
+
+
 all_trees <- read.simmap("data/1_validation/testing_artiodactyla/artiodactyla_all.tre", format="phylip",version=1)
 parameter_csv <- read.csv("data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
 
