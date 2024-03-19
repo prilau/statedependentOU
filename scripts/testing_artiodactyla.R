@@ -1,7 +1,8 @@
 library(ape)
 library(pracma)
 library(phytools)
-library(tibble) 
+library(slouch)
+library(tibble)
 library(tidyverse)
 
 
