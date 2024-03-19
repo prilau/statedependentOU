@@ -221,6 +221,7 @@ all_trees <- read.simmap("data/1_validation/testing_artiodactyla/artiodactyla_al
 parameter_csv <- read.csv("data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
 
 pruning_likelihoods = c()
+vcv_likelihoods = c()
 for (i in 1:10){
   tree <- all_trees[[i]]
   alpha = c(parameter_csv$alpha_Br[i], parameter_csv$alpha_Gr[i], parameter_csv$alpha_MF[i])
@@ -230,6 +231,8 @@ for (i in 1:10){
   theta = c(parameter_csv$theta_Br[i], parameter_csv$theta_Gr[i], parameter_csv$theta_MF[i])
   names(theta) = c("Br", "Gr", "MF")
   pruning_likelihoods[i] <- sd_logL_pruning(tree, brain, alpha, sigma2, theta)
+  #vcv_likelihoods[i] <- sd_logL_vcv(tree, brain, alpha, sigma2, theta)
 }
 
 pruning_likelihoods
+vcv_likelihoods
