@@ -144,6 +144,7 @@ sd_postorder <- function(node_index, edge, tree, continuousChar,
       state <- names(sub_bl_right[i])
       log_nf_right = log_nf_right + sub_bl_right[[i]] * alpha[[state]]
     }
+
     
     contrast = mean_left - mean_right
     a = -(contrast*contrast / (2*(var_left+var_right)))
@@ -221,7 +222,32 @@ all_trees <- read.simmap("data/1_validation/testing_artiodactyla/artiodactyla_al
 parameter_csv <- read.csv("data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
 
 pruning_likelihoods = c()
-vcv_likelihoods = c()
+#vcv_likelihoods = c()
+for (i in 1:10){
+  tree <- all_trees[[i]]
+  alpha = c(parameter_csv$alpha_Br[i], parameter_csv$alpha_Gr[i], parameter_csv$alpha_MF[i])
+  #alpha = c(1,1,1)
+  names(alpha) = c("Br", "Gr", "MF")
+  sigma2 = c(parameter_csv$sigma2_Br[i], parameter_csv$sigma2_Gr[i], parameter_csv$sigma2_MF[i])
+  #sigma2 = c(1,1,1)
+  names(sigma2) = c("Br", "Gr", "MF")
+  theta = c(parameter_csv$theta_Br[i], parameter_csv$theta_Gr[i], parameter_csv$theta_MF[i])
+  #theta = c(0,0,0)
+  names(theta) = c("Br", "Gr", "MF")
+  pruning_likelihoods[i] <- sd_logL_pruning(tree, brain, alpha, sigma2, theta)
+  #vcv_likelihoods[i] <- sd_logL_vcv(tree, brain, alpha, sigma2, theta)
+}
+
+pruning_likelihoods
+#vcv_likelihoods
+
+
+
+
+
+
+pruning_likelihoods = c()
+#vcv_likelihoods = c()
 for (i in 1:10){
   tree <- all_trees[[i]]
   alpha = c(parameter_csv$alpha_Br[i], parameter_csv$alpha_Gr[i], parameter_csv$alpha_MF[i])
@@ -235,4 +261,4 @@ for (i in 1:10){
 }
 
 pruning_likelihoods
-vcv_likelihoods
+
