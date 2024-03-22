@@ -553,16 +553,16 @@ sd_logL_vcv <- function(tree, continuousChar, alpha, sigma2, theta){
 ###################################################
 
 # From local
-#dummy_tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap2.tre",
-#                          format="phylip",version=1)
+dummy_tree <- read.simmap("data/1_validation/dummy_threetaxon_simmap2.tre",
+                          format="phylip",version=1)
 
 # read.nexus.data() gives lists of species with character values, need to change to input format for our functions
-#char <- read.nexus.data("data/1_validation/dummy_threetaxon_Continuous.nex")
-#continuousChar <- c()
-#for (species in char){
-#  continuousChar <- append(continuousChar, as.numeric(species))
-#}
-#names(continuousChar) <- names(char)
+char <- read.nexus.data("data/1_validation/dummy_threetaxon_Continuous.nex")
+continuousChar <- c()
+for (species in char){
+  continuousChar <- append(continuousChar, as.numeric(species))
+}
+names(continuousChar) <- names(char)
 
 
 # From slouch
@@ -644,3 +644,4 @@ hist(log(likelihood_difference), breaks = 20)
 ggplot(as.data.frame(likelihood_difference)) +
   geom_histogram(aes(likelihood_difference))
 ggsave("Desktop/likelihood_difference_hist.pdf")
+

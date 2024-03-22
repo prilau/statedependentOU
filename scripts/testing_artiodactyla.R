@@ -31,6 +31,22 @@ library(tidyverse)
 #
 #write.csv(parameter_1000, "data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
 #
+# data("artiodactyla")
+# data("neocortex")
+# neocortex <- neocortex[match(artiodactyla$tip.label, neocortex$species), ]
+# brain <- neocortex$brain_mass_g_log_mean
+# names(brain) <- artiodactyla$tip.label
+# logL <- tibble(rb = rep(0,1000), R = rep(0,1000))
+# metadata <- read.csv("data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
+# alltrees <- read.simmap("data/1_validation/testing_artiodactyla/artiodactyla_all.tre", format="phylip")
+# root_state <- c()
+
+
+# root_state <- as.numeric(root_state)
+# metadata$root_state <- root_state
+# metadata <- metadata %>% mutate(X = NULL)
+# write.csv(metadata, "data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
+
 #tree <- artiodactyla
 #brain <- neocortex$brain_mass_g_log_mean
 #names(brain) <- tree$tip.label
@@ -251,14 +267,36 @@ pruning_likelihoods = c()
 for (i in 1:10){
   tree <- all_trees[[i]]
   alpha = c(parameter_csv$alpha_Br[i], parameter_csv$alpha_Gr[i], parameter_csv$alpha_MF[i])
-  names(alpha) = c("Br", "Gr", "MF")
+  names(alpha) = c("0", "1", "2")
   sigma2 = c(parameter_csv$sigma2_Br[i], parameter_csv$sigma2_Gr[i], parameter_csv$sigma2_MF[i])
-  names(sigma2) = c("Br", "Gr", "MF")
+  names(sigma2) = c("0", "1", "2")
   theta = c(parameter_csv$theta_Br[i], parameter_csv$theta_Gr[i], parameter_csv$theta_MF[i])
-  names(theta) = c("Br", "Gr", "MF")
+  names(theta) = c("0", "1", "2")
   pruning_likelihoods[i] <- sd_logL_pruning(tree, brain, alpha, sigma2, theta)
   #vcv_likelihoods[i] <- sd_logL_vcv(tree, brain, alpha, sigma2, theta)
 }
 
 pruning_likelihoods
 
+
+
+for (i in 1:1000){
+  tree <- alltrees[[i]]
+  #root_state[i] <- names(tree$maps[[1]][1])
+  alpha <- c()
+  sigma2 <- c()
+  theta <- c()
+  alpha[[1]] <- metadata$alpha_Br[i]
+  alpha[[2]] <- metadata$alpha_Gr[i]
+  alpha[[3]] <- metadata$alpha_MF[i]
+  sigma2[[1]] <- metadata$sigma2_Br[i]
+  sigma2[[2]] <- metadata$sigma2_Gr[i]
+  sigma2[[3]] <- metadata$sigma2_MF[i]
+  theta[[1]] <- metadata$theta_Br[i]
+  theta[[2]] <- metadata$theta_Gr[i]
+  theta[[3]] <- metadata$theta_MF[i]
+  names(alpha) <- c("0", "1", "2")
+  names(sigma2) <- c("0", "1", "2")
+  names(theta) <- c("0", "1", "2")
+  logL$R[i] <- sd_logL_pruning(tree, brain, alpha, sigma2, theta)
+}
