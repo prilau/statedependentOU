@@ -399,15 +399,15 @@ weights.lineage <- function(tree, alpha, e){
       lineage$sum2_temp[i] = lineage$sum2[i] + lineage$sum2_temp[i]
     }
 
-    weights = lineage %>% mutate(exp_final = exp1 * exp(sum2)) %>% 
+    all_weights = lineage %>% mutate(exp_final = exp1 * exp(sum2)) %>% 
       group_by(state) %>% 
       summarise(weight = sum(exp_final))
     
-    for (i in 1:nrow(weights)){
-      W[, weights$state[i]] = weights$weight[i]
+    for (i in 1:nrow(all_weights)){
+      W[, all_weights$state[i]] = all_weights$weight[i]
     }
   } else {
-    W[, weights$state[1]] = 1
+    W[, lineage$state[1]] = 1
   }
   
   return(W)
