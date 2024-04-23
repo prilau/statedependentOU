@@ -2,171 +2,105 @@ library(ape)
 library(phytools)
 library(geiger)
 library(TESS)
-source("scripts/readWriteCharacterData.R")
 
-# simulate the tree
-num_tips = 250
-tree = ladderize(tess.sim.taxa(1, num_tips, 10, 1, 0.5)[[1]])
-# rescale the tree
-tree$edge.length = tree$edge.length / max(branching.times(tree))
+simulateContinuous = function(tree, halflife, theta, sigma2) {
 
-write.tree(tree, file=paste0("data/n100_simulation.tre"))
-
-
-tree_lengths <- sum(tree$edge.length)
-# specify rates so that the expected number of changes is 5
-rates = 10 / tree_lengths
-names(rates) = num_tips
-
-# specify the Mk2 rate matrix
-Q = matrix(1, 2, 2)
-diag(Q) = -1
-rownames(Q) = colnames(Q) = 1:2 - 1
-
-# simulate the discrete characters
-# track the number of rejected simulations based on proportional
-# representation
-colors = c("0"="blue","1"="red")
-num_rejections = numeric(length(num_tips))
-num_simulations = numeric(length(num_tips))
-names(num_rejections) = names(num_simulations) = num_tips
-this_rate = rates[as.character(num_tips)]
-history = sim.history(tree, this_rate * Q, nsim=1, message=FALSE)
-while (! (mean(history$states == "0") > 0.2 & (mean(history$states == "1") > 0.2) ) ) {
-  history = sim.history(tree, this_rate * Q, nsim=1, message=FALSE)
-  num_rejections[as.character(num_tips)] = num_rejections[as.character(num_tips)] + 1
-}
-num_simulations[as.character(num_tips)] = num_simulations[as.character(num_tips)] + 1
-maps = history$mapped.edge[,c("0","1")]
-
-pdf("data/n100History.pdf")
-plot(history, col=colors)
-dev.off()
-
-writeCharacterData(t(t(history$states)), file=paste0("data/n100_simulationDiscrete.nex"), type="Standard")
-
-
-
-
-
-
-# obtain root state
-obtainRootState = function(tree) {
-  edge1d <- rev(postorder(tree))[1]
-  rootState <- names(history$maps[[edge1d]][1])
-  rootState <- as.integer(rootState)
-  return(rootState)
-}
-
-obtainRootState(tree)
-
-
-treeheight <- function(tree) max(node.depth.edgelength(tree))
-obtainContinuousStates_ver7 = function(tree, halflifeRoot, halflifeAlt,
-                                       thetaRoot, thetaAlt, sigmaRoot, sigmaAlt,
-                                       initialValue = thetaRoot, dt = 0.002) {
-  if (missing(dt)){
-    dt <- 0.002 * treeheight(history)
-  }
   ## Re-parameterization
-  alphaRoot <- log(2) / halflifeRoot 
-  alphaAlt <- log(2) / halflifeAlt
-  
-  cont_states <- list()
-  ## obtain root state
-  root_state <- obtainRootState(tree)
+  alpha <- log(2) / halflife
+  #sigma2 <- stationaryvar * 2 * alpha
+
   preorder <- rev(postorder(tree))
   edges <- tree$edge
-  ntips <- length(tree$tip.label)
-  root_node <- ntips + 1
-  node_values <- list()
-  node_values[[root_node]] <- initialValue
-  
-  #for (i in 1:length(branch_order)) {
+  root_node <- length(tree$tip.label) + 1
+  state = tree$node.states[root_node]
+  expected_mu <- rep(0, length(tree$node.states))
+  expected_mu[root_node] <- theta[[state]]
+  variance <- rep(0, length(tree$node.states))
+
   for (edge_index in preorder){
     sub_edges <- tree$maps[[edge_index]]
     parent_node <- edges[edge_index, 1]
-    xt0 <- node_values[[parent_node]]
+    y <- expected_mu[parent_node]
+    v <- variance[parent_node]
     for (j in 1:length(sub_edges)) {
-      dt_length = sub_edges[j] %/% dt
-      dt_remainder = sub_edges[j] %% dt
-      
-      if (root_state == as.integer(names(sub_edges[j]))) {
-        for (k in 1:dt_length) {
-          xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt + sigmaRoot * sqrt(dt) * rnorm(1)
-          xt0 <- xt1
-        }
-        xt1 <- xt0 + alphaRoot * (thetaRoot - xt0) * dt_remainder + sigmaRoot * sqrt(dt_remainder) * rnorm(1)
-        xt0 <- xt1
-      }
-      
-      else {
-        for (k in 1:dt_length) {
-          xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt + sigmaAlt * sqrt(dt) * rnorm(1)
-          xt0 <- xt1
-        }
-        xt1 <- xt0 + alphaAlt * (thetaAlt - xt0) * dt_remainder + sigmaAlt * sqrt(dt_remainder) * rnorm(1)
-        xt0 <- xt1
-      }
+      state <- names(sub_edges[j])
+      y <- y + (theta[[state]] - y) * exp(-alpha[[state]] * sub_edges[[j]])
+      v <- v * (exp(2 * alpha[[state]] * sub_edges[[j]])) + sigma2[[state]] / (2 * alpha[[state]]) * (exp(2 * alpha[[state]] * sub_edges[[j]]) - 1)
     }
     desc_node <- edges[edge_index, 2]
-    node_values[[desc_node]] <- xt0
+    expected_mu[desc_node] <- y
+    variance[desc_node] <- v
   }
-  disc_states <- list()
-  for (i in 1:length(edges[,2])) {
-    is_tip <- !(edges[i,2] %in% edges[,1])
-    if (is_tip) {
-      tip_label <- tips(tree, edges[i,2])
-      cont_states[[tip_label]] <- unname(node_values[[edges[i,2]]])
-      disc_states[[tip_label]] <- tail(names(history$maps[[i]]), n = 1)
-    }
+  
+  cont_list <- list()
+  for (i in 1:length(tree$tip.label)){
+    tip <- tree$tip.label[i]
+    cont_list[[tip]] <- rnorm(1, mean = expected_mu[i], sd = sqrt(variance[i]))
   }
-  res <- list(
-    cont_states,
-    disc_states
-  )
-  return(res)
+  
+  return(cont_list)
 }
 
-plot(history)
+stateless_halflife <- c(1, 1, 1)
+sd_halflife <- c(0.5, 1, 5)
+stateless_theta <- c(2, 2, 2)
+sd_theta <- c(2, 4, 6)
+stateless_sigma2 <- c(1, 1, 1)
+sd_sigma2 <- c(0.05, 1, 2)
 
-cont_states_ver7 <- obtainContinuousStates_ver7(tree = history,
-                                                halflifeRoot = 0.35, halflifeAlt = 0.35,
-                                                thetaRoot = 50, thetaAlt = 20,
-                                                sigmaRoot = 5, sigmaAlt = 5,
-                                                initialValue = 50, dt = 0.001)
+names(stateless_halflife) = 
+  names(sd_halflife) = 
+  names(stateless_theta) =
+  names(sd_theta) =  
+  names(stateless_sigma2) =  
+  names(sd_sigma2) = 
+  c("0", "1", "2")
 
-par(mar = c(6,7,3,3))
-hist(as.numeric(cont_states_ver7[[1]]), xlab = "tip character values", ylab = "frequency")
+cat("simulating continuous characters.\n")
 
-treeheight(history)
+sd_combination   = c("xxx", "xxt", "xsx", "axx", "asx", "axt", "xst", "ast")
+reps       = 80
+
+grid = expand.grid(combination=sd_combination, tree=1:reps,
+                   stringsAsFactors=FALSE)
+bar = txtProgressBar(style=3, width=40)
+for(i in 1:nrow(grid)) {
+  
+  this_row = grid[i,]
+  this_combo    = this_row[[1]]
+  this_tree        = this_row[[2]]
+
+  # read the history
+  this_dir = paste0("data/2_simulation/2a_state_dependency/",this_combo, "/t", this_tree)
+  load(paste0(this_dir, "/history.Rda"))
+  
+  if (isTRUE(grepl("a", this_combo))){
+    halflife <- sd_halflife
+  } else {
+    halflife <- stateless_halflife
+  }
+  
+  if (isTRUE(grepl("s", this_combo))){
+    sigma2 <- sd_sigma2
+  } else {
+    sigma2 <- stateless_sigma2
+  }
+  
+  if (isTRUE(grepl("t", this_combo))){
+    theta <- sd_theta
+  } else {
+    theta <- stateless_theta
+  }
+  
+  cont_states <- simulateContinuous(tree = history,
+                                    halflife, theta, sigma2)
+  
+  write.nexus.data(cont_states, 
+                   file = paste0(this_dir, "/continuous.nex"),
+                   format="Continuous")
+  setTxtProgressBar(bar, i / nrow(grid))
+}
+cat("\n")
 
 
-library(slouch)
-df <- data.frame(
-  "species" = names(cont_states_ver7[[1]]),
-  "y" = as.numeric(cont_states_ver7[[1]]),
-  "regime" = unname(unlist(cont_states_ver7[[2]]))
-)
-df <- df[match(history$tip.label, df$species), ]
 
-m0 <- slouch.fit(
-  history,
-  hl_values = seq(0.05, 0.25, length.out = 35),
-  sigma2_y_values = seq(35, 65, length.out = 35),
-  response = df$y,
-  species = df$species,
-  fixed.fact = df$regime,
-  anc_maps = "simmap",
-  hillclimb = F
-)
-m0
-summary(m0)
-plot(m0)
-regimeplot(m0)
-summary(m0)
-
-
-write.nexus.data(cont_states_ver7[[1]]), file = "data/n100_simulationDiscrete.nex", format="Continuous")
-
-var(unlist(cont_states_ver7[[1]]))
