@@ -15,21 +15,19 @@ simulateContinuous = function(tree, halflife, theta, sigma2) {
   state = tree$node.states[root_node]
   expected_mu <- rep(0, length(tree$node.states))
   expected_mu[root_node] <- theta[[state]]
-  variance <- rep(0, length(tree$node.states))
 
   for (edge_index in preorder){
     sub_edges <- tree$maps[[edge_index]]
     parent_node <- edges[edge_index, 1]
     y <- expected_mu[parent_node]
-    v <- variance[parent_node]
     for (j in 1:length(sub_edges)) {
       state <- names(sub_edges[j])
-      y <- y + (theta[[state]] - y) * exp(-alpha[[state]] * sub_edges[[j]])
-      v <- v * (exp(2 * alpha[[state]] * sub_edges[[j]])) + sigma2[[state]] / (2 * alpha[[state]]) * (exp(2 * alpha[[state]] * sub_edges[[j]]) - 1)
+      mu <- y * exp(-alpha[[state]] * sub_edges[[j]]) + theta[[state]] * (1 - exp(-alpha[[state]] * sub_edges[[j]]))
+      v <- sigma2[[state]] / (2 * alpha[[state]]) * (1 - exp(-2 * alpha[[state]] * sub_edges[[j]]))
+      y <- rnorm(n=1, mu, sqrt(v))    
     }
     desc_node <- edges[edge_index, 2]
     expected_mu[desc_node] <- y
-    variance[desc_node] <- v
   }
   
   cont_list <- list()
