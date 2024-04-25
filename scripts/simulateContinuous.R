@@ -13,13 +13,13 @@ simulateContinuous = function(tree, halflife, theta, sigma2) {
   edges <- tree$edge
   root_node <- length(tree$tip.label) + 1
   state = tree$node.states[root_node]
-  expected_mu <- rep(0, length(tree$node.states))
-  expected_mu[root_node] <- theta[[state]]
+  mu_at_nodes <- rep(0, length(tree$node.states))
+  mu_at_nodes[root_node] <- theta[[state]]
 
   for (edge_index in preorder){
     sub_edges <- tree$maps[[edge_index]]
     parent_node <- edges[edge_index, 1]
-    y <- expected_mu[parent_node]
+    y <- mu_at_nodes[parent_node]
     for (j in 1:length(sub_edges)) {
       state <- names(sub_edges[j])
       mu <- y * exp(-alpha[[state]] * sub_edges[[j]]) + theta[[state]] * (1 - exp(-alpha[[state]] * sub_edges[[j]]))
@@ -27,13 +27,13 @@ simulateContinuous = function(tree, halflife, theta, sigma2) {
       y <- rnorm(n=1, mu, sqrt(v))    
     }
     desc_node <- edges[edge_index, 2]
-    expected_mu[desc_node] <- y
+    mu_at_nodes[desc_node] <- y
   }
   
   cont_list <- list()
   for (i in 1:length(tree$tip.label)){
     tip <- tree$tip.label[i]
-    cont_list[[tip]] <- expected_mu[tip]
+    cont_list[[tip]] <- mu_at_nodes[i]
   }
   
   return(cont_list)
