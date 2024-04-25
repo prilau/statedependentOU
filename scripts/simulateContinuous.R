@@ -33,7 +33,7 @@ simulateContinuous = function(tree, halflife, theta, sigma2) {
   cont_list <- list()
   for (i in 1:length(tree$tip.label)){
     tip <- tree$tip.label[i]
-    cont_list[[tip]] <- rnorm(1, mean = expected_mu[i], sd = sqrt(variance[i]))
+    cont_list[[tip]] <- expected_mu[tip]
   }
   
   return(cont_list)
