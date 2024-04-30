@@ -3,7 +3,7 @@ library(phytools)
 library(geiger)
 library(TESS)
 
-simulateContinuous = function(tree, halflife, theta, sigma2) {
+simulateContinuous = function(tree, halflife, theta, sigma2, rootState="optimum") {
 
   ## Re-parameterization
   alpha <- log(2) / halflife
@@ -14,8 +14,16 @@ simulateContinuous = function(tree, halflife, theta, sigma2) {
   root_node <- length(tree$tip.label) + 1
   state = tree$node.states[root_node]
   mu_at_nodes <- rep(0, length(tree$node.states))
-  mu_at_nodes[root_node] <- theta[[state]]
-
+  
+  if (rootState == "optimum"){
+    mu_at_nodes[root_node] <- theta[[state]]
+  } else if (rootState == "distribution") {
+    mu_at_nodes[root_node] <- rnorm(1, mean = theta[[state]],
+                                    sd = sqrt(sigma2[[state]]/(2*alpha[[state]])))
+  } else if (rootState == "parameter"){
+    mu_at_nodes[root_node] <- runif(1, min = min(theta)/2, max = max(theta)*2)
+  }
+  
   for (edge_index in preorder){
     sub_edges <- tree$maps[[edge_index]]
     parent_node <- edges[edge_index, 1]
@@ -91,7 +99,7 @@ for(i in 1:nrow(grid)) {
   }
   
   cont_states <- simulateContinuous(tree = history,
-                                    halflife, theta, sigma2)
+                                    halflife, theta, sigma2, rootState = "theta")
   
   write.nexus.data(cont_states, 
                    file = paste0(this_dir, "/continuous.nex"),

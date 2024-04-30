@@ -17,16 +17,16 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/4_empirical/haemulidae_Tree.tre")[1]
+T <- readTrees("data/3_empirical/haemulidae_Tree.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/4_empirical/haemulidae_Continuous.nex")
+cont <- readContinuousCharacterData("data/3_empirical/haemulidae_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/4_empirical/haemulidae_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/haemulidae_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
