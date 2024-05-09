@@ -52,7 +52,7 @@ root_age <- tree.rootAge()
 Q <- fnJC(num_disc_states)
 
 # make the transition rate parameter
-lambda ~ dnLoguniform(1e-3, 2)
+lambda ~ dnLoguniform(1e-5, 2)
 moves.append( mvScale(lambda, weight=1.0) )
 
 # make the data-augmented CTCM model
@@ -79,19 +79,18 @@ for (i in 1:num_disc_states){
   theta[i] ~ dnUniform(-10, 10)
   moves.append(mvSlide(theta[i], weight = 1.0) )
 
-  sigma2[i] ~ dnLoguniform(1e-3, 1)
+  sigma2[i] ~ dnLoguniform(1e-10, 1)
   moves.append(mvScale(sigma2[i], weight = 1.0) )
 
-	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
+	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) ) #can it potentially jump to 0?
   moves.append(mvScale(alpha[i], weight = 1.0) )
 }
-
 
 ##########################
 # Specify the OU process #
 ##########################
 root_state = 0
-Y ~ dnPhyloOUSD(char_hist, theta=theta, rootStates=theta, alpha=alpha, sigma=sigma2^0.5)
+Y ~ dnPhyloOUSD(char_hist, theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
 Y.clamp(cont)
 
 #############
@@ -110,7 +109,7 @@ monitors.append( mnScreen(printgen=1000) )
 ################
 
 ### workspace mcmc ###
-mymcmc = mcmc(mymodel, monitors, moves, nruns=2, combine="none")
+mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="none")
 
 
 ### run the MCMC ###

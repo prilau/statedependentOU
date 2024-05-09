@@ -52,7 +52,7 @@ root_age <- tree.rootAge()
 Q <- fnJC(num_disc_states)
 
 # make the transition rate parameter
-lambda ~ dnLoguniform(1e-3, 2)
+lambda ~ dnLoguniform(1e-5, 2)
 moves.append( mvScale(lambda, weight=1.0) )
 
 # make the data-augmented CTCM model
@@ -98,7 +98,7 @@ for (i in 1:num_disc_states){
 # Specify the OU process #
 ##########################
 root_state = 0
-Y ~ dnPhyloOUSD(char_hist, theta=thetas, rootStates=theta, alpha=alphas, sigma=sigma2s^0.5)
+Y ~ dnPhyloOUSD(char_hist, theta=thetas, rootTreatment="optimum", alpha=alphas, sigma=sigma2s^0.5)
 Y.clamp(cont)
 
 #############

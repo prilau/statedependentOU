@@ -95,7 +95,7 @@ for (i in 1:num_disc_states){
 # Specify the OU process #
 ##########################
 root_state = 0
-Y ~ dnPhyloOUSD(char_hist, theta=thetas, rootStates=theta, alpha=alphas, sigma=sigma2s^0.5)
+Y ~ dnPhyloOUSD(char_hist, theta=thetas, rootTreatment="optimum", alpha=alphas, sigma=sigma2s^0.5)
 Y.clamp(cont)
 
 #############
