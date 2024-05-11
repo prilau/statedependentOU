@@ -1,4 +1,5 @@
 library(ape)
+library(KScorrect)
 library(pracma)
 library(phytools)
 library(slouch)
@@ -6,29 +7,29 @@ library(tibble)
 library(tidyverse)
 
 # write data
-#parameter_1000 <- tibble("alpha_Br" = rep(0,1000),
-#                         "alpha_Gr" = rep(0,1000),
-#                         "alpha_MF" = rep(0,1000),
-#                         "sigma2_Br" =rep(0,1000),
-#                         "sigma2_Gr" =rep(0,1000),
-#                         "sigma2_MF" =rep(0,1000),
-#                         "theta_Br" = rep(0,1000),
-#                         "theta_Gr" = rep(0,1000),
-#                         "theta_MF" = rep(0,1000))
+parameter_1000 <- tibble("alpha_Br" = rep(0,1000),
+                         "alpha_Gr" = rep(0,1000),
+                         "alpha_MF" = rep(0,1000),
+                         "sigma2_Br" =rep(0,1000),
+                         "sigma2_Gr" =rep(0,1000),
+                         "sigma2_MF" =rep(0,1000),
+                         "theta_Br" = rep(0,1000),
+                         "theta_Gr" = rep(0,1000),
+                         "theta_MF" = rep(0,1000))
+
+for (i in 1:1000){
+  parameter_1000[["alpha_Br"]][i] = rexp(n=1, rate=19.61)
+  parameter_1000[["alpha_Gr"]][i] = rexp(n=1, rate=19.61)
+  parameter_1000[["alpha_MF"]][i] = rexp(n=1, rate=19.61)
+  parameter_1000[["sigma2_Br"]][i] = rlunif(n=1, min=1e-5, max=10)
+  parameter_1000[["sigma2_Gr"]][i] = rlunif(n=1, min=1e-5, max=10)
+  parameter_1000[["sigma2_MF"]][i] = rlunif(n=1, min=1e-5, max=10)
+  parameter_1000[["theta_Br"]][i] = runif(n=1, min=0, max=10)
+  parameter_1000[["theta_Br"]][i] = runif(n=1, min=0, max=10)
+  parameter_1000[["theta_MF"]][i] = runif(n=1, min=0, max=10)
+}
 #
-#for (i in 1:1000){
-#  parameter_1000[["alpha_Br"]][i] = rgamma(n=1, shape=1, rate=10)
-#  parameter_1000[["alpha_Gr"]][i] = rgamma(n=1, shape=1, rate=10)
-#  parameter_1000[["alpha_MF"]][i] = rgamma(n=1, shape=1, rate=10)
-#  parameter_1000[["sigma2_Br"]][i] = rgamma(n=1, shape=2, rate=10)
-#  parameter_1000[["sigma2_Gr"]][i] = rgamma(n=1, shape=2, rate=10)
-#  parameter_1000[["sigma2_MF"]][i] = rgamma(n=1, shape=2, rate=10)
-#  parameter_1000[["theta_Br"]][i] = rnorm(1, mean = 0, sd = 3)
-#  parameter_1000[["theta_Br"]][i] = rnorm(1, mean = 0, sd = 3)
-#  parameter_1000[["theta_MF"]][i] = rnorm(1, mean = 0, sd = 3)
-#}
-#
-#write.csv(parameter_1000, "data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
+write.csv(parameter_1000, "data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
 #
 # data("artiodactyla")
 # data("neocortex")
@@ -218,6 +219,214 @@ sd_logL_pruning <- function(tree, continuousChar, alpha, sigma2, theta){
   return(lnl)
 }
 
+parentNode <- function(tree, x){
+  m <- which(tree$edge[, 2] == x)
+  return(tree$edge[m, 1])
+}
+
+# find nodes along a lineage towards root node by providing initial child (presumably tip) node
+nodesAlongLineage <- function(tree, old_node, young_node){
+  k <- young_node
+  while(young_node != old_node){
+    k <- c(k, parentNode(tree, young_node))
+    young_node <- tail(k, n = 1)
+  }
+  return(k)
+}
+
+# find subedges of a lineage
+lineage.constructor <- function(tree, root_node, e){
+  nodes <- nodesAlongLineage(tree, root_node, e)
+  edges <- which(tree$edge[,2] %in% nodes) # from root to tip
+  subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # tip to root
+  
+  state_changes <- names(subedge_lengths) # from tip to root
+  #state_changes <- c(state_changes[1], state_changes) # add root state, assuming root state equals the state of the closest subedge
+  
+  #lineage$state_indicator <- lapply(all_states, function(x) {res <- match(lineage$state_changes, x); res[is.na(res)] <- 0; return(res)})
+  #names(lineage$state_indicator) <- all_states
+  
+  # recording time-related numbers of each subedge (root is a subedge with length = 0)
+  #times <- cumsum(unname(subedge_lengths))
+  #time_tip <- tail(times, n = 1)
+  
+  #time_begin <- time_tip - c(0, head(times, n = -1))
+  #time_end <- time_tip - times
+  #time_span <- time_begin - time_end
+  
+  return(tibble(state = state_changes,
+                #time_begin = time_begin,
+                #time_end = time_end,
+                time_span = subedge_lengths))
+}
+
+# not yet finished - weight matrix function
+## need updates
+weights.lineage <- function(tree, alpha, e){
+  root_node = length(tree$tip.label) + 1
+  lineage <- lineage.constructor(tree, root_node, e)
+  lineage[["alpha"]] = alpha[lineage[["state"]]]
+  
+  W = matrix(0, ncol = length(alpha), nrow = 1)
+  colnames(W) = sort(names(alpha))
+  
+  if (length(lineage[[1]]) > 1){
+    lineage <- lineage %>%
+      mutate(
+        exp1 = -1 * expm1(-1 * alpha * time_span),
+        sum2_temp = -1 * alpha * time_span)
+    lineage$exp1[length(lineage$exp1)] = 1
+    lineage$sum2 = 0
+    
+    for (i in 2:length(lineage[[1]])){
+      lineage$sum2[i] = lineage$sum2_temp[i-1]
+      lineage$sum2_temp[i] = lineage$sum2[i] + lineage$sum2_temp[i]
+    }
+    
+    all_weights = lineage %>% mutate(exp_final = exp1 * exp(sum2)) %>% 
+      group_by(state) %>% 
+      summarise(weight = sum(exp_final))
+    
+    for (i in 1:nrow(all_weights)){
+      W[, all_weights$state[i]] = all_weights$weight[i]
+    }
+  } else {
+    W[, lineage$state[1]] = 1
+  }
+  
+  return(W)
+}
+
+# combine to form weight matrix
+weight.matrix <- function(tree, alpha){
+  ntip = length(tree$tip.label)
+  weight_matrix = matrix(0, nrow = ntip, ncol = length(alpha))
+  rownames(weight_matrix) <- tree$tip.label
+  colnames(weight_matrix) <- c(sort(names(alpha)))
+  for (i in 1:ntip){
+    weight_matrix[i, ] <- weights.lineage(tree, alpha, i)
+  }
+  return(weight_matrix)
+}
+
+
+cov.accum <- function(tree, mrca_node, alpha, sigma2){
+  root_node = length(tree$tip.label) + 1
+  if (mrca_node == root_node){
+    cov_accum = 0.0
+  } else {
+    nodes <- nodesAlongLineage(tree, root_node, mrca_node)
+    edges <- which(tree$edge[,2] %in% nodes) # from root to mcra_node
+    subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from mcra_node to root
+    
+    subedge_lengths <- tibble(state = names(subedge_lengths),
+                              time_span = subedge_lengths,
+                              alpha = alpha[names(subedge_lengths)],
+                              sigma2 = sigma2[names(subedge_lengths)]) %>% 
+      mutate(exp1 = -1 * expm1(-2 * alpha * time_span),
+             sum2_temp = -2 * alpha * time_span)
+    subedge_lengths$sum2= 0
+    
+    if (length(subedge_lengths[[1]]) == 1){
+      subedge_lengths = subedge_lengths %>% 
+        mutate(cov = sigma2 / (2 * alpha) * exp1)
+      cov_accum = subedge_lengths$cov[[1]]
+    } else {
+      for (i in 2:length(subedge_lengths[[1]])){
+        subedge_lengths$sum2[i] = subedge_lengths$sum2_temp[i-1]
+        subedge_lengths$sum2_temp[i] = subedge_lengths$sum2[i] + subedge_lengths$sum2_temp[i]
+      }
+      cov_accum = subedge_lengths %>% mutate(exp3 = exp1 * exp(sum2)) %>% 
+        group_by(state) %>% 
+        summarise(sum4 = sum(sigma2 / (2 * alpha) * exp3)) %>% 
+        reframe(sum_final = sum(sum4)) %>% 
+        unlist() %>% 
+        unname()
+    }
+  }
+  return(cov_accum)
+}
+
+cov.loss <- function(tree, mrca_node, alpha, tip){
+  if (mrca_node == tip){
+    cov_loss_rate = 0
+  } else {
+    nodes <- nodesAlongLineage(tree, mrca_node, tip)
+    nodes <- head(nodes, n = -1)
+    edges <- which(tree$edge[,2] %in% nodes) # from root to mcra_node
+    subedge_lengths <- rev(unlist(lapply(edges, function(i) tree$maps[[i]]))) # from mcra_node to root
+    subedge_lengths <- tibble(time_span = subedge_lengths,
+                              alpha = alpha[names(subedge_lengths)])
+    cov_loss_rate = subedge_lengths %>% 
+      mutate(sum1 = -1 * alpha * time_span) %>% 
+      reframe(sum_final = sum(sum1))
+  }
+  return(cov_loss_rate)
+}
+
+vcv.pairwise <- function(tree, alpha, sigma2, tip1, tip2){
+  mrca_node <- ape::mrca(tree)[tip1, tip2]
+  cov_accum = cov.accum(tree, mrca_node, alpha, sigma2)
+  cov_loss1 = cov.loss(tree, mrca_node, alpha, tip1)
+  cov_loss2 = cov.loss(tree, mrca_node, alpha, tip2)
+  cov = cov_accum * exp(cov_loss1 + cov_loss2)
+  return(unlist(unname(cov)))
+}
+
+
+vcv.matrix <- function(tree, alpha, sigma2){
+  ntip <- length(tree$tip.label)
+  V <- matrix(nrow = ntip, ncol = ntip)
+  j = ntip
+  while (j != 0){
+    for (i in 1:ntip){
+      V[i,j] <- vcv.pairwise(tree, alpha, sigma2, i, j)
+      V[j,i] <- V[i,j]
+    }
+    j = j-1
+  }
+  colnames(V) <- tree$tip.label
+  rownames(V) <- tree$tip.label
+  return(V)
+}
+
+
+sd_logL_vcv <- function(tree, continuousChar, alpha, sigma2, theta){
+  alpha = alpha[sort(names(alpha))]
+  sigma2 = sigma2[sort(names(sigma2))]
+  theta = theta[sort(names(theta))]
+  theta = as.matrix(theta, nrow = 3)
+  
+  ntip <- length(tree$tip.label)
+  V = vcv.matrix(tree, alpha, sigma2)
+  
+  W = weight.matrix(tree, alpha)
+  
+  C = chol(V) # upper triangular matrix
+  L = t(C) # lower triangular matrix
+  log_det_V = 0
+  for (i in 1:ntip){
+    log_det_V = log_det_V + log(L[i,i])
+  }
+  log_det_V = log_det_V * 2.0 # equals to julia implementation to 12 sig. fig.
+  
+  y = NULL
+  for (species in tree$tip.label){
+    y[species] = as.numeric(continuousChar[species])
+  }
+  
+  # inverse of L
+  r = solve(L) %*% y - solve(L) %*% W %*% theta # what does de-correlated residuals mean?
+  
+  # res = - (n/2) * log(2*pi) - 0.5 * log_det_V - 0.5 * dot(r, r)
+  #     = exp(-n/2)^(2*pi) * exp(-0.5)^det_V * exp(-0.5)^dot(r, r) ?
+  res = 0.0
+  res = res - (ntip/2) * log(2*pi)
+  res = res - 0.5 * log_det_V
+  res = res - 0.5 * dot(r, r) # is it dot product? what is dot product of r?
+  
+  return(res)
+}
 
 
 
@@ -232,11 +441,11 @@ names(brain) <- tree$tip.label
 
 
 
-alltrees <- read.simmap("data/1_validation/testing_artiodactyla/artiodactyla_all.tre", format="phylip",version=1)
+alltrees <- read.simmap("data/1_validation/testing_artiodactyla/artiodactyla.trees", format="phylip",version=1)
 metadata <- read.csv("data/1_validation/testing_artiodactyla/ou_parameters_all.csv")
 logL <- tibble(rb = rep(0,1000), R_pruning = rep(0,1000), R_vcv = rep(0,1000))
 
-
+bar = txtProgressBar(style=3, width=40)
 for (i in 1:1000){
   tree <- alltrees[[i]]
   #root_state[i] <- names(tree$maps[[1]][1])
@@ -255,8 +464,11 @@ for (i in 1:1000){
   names(alpha) <- c("0", "1", "2")
   names(sigma2) <- c("0", "1", "2")
   names(theta) <- c("0", "1", "2")
-  #logL$R_pruning[i] <- sd_logL_pruning(tree, brain, alpha, sigma2, theta)
+  logL$R_pruning[i] <- sd_logL_pruning(tree, brain, alpha, sigma2, theta)
   logL$R_vcv[i] <- sd_logL_vcv(tree, brain, alpha, sigma2, theta)
+  delta = log10(abs(logL$R_vcv[i] - logL$R_pruning[i]))
+  cat(delta)
+  setTxtProgressBar(bar, i / nrow(grid))
 }
 
 

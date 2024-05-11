@@ -1,7 +1,7 @@
 #NEXUS
-[Data written by write.nexus.data.R, Thu May  9 20:52:09 2024]
+[Data written by write.nexus.data.R, Thu May  9 21:09:31 2024]
 BEGIN DATA;
-  DIMENSIONS NTAX=1217 NCHAR=1;
+  DIMENSIONS NTAX=1192 NCHAR=1;
   FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="012";
   MATRIX
     Acerodon_jubatus                     0
@@ -56,7 +56,6 @@ BEGIN DATA;
     Arctocebus_calabarensis              1
     Arctocephalus_gazella                2
     Arctocephalus_townsendi              2
-    Ariteus_flavescens                   0
     Artibeus_fimbriatus                  0
     Artibeus_glaucus                     0
     Artibeus_jamaicensis                 0
@@ -220,11 +219,9 @@ BEGIN DATA;
     Cormura_brevirostris                 2
     Craseonycteris_thonglongyai          2
     Cricetomys_emini                     0
-    Cricetulus_barabensis                1
     Cricetulus_migratorius               1
     Cricetus_cricetus                    1
     Crocidura_cyanea                     2
-    Crocidura_dsinezumi                  2
     Crocidura_flavescens                 2
     Crocidura_fumosa                     2
     Crocidura_grayi                      2
@@ -299,7 +296,6 @@ BEGIN DATA;
     Dipodomys_nelsoni                    0
     Dipodomys_nitratoides                0
     Dipodomys_ordii                      0
-    Dipodomys_panamintinus               0
     Dipodomys_phillipsii                 0
     Dipodomys_spectabilis                1
     Dipodomys_venustus                   0
@@ -361,7 +357,6 @@ BEGIN DATA;
     Eumops_perotis                       2
     Eumops_underwoodi                    2
     Euoticus_elegantulus                 1
-    Eupetaurus_cinereus                  0
     Euphractus_sexcinctus                1
     Felis_chaus                          2
     Felis_silvestris                     1
@@ -372,7 +367,6 @@ BEGIN DATA;
     Galemys_pyrenaicus                   2
     Galerella_sanguinea                  2
     Galictis_cuja                        2
-    Gazella_cuvieri                      0
     Gazella_dorcas                       0
     Gazella_gazella                      0
     Gazella_leptoceros                   0
@@ -426,7 +420,6 @@ BEGIN DATA;
     Hipposideros_caffer                  2
     Hipposideros_cervinus                2
     Hipposideros_diadema                 2
-    Hipposideros_dinops                  2
     Hipposideros_speoris                 2
     Hippotragus_equinus                  0
     Hippotragus_niger                    0
@@ -483,7 +476,6 @@ BEGIN DATA;
     Lama_glama                           0
     Lariscus_insignis                    1
     Lasionycteris_noctivagans            2
-    Lasiopodomys_brandtii                0
     Lasiorhinus_krefftii                 0
     Lasiorhinus_latifrons                0
     Lasiurus_borealis                    2
@@ -605,9 +597,7 @@ BEGIN DATA;
     Mephitis_mephitis                    1
     Meriones_crassus                     1
     Meriones_libycus                     0
-    Meriones_meridianus                  1
     Meriones_shawi                       0
-    Meriones_tamariscinus                1
     Meriones_unguiculatus                0
     Mesomys_hispidus                     1
     Mesophylla_macconnelli               0
@@ -675,7 +665,6 @@ BEGIN DATA;
     Mus_musculus                         1
     Mus_setulosus                        0
     Muscardinus_avellanarius             1
-    Musonycteris_harrisoni               0
     Mustela_erminea                      2
     Mustela_nivalis                      2
     Mustela_putorius                     2
@@ -700,9 +689,7 @@ BEGIN DATA;
     Myotis_mystacinus                    2
     Myotis_nattereri                     2
     Myotis_nigricans                     2
-    Myotis_ricketti                      2
     Myotis_ruber                         2
-    Myotis_simus                         2
     Myotis_sodalis                       2
     Myotis_thysanodes                    2
     Myotis_velifer                       2
@@ -714,7 +701,6 @@ BEGIN DATA;
     Mystromys_albicaudatus               1
     Naemorhedus_goral                    0
     Nandinia_binotata                    1
-    Nannosciurus_melanotis               1
     Napaeozapus_insignis                 1
     Nasalis_larvatus                     0
     Nasua_narica                         1
@@ -817,7 +803,6 @@ BEGIN DATA;
     Panthera_tigris                      2
     Pantholops_hodgsonii                 0
     Papio_hamadryas                      0
-    Paradipus_ctenodactylus              0
     Paradoxurus_hermaphroditus           1
     Parantechinus_apicalis               2
     Paranyctimene_raptor                 2
@@ -843,7 +828,6 @@ BEGIN DATA;
     Peromyscus_crinitus                  1
     Peromyscus_eremicus                  1
     Peromyscus_leucopus                  1
-    Peromyscus_levipes                   1
     Peromyscus_maniculatus               1
     Peromyscus_melanophrys               0
     Peromyscus_melanotis                 1
@@ -853,7 +837,6 @@ BEGIN DATA;
     Peromyscus_truei                     1
     Peropteryx_kappleri                  2
     Peropteryx_macrotis                  2
-    Petaurista_leucogenys                0
     Petaurista_petaurista                0
     Petauroides_volans                   0
     Petaurus_breviceps                   1
@@ -884,7 +867,6 @@ BEGIN DATA;
     Phocoena_sinus                       2
     Phocoenoides_dalli                   2
     Phodopus_campbelli                   0
-    Phodopus_roborovskii                 1
     Phodopus_sungorus                    1
     Phylloderma_stenops                  1
     Phyllostomus_discolor                1
@@ -905,7 +887,6 @@ BEGIN DATA;
     Platyrrhinus_lineatus                0
     Plecotus_auritus                     2
     Plecotus_austriacus                  2
-    Podogymnura_truei                    2
     Podomys_floridanus                   1
     Poecilogale_albinucha                2
     Pongo_pygmaeus                       1
@@ -996,7 +977,6 @@ BEGIN DATA;
     Rhinopoma_microphyllum               2
     Rhinopoma_muscatellum                2
     Rhinosciurus_laticaudatus            2
-    Rhogeessa_genowaysi                  2
     Rhyncholestes_raphanurus             1
     Rhynchomys_isarogensis               2
     Rhynchonycteris_naso                 2
@@ -1023,14 +1003,12 @@ BEGIN DATA;
     Scapteromys_tumidus                  1
     Sciurillus_pusillus                  0
     Sciurus_aestuans                     0
-    Sciurus_anomalus                     0
     Sciurus_aureogaster                  0
     Sciurus_colliaei                     0
     Sciurus_deppei                       0
     Sciurus_granatensis                  0
     Sciurus_griseus                      0
     Sciurus_igniventris                  0
-    Sciurus_niger                        0
     Sciurus_spadiceus                    0
     Sciurus_variegatoides                0
     Sciurus_vulgaris                     1
@@ -1078,9 +1056,7 @@ BEGIN DATA;
     Sousa_chinensis                      2
     Spalacopus_cyanus                    0
     Spalax_microphthalmus                0
-    Spermophilopsis_leptodactylus        0
     Stenella_attenuata                   2
-    Stenella_clymene                     2
     Stenella_coeruleoalba                2
     Stenella_frontalis                   2
     Stenella_longirostris                2
@@ -1133,7 +1109,6 @@ BEGIN DATA;
     Tamias_rufus                         1
     Tamias_senex                         1
     Tamias_speciosus                     1
-    Tamias_striatus                      1
     Tamias_townsendii                    1
     Tamiasciurus_douglasii               0
     Tamiasciurus_hudsonicus              0

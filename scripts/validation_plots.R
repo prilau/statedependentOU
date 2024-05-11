@@ -149,21 +149,23 @@ dev.off()
 
 
 
-load("likelihood_comparison_across_methods.Rda")
+load("output/likelihood_comparison_across_methods.Rda")
 logL <- logL %>% 
-  filter(rb > -1000)
-logL$it = 1:804
+  filter(rb > -1500, rb < -800)
+logL <- logL[sample(1:length(logL$rb), 150, replace=FALSE),]
+logL = logL[order(logL$rb),]
+logL$Replicates = 1:length(logL$rb)
 
-logL100 <- logL[sample(1:804, 50, replace=FALSE),]
-logL100 = logL100[order(logL100$rb),]
-logL100$it = 1:50
-
-valid <- ggplot(logL100) +
-  geom_line(aes(x=it, y=R_vcv)) +
-  geom_point(shape=12,aes(x=it, y=R_pruning),col="#009988") +
-  geom_point(shape=3,aes(x=it, y=rb),col="#DDCC77") +
+lnl_comparison <- ggplot(logL) +
+  geom_point(shape=15, alpha=0.7, aes(x=Replicates, y=R_vcv),col="black") +
+  geom_point(shape=3,alpha=0.7,aes(x=Replicates, y=R_pruning),col="#ee7733") +
+  geom_point(shape=4,alpha=0.7,aes(x=Replicates, y=rb),col="#0077bb") +
+  ylab("Likelihood") +
+  xlab("Replicate number") +
   theme_bw()
 
-pdf("valid_lnl.pdf")
-valid
+
+
+pdf("figures/likelihoods.pdf")
+lnl_comparison
 dev.off()

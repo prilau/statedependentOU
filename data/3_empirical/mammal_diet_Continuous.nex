@@ -1,7 +1,7 @@
 #NEXUS
-[Data written by write.nexus.data.R, Thu May  9 20:55:59 2024]
+[Data written by write.nexus.data.R, Thu May  9 21:08:29 2024]
 BEGIN DATA;
-  DIMENSIONS NTAX=1217 NCHAR=1;
+  DIMENSIONS NTAX=1192 NCHAR=1;
   FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
   MATRIX
     Acerodon_jubatus                     0.0861776962410524
@@ -54,7 +54,6 @@ BEGIN DATA;
     Aproteles_bulmerae                   -0.479650006297541
     Archboldomys_luzonensis              -3.34104345884241
     Arctocebus_calabarensis              -1.35479569406052
-    Ariteus_flavescens                   NaN
     Artibeus_fimbriatus                  -2.75043591759865
     Artibeus_glaucus                     -4.49184150068109
     Artibeus_jamaicensis                 -3.17965511171492
@@ -220,11 +219,9 @@ BEGIN DATA;
     Cormura_brevirostris                 -4.68638024141363
     Craseonycteris_thonglongyai          -6.23481080573971
     Cricetomys_emini                     0.246860077931526
-    Cricetulus_barabensis                NaN
     Cricetulus_migratorius               -3.4867552700238
     Cricetus_cricetus                    -0.84629836005412
     Crocidura_cyanea                     -4.75715654298597
-    Crocidura_dsinezumi                  NaN
     Crocidura_flavescens                 -3.49002859536877
     Crocidura_fumosa                     -4.23360662955561
     Crocidura_grayi                      -4.55638002181866
@@ -313,7 +310,6 @@ BEGIN DATA;
     Dipodomys_nelsoni                    -2.43155547429101
     Dipodomys_nitratoides                -3.17965511171492
     Dipodomys_ordii                      -2.98776410390481
-    Dipodomys_panamintinus               NaN
     Dipodomys_phillipsii                 -3.19418321227783
     Dipodomys_spectabilis                -2.07944154167984
     Dipodomys_venustus                   -2.55104645229255
@@ -361,7 +357,6 @@ BEGIN DATA;
     Eumops_perotis                       -2.97789235542566
     Eumops_underwoodi                    -2.84386992424474
     Euoticus_elegantulus                 -1.21739582465808
-    Eupetaurus_cinereus                  NaN
     Euphractus_sexcinctus                1.56444054650336
     Felis_chaus                          1.96990565461153
     Felis_silvestris                     1.50185270175416
@@ -382,7 +377,6 @@ BEGIN DATA;
     Galemys_pyrenaicus                   -2.82683373709218
     Galerella_sanguinea                  -0.659712404473708
     Galictis_cuja                        0
-    Gazella_cuvieri                      NaN
     Gazella_dorcas                       2.7408400239252
     Gazella_gazella                      3.05400118167797
     Gazella_leptoceros                   3.1904763503465
@@ -439,7 +433,6 @@ BEGIN DATA;
     Hipposideros_caffer                  -4.66598232538485
     Hipposideros_cervinus                -4.77122477031817
     Hipposideros_diadema                 -3.08129016191564
-    Hipposideros_dinops                  NaN
     Hipposideros_speoris                 -4.57561138374655
     Hippotragus_equinus                  5.56068163101553
     Hippotragus_niger                    5.4553211153577
@@ -483,7 +476,6 @@ BEGIN DATA;
     Lama_glama                           4.91998092582813
     Lariscus_insignis                    -1.74296930505862
     Lasionycteris_noctivagans            -4.51899248974704
-    Lasiopodomys_brandtii                NaN
     Lasiorhinus_krefftii                 3.4626060097908
     Mandrillus_leucophaeus               2.65324196460721
     Mandrillus_sphinx                    2.82137888640921
@@ -605,9 +597,7 @@ BEGIN DATA;
     Mephitis_mephitis                    0.8754687373539
     Meriones_crassus                     -2.66068962974237
     Meriones_libycus                     -2.39360449138121
-    Meriones_meridianus                  NaN
     Meriones_shawi                       -2.4013010659332
-    Meriones_tamariscinus                NaN
     Meriones_unguiculatus                -2.85249810546808
     Mesomys_hispidus                     -1.74296930505862
     Mesophylla_macconnelli               -4.99083266680008
@@ -661,9 +651,7 @@ BEGIN DATA;
     Myotis_mystacinus                    -5.24004845842406
     Myotis_nattereri                     -4.9309003260774
     Myotis_nigricans                     -5.46319200973827
-    Myotis_ricketti                      NaN
     Myotis_ruber                         -5.29831736654804
-    Myotis_simus                         NaN
     Myotis_sodalis                       -4.94625303516699
     Myotis_thysanodes                    -4.77004482917833
     Myotis_velifer                       -4.62741579493541
@@ -691,7 +679,6 @@ BEGIN DATA;
     Mus_musculus                         -3.9476501830713
     Mus_setulosus                        -4.49184150068109
     Muscardinus_avellanarius             -3.5335865697079
-    Musonycteris_harrisoni               NaN
     Mustela_erminea                      -1.25878104082093
     Mustela_nivalis                      -2.52697942620991
     Mustela_putorius                     -0.0161293819298836
@@ -714,7 +701,6 @@ BEGIN DATA;
     Myotis_lucifugus                     -4.85748511460258
     Myotis_myotis                        -3.66126428708096
     Nandinia_binotata                    0.774727167552368
-    Nannosciurus_melanotis               NaN
     Napaeozapus_insignis                 -3.8076629901039
     Nasalis_larvatus                     2.50959926237837
     Nasua_narica                         1.52169899812609
@@ -827,7 +813,6 @@ BEGIN DATA;
     Panthera_tigris                      5.09375020080676
     Pantholops_hodgsonii                 3.48124008933569
     Papio_hamadryas                      2.82731362192903
-    Paradipus_ctenodactylus              NaN
     Paradoxurus_hermaphroditus           1.16315080980568
     Parantechinus_apicalis               -2.61319467008953
     Paranyctimene_raptor                 -3.70095203534821
@@ -853,7 +838,6 @@ BEGIN DATA;
     Peromyscus_crinitus                  -4.11659017116942
     Peromyscus_eremicus                  -3.78539035449478
     Peromyscus_leucopus                  -4.01184334071036
-    Peromyscus_levipes                   NaN
     Peromyscus_maniculatus               -3.90703546391711
     Peromyscus_melanophrys               -3.2188758248682
     Peromyscus_melanotis                 -3.2289261607217
@@ -863,7 +847,6 @@ BEGIN DATA;
     Peromyscus_truei                     -3.61191841297781
     Peropteryx_kappleri                  -4.62843881292745
     Peropteryx_macrotis                  -5.18498868124103
-    Petaurista_leucogenys                NaN
     Petaurista_petaurista                0.431782416425538
     Petauroides_volans                   0.231111720963387
     Petaurus_breviceps                   -2.12863178587061
@@ -884,7 +867,6 @@ BEGIN DATA;
     Phacochoerus_africanus               4.41279829334063
     Phalanger_orientalis                 0.693147180559945
     Phodopus_campbelli                   -3.60822155109648
-    Phodopus_roborovskii                 NaN
     Phodopus_sungorus                    -3.49331267056996
     Phylloderma_stenops                  -2.89498237045385
     Phyllostomus_discolor                -3.31044301839369
@@ -909,7 +891,6 @@ BEGIN DATA;
     Platyrrhinus_lineatus                -3.72554343848553
     Plecotus_auritus                     -4.81342512480855
     Plecotus_austriacus                  -5.00266712444708
-    Podogymnura_truei                    NaN
     Podomys_floridanus                   -3.48024058900261
     Poecilogale_albinucha                -1.17441400208439
     Pongo_pygmaeus                       3.95316494875932
@@ -1004,7 +985,6 @@ BEGIN DATA;
     Sorex_hoyi                           -5.71991185658608
     Sorex_isodon                         -4.42284862919414
     Rhinosciurus_laticaudatus            -1.46967597005894
-    Rhogeessa_genowaysi                  NaN
     Rhyncholestes_raphanurus             -3.85375409730417
     Rhynchomys_isarogensis               -2.10373423424888
     Rhynchonycteris_naso                 -5.49433225047399
@@ -1031,14 +1011,12 @@ BEGIN DATA;
     Scapteromys_tumidus                  -1.9241486572738
     Sciurillus_pusillus                  -3.35526844977376
     Sciurus_aestuans                     -1.73160554640831
-    Sciurus_anomalus                     NaN
     Sciurus_aureogaster                  -0.785262469467751
     Sciurus_colliaei                     -0.697155201957484
     Sciurus_deppei                       -1.38629436111989
     Sciurus_granatensis                  -1.14256417619729
     Sciurus_griseus                      -0.350976922824095
     Sciurus_igniventris                  -0.356674943938732
-    Sciurus_niger                        NaN
     Sciurus_spadiceus                    -0.908818717035454
     Sciurus_variegatoides                -0.723606388044654
     Sciurus_vulgaris                     -1.09961278900169
@@ -1078,7 +1056,6 @@ BEGIN DATA;
     Sousa_chinensis                      5.63478960316925
     Spalacopus_cyanus                    -2.29263476214088
     Spalax_microphthalmus                -0.755022584278033
-    Spermophilopsis_leptodactylus        NaN
     Taphozous_mauritianus                -3.58632286578884
     Taphozous_melanopogon                -3.63818633979842
     Tapirus_bairdii                      5.67332326717149
@@ -1091,7 +1068,6 @@ BEGIN DATA;
     Vulpes_cana                          -0.00100050033358353
     Vulpes_chama                         1.07158361628019
     Stenella_attenuata                   4.18509892549057
-    Stenella_clymene                     NaN
     Stenella_coeruleoalba                4.95582705760126
     Stenella_frontalis                   4.70048036579242
     Stenella_longirostris                3.92197333628131
@@ -1144,7 +1120,6 @@ BEGIN DATA;
     Tamias_rufus                         -2.92620621090538
     Tamias_senex                         -2.41575379109968
     Tamias_speciosus                     -2.79852210426629
-    Tamias_striatus                      NaN
     Tamias_townsendii                    -2.53704240420853
     Tamiasciurus_douglasii               -1.49165487677772
     Tamiasciurus_hudsonicus              -1.6094379124341

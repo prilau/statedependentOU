@@ -49,3 +49,9 @@ BEGIN DATA;
   ;
 END;
 
+[
+  Diets
+  0: Br
+  1: Gr
+  2: MF
+]

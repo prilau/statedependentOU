@@ -17,16 +17,16 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/haemulidae_Tree.tre")[1]
+T <- readTrees("data/3_empirical/mammal_foot.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/3_empirical/haemulidae_Continuous.nex")
+cont <- readContinuousCharacterData("data/3_empirical/mammal_foot_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/3_empirical/haemulidae_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_foot_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -75,20 +75,24 @@ char_hist := X.characterHistories()
 ##########################
 # Specify the rate model #
 ##########################
+
 for (i in 1:num_disc_states){
-  theta[i] ~ dnUniform(-10, 10)
+  theta[i] ~ dnUniform(-7, 12)
   moves.append(mvSlide(theta[i], weight = 1.0) )
 
-  sigma2[i] ~ dnLoguniform(1e-10, 1)
+  sigma2[i] ~ dnLoguniform(1e-5, 10)
   moves.append(mvScale(sigma2[i], weight = 1.0) )
 
-	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) ) #can it potentially jump to 0?
+	alpha[i] ~ dnExponential( abs( root_age / 2.0 / ln(2.0) ) )
   moves.append(mvScale(alpha[i], weight = 1.0) )
 }
+
+
 
 ##########################
 # Specify the OU process #
 ##########################
+
 Y ~ dnPhyloOUSD(char_hist, theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
 Y.clamp(cont)
 
@@ -99,8 +103,8 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/state_dependent_OU/state_dependent_OU.log", printgen=10) )
-monitors.append( mnScreen(printgen=1000) )
+monitors.append( mnModel(filename="output/mammal_foot/ast.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, sigma2, theta) )
 
 
 ################
@@ -108,12 +112,12 @@ monitors.append( mnScreen(printgen=1000) )
 ################
 
 ### workspace mcmc ###
-mymcmc = mcmc(mymodel, monitors, moves, nruns=4, combine="none")
+mymcmc = mcmc(mymodel, monitors, moves, nruns=2, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=100000)
+mymcmc.burnin(generations=2000, tuningInterval=100)
+mymcmc.run(generations=20000)
 
 
 
