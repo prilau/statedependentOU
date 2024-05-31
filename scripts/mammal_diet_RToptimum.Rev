@@ -60,8 +60,8 @@ X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=20.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=20.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=50.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=50.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -80,7 +80,7 @@ for (i in 1:num_disc_states){
   theta[i] ~ dnUniform(-7, 12)
   moves.append(mvSlide(theta[i], weight = 1.0) )
 
-  sigma2[i] ~ dnLoguniform(1e-10, 1)
+  sigma2[i] ~ dnLoguniform(1e-5, 10)
   moves.append(mvScale(sigma2[i], weight = 1.0) )
 
 	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
@@ -103,8 +103,8 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/mammal_diet/state_dependent_OU_optimum.log", printgen=10) )
-monitors.append( mnScreen(printgen=1000, sigma2, theta) )
+monitors.append( mnModel(filename="output/mammal_diet/RToptimum.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, theta) )
 
 
 ################
@@ -116,8 +116,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=2, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=50000)
+mymcmc.burnin(generations=2000, tuningInterval=100)
+mymcmc.run(generations=20000)
 
 
 

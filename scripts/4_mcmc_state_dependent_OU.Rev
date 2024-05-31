@@ -82,7 +82,7 @@ for (i in 1:num_disc_states){
   sigma2[i] ~ dnLoguniform(1e-10, 1)
   moves.append(mvScale(sigma2[i], weight = 1.0) )
 
-	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) ) #can it potentially jump to 0?
+	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
   moves.append(mvScale(alpha[i], weight = 1.0) )
 }
 

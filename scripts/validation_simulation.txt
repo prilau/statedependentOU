@@ -1,0 +1,14 @@
+
+char_hist <- readCharacterHistory( "data/1_validation/artiodactyla/artiodactyla.trees" )[1]
+
+for (i in 1:1000){
+  for (i in 1:3){
+  theta[i] ~ dnUniform(-10, 15)
+  sigma2[i] ~ dnLoguniform(1e-5, 10)
+  alpha[i] ~ dnExponential( abs(27.3 / 2.0 / ln(2.0)) )
+}
+
+  # simulate
+  cont_char <- simulate()
+  save()
+}

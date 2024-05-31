@@ -1,0 +1,127 @@
+################################################################################
+#
+# RevBayes Validation Test: Ornstein-Uhlenbeck on a fixed tree
+#
+# Model: Continuous character(s) evolve under Ornstein-Uhlenbeck model.
+#
+#
+# authors: Sebastian Hoehna
+#
+################################################################################
+
+## Global settings
+
+NUM_VALIDATION_REPLICATES = 1000
+NUM_MCMC_ITERATIONS       = 10000
+
+
+# create the monitor and moves vectors
+moves     = VectorMoves()
+monitors  = VectorMonitors()
+
+
+#######################
+# Reading in the Data #
+#######################
+characterCont <- 1
+characterDisc <- 1
+
+cont <- readContinuousCharacterData("data/1_validation/artiodactyla/artiodactyla_Continuous.nex")
+cont.excludeAll()
+cont.includeCharacter(characterCont)
+
+disc <- readDiscreteCharacterData("data/1_validation/artiodactyla/artiodactyla_Discrete.nex")
+num_disc_states <- disc.getStateDescriptions().size()
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+
+
+# Get some useful variables from the data. We need these later on.
+taxa <- cont.taxa()
+
+##############
+# Tree model #
+##############
+
+tree <- readTrees( "data/1_validation/artiodactyla/artiodactyla.tree" )[1]
+#charHist <- readCharacterHistory( "data/1_validation/artiodactyla/artiodactyla.trees" )[1]
+
+ntips <- tree.ntips()
+nbranches <- 2 * ntips - 2
+
+# make the Q matrix
+Q <- fnJC(num_disc_states)
+
+# make the transition rate parameter
+lambda ~ dnLoguniform(1e-5, 2)
+moves.append( mvScale(lambda, weight=1.0) )
+
+# make the data-augmented CTCM model
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X.clamp(disc)
+
+# include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=20.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=20.0) )
+
+# keep track of the number of transitions
+for(i in 1:nbranches) {
+    num_changes[i] := sum(X.numCharacterChanges(i))
+}
+total_num_changes := sum(num_changes)
+
+char_hist := X.characterHistories()
+
+
+
+#######################
+# OU-Model Parameters #
+#######################
+
+for (i in 1:num_disc_states){
+  theta[i] ~ dnUniform(-10, 15)
+  moves.append(mvSlide(theta[i], weight = 1.0) )
+
+  sigma2[i] ~ dnLoguniform(1e-5, 10)
+  moves.append(mvScale(sigma2[i], weight = 1.0) )
+
+  alpha[i] ~ dnExponential( abs(27.3 / 2.0 / ln(2.0)) )
+  moves.append(mvScale(alpha[i], weight = 1.0) )
+}
+
+
+
+###################
+# PhyloCTMC Model #
+###################
+
+Y ~ dnPhyloOUSD(characterHistory=char_hist, alpha=alpha, theta=theta, sigma=sigma2^0.5, rootTreatment="optimum", nSites=1)
+
+# attach the data
+Y.clamp(cont)
+
+
+
+#############
+# THE Model #
+#############
+
+# We define our model.
+# We can use any node of our model as a handle
+mymodel = model(Y)
+
+
+
+
+mymcmc = mcmc(mymodel, monitors, moves)
+
+validation = validationAnalysis( mymcmc, NUM_VALIDATION_REPLICATES, directory="output/1_validation/simulatedHistory" )
+validation.burnin(generations=0.1*NUM_MCMC_ITERATIONS,tuningInterval=100)
+validation.run(generations=NUM_MCMC_ITERATIONS)
+validation.summarize(coverageProbability=0.9)
+validation.summarize(coverageProbability=0.5)
+
+
+
+# you may want to quit RevBayes now
+q()
