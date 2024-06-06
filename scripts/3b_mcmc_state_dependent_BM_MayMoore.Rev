@@ -17,16 +17,16 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/haemulidae_Tree.tre")[1]
+T <- readTrees("data/1_validation/haemulidae/haemulidae_Tree.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/3_empirical/haemulidae_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/haemulidae/haemulidae_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/3_empirical/haemulidae_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/haemulidae/haemulidae_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -75,7 +75,7 @@ total_num_changes := sum(num_changes)
 
 
 for (i in 1:num_disc_states){
-  sigma2s[i] ~ dnLoguniform(1e-3, 1)
+  sigma2s[i] ~ dnLoguniform(1e-3, 10)
   moves.append(mvScale(sigma2s[i], weight = 1.0) )
 }
 
@@ -100,7 +100,7 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/state_dependent_BM/state_dependent_BM_MayMoore.log", printgen=10) )
+monitors.append( mnModel(filename="output//1_validation/state_dependent_BM/state_dependent_BM_MayMoore.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, sigma2s) )
 
 

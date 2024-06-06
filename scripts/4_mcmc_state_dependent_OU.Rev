@@ -17,16 +17,16 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/haemulidae_Tree.tre")[1]
+T <- readTrees("data/1_validation/haemulidae/haemulidae_Tree.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/3_empirical/haemulidae_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/haemulidae/haemulidae_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/3_empirical/haemulidae_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/haemulidae/haemulidae_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -79,11 +79,13 @@ for (i in 1:num_disc_states){
   theta[i] ~ dnUniform(-10, 10)
   moves.append(mvSlide(theta[i], weight = 1.0) )
 
-  sigma2[i] ~ dnLoguniform(1e-10, 1)
+  sigma2[i] ~ dnLoguniform(1e-3, 10)
   moves.append(mvScale(sigma2[i], weight = 1.0) )
 
 	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
   moves.append(mvScale(alpha[i], weight = 1.0) )
+
+  stVs[i] := sigma2[i] / (2 * alpha[i])
 }
 
 ##########################
@@ -99,7 +101,7 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/state_dependent_OU/state_dependent_OU.log", printgen=10) )
+monitors.append( mnModel(filename="output/1_validation/state_dependent_OU/state_dependent_OU.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
 
 

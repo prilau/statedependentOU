@@ -16,12 +16,12 @@
 characterCont <- 1
 
 ### Read in the tree
-T <- readTrees("data/4_empirical/haemulidae_Tree.tre")[1]
+T <- readTrees("data/1_validation/haemulidae/haemulidae_Tree.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/4_empirical/haemulidae_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/haemulidae/haemulidae_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
@@ -42,10 +42,11 @@ root_age <- tree.rootAge()
 # Specify the rate model #
 ##########################
 
-sigma2 ~ dnLoguniform(1e-3, 1)
+sigma2 ~ dnLoguniform(1e-3, 10)
 theta ~ dnUniform(-10, 10)
 alpha ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
 halflife := ln(2) / alpha
+stV := sigma2 / (2 * alpha)
 
 moves.append(mvScale(sigma2, weight = 1.0) )
 moves.append(mvScale(alpha, weight = 1.0) )
@@ -67,7 +68,7 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/state_less_OU/state_less_OU.log", printgen=10) )
+monitors.append( mnModel(filename="output/1_validation/state_less_OU/state_less_OU.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, sigma2) )
 
 
