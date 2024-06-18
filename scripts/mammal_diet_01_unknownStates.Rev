@@ -26,7 +26,7 @@ cont <- readContinuousCharacterData("data/3_empirical/mammal_diet_Continuous.nex
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet_unknown_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -43,13 +43,22 @@ monitors = VectorMonitors()
 tree <- T
 root_age <- tree.rootAge()
 
-
 ########################################
 # Specify the discrete-character model #
 ########################################
 
 # make the Q matrix
-Q <- fnJC(num_disc_states)
+rate_12 ~ dnLognormal(0,1)
+rate_13 ~ dnLognormal(0,1)
+rate_21 ~ dnLognormal(0,1)
+rate_23 ~ dnLognormal(0,1)
+rate_31 ~ dnLognormal(0,1)
+rate_32 ~ dnLognormal(0,1)
+rates <- [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
+
+Q <- fnFreeK(rates, rescaled=TRUE)
+
+
 
 # make the transition rate parameter
 lambda ~ dnLoguniform(1e-5, 2)
@@ -60,8 +69,10 @@ X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=50.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=50.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
+
+
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -76,15 +87,28 @@ char_hist := X.characterHistories()
 # Specify the rate model #
 ##########################
 
+theta[1] ~ dnUniform(-8, 12)
+moves.append(mvSlide(theta[1], weight = 1.0) )
+
+
+for (i in 2:num_disc_states){
+  delta[i-1] ~ dnExponential(0.3)
+  theta[i] := min([12, theta[i-1] + delta[i-1]])
+  theta[i] := max([-8, theta[i]])
+}
+
+
+
 for (i in 1:num_disc_states){
-  theta[i] ~ dnUniform(-7, 12)
-  moves.append(mvSlide(theta[i], weight = 1.0) )
 
   sigma2[i] ~ dnLoguniform(1e-5, 10)
   moves.append(mvScale(sigma2[i], weight = 1.0) )
 
 	alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
   moves.append(mvScale(alpha[i], weight = 1.0) )
+
+  halflife[i] := ln(2.0) / alpha[i]
+  rho[i] := 1 - ( 1 - exp( -2 * alpha[i] * root_age ) ) / ( 2 * alpha[i] * root_age )
 }
 
 
@@ -93,7 +117,7 @@ for (i in 1:num_disc_states){
 # Specify the OU process #
 ##########################
 
-Y ~ dnPhyloOUSD(char_hist, theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+Y ~ dnPhyloOUSD(tree, theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
 Y.clamp(cont)
 
 #############

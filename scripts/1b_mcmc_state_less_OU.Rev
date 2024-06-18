@@ -54,7 +54,7 @@ moves.append(mvSlide(root_state, weight = 1.0) )
 # Specify the OU process #
 ##########################
 
-Y ~ dnPhyloOrnsteinUhlenbeckREML(tree, sigma=sigma2^0.5, alpha=0.0, theta=root_state, rootStates=root_state)
+Y ~ dnPhyloOrnsteinUhlenbeckPruning(tree, sigma=sigma2^0.5, alpha=0.0, theta=root_state, rootStates=root_state)
 Y.clamp(cont)
 
 #############

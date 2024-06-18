@@ -6,14 +6,14 @@ library(ggplot2)
 # state-less OU
 # run 1
 sdou1 <- readTrace("output/1_validation/state_less_OU/state_dependent_OU_run_1.log", burnin = 0.05)[[1]]
-sdou1 <- sdou1 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
+#sdou1 <- sdou1 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
 
 #sdou1 <- read.csv("output/1_validation/state_less_OU/state_dependent_OU_run_1.log", sep="\t") %>%
 #  mutate(stationaryVariance = sigma2 / (2 * alpha))
 #write_delim(sdou1, file="output/1_validation/state_less_OU/state_dependent_OU_run_1_modified.log", delim="\t")
 
 ou1 <- readTrace("output/1_validation/state_less_OU/state_less_OU_run_1.log", burnin = 0.05)[[1]]
-ou1 <- ou1 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
+#ou1 <- ou1 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
 
 #ou1 <- read.csv("output/1_validation/state_less_OU/state_less_OU_run_1.log", sep="\t") %>%
 #  mutate(stationaryVariance = sigma2 / (2 * alpha))
@@ -22,16 +22,16 @@ ou1 <- ou1 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
 
 # only theta passed KL divergence test
 kl.dist(sdou1$sigma2, ou1$sigma2, exp(1))[[3]]
-sqrt(-log(0.05/2) * 0.5 * (5024+5001)/(5024*5001))
+sqrt(-log(0.05/2) * 0.5 * (3461+3335)/(3461*3335))
 
 kl.dist(sdou1$alpha, ou1$alpha, exp(1))[[3]]
-sqrt(-log(0.05/2) * 0.5 * (4344+4805)/(4344*4805))
+sqrt(-log(0.05/2) * 0.5 * (3118+3418)/(3118*3418))
 
 kl.dist(sdou1$theta, ou1$theta, exp(1))[[3]]
-sqrt(-log(0.05/2) * 0.5 * (8238+8248)/(8238*8248))
+sqrt(-log(0.05/2) * 0.5 * (8276+8386)/(8276*8386))
 
-kl.dist(sdou1$stationaryVariance, ou1$stationaryVariance, exp(1))[[3]]
-sqrt(-log(0.05/2) * 0.5 * (7358+7326)/(7358*7326))
+kl.dist(sdou1$`stVs[1]`, ou1$stV, exp(1))[[3]]
+sqrt(-log(0.05/2) * 0.5 * (8344+8322)/(8344*8322))
 
 
 
@@ -39,9 +39,9 @@ sqrt(-log(0.05/2) * 0.5 * (7358+7326)/(7358*7326))
 
 # run 2
 sdou2 <- readTrace("output/1_validation/state_less_OU/state_dependent_OU_run_2.log", burnin = 0.05)[[1]]
-sdou2 <- sdou2 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
+#sdou2 <- sdou2 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
 ou2 <- readTrace("output/1_validation/state_less_OU/state_less_OU_run_2.log", burnin = 0.05)[[1]]
-ou2 <- ou2 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
+#ou2 <- ou2 %>% mutate(stationaryVariance = sigma2 / (2 * alpha))
 
 max(kl.dist(sdou2$sigma2, ou2$sigma2, exp(1))[[1]], kl.dist(sdou2$sigma2, ou2$sigma2, exp(1))[[2]])
 sqrt(-log(0.05/2) * 0.5 * (4697+5259)/(4697*5259))

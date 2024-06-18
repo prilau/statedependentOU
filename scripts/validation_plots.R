@@ -30,10 +30,10 @@ dev.off()
 
 
 
-ou <- readTrace(path = "output/1_validation/state_less_OU/state_less_OU_run_1.log", burnin = 0.05)
+ou <- readTrace(path = "output/1_validation/state_less_OU/state_less_OU_run_2.log", burnin = 0.05)
 #ou[[1]] <- ou[[1]] %>% 
 #  mutate(stv = sigma2 / (2 * alpha))
-sdou2 <-  readTrace(path = "output/1_validation/state_less_OU/state_dependent_OU_run_1.log", burnin = 0.05)
+sdou2 <-  readTrace(path = "output/1_validation/state_less_OU/state_dependent_OU_run_2.log", burnin = 0.05)
 #sdou2[[1]] <- sdou2[[1]] %>% 
 #  mutate(stv = sigma2 / (2 * alpha))
 
@@ -71,10 +71,6 @@ ou_alpha
 ou_sigma2
 ou_theta
 dev.off()
-
-
-
-
 
 sdbm <- readTrace(path = "output/1_validation/state_dependent_BM/state_dependent_BM_run_1.log", burnin = 0.05)
 sdbm2020 <- readTrace(path = "output/1_validation/state_dependent_BM/state_dependent_BM_MayMoore_run_1.log", burnin = 0.05)
