@@ -1,0 +1,116 @@
+################################################################################
+#
+# RevBayes Example: Bayesian inference of rates of evolution under a
+#                   state-dependent Brownian-motion model
+#
+#
+# authors: Sebastian Hoehna
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+characterDisc <- 1
+
+### Read in the tree
+T <- readTrees("data/3_empirical/mammal_diet.tre")[1]
+ntips <- T.ntips()
+nbranches <- 2 * ntips - 2
+
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet_Discrete.nex")
+num_disc_states <- disc.getStateDescriptions().size()
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+
+##########################
+# Specify the tree model #
+##########################
+
+tree <- T
+root_age <- tree.rootAge()
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+rate_12 ~ dnLognormal(0,1)
+rate_13 ~ dnLognormal(0,1)
+rate_21 ~ dnLognormal(0,1)
+rate_23 ~ dnLognormal(0,1)
+rate_31 ~ dnLognormal(0,1)
+rate_32 ~ dnLognormal(0,1)
+
+moves.append( mvScale(rate_12, weight=1.0) )
+moves.append( mvScale(rate_13, weight=1.0) )
+moves.append( mvScale(rate_21, weight=1.0) )
+moves.append( mvScale(rate_23, weight=1.0) )
+moves.append( mvScale(rate_31, weight=1.0) )
+moves.append( mvScale(rate_32, weight=1.0) )
+
+rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
+
+Q := fnFreeK(rates, rescaled=TRUE)
+
+rf_prior <- [1,1]
+rf ~ dnDirichlet( rf_prior )
+moves.append( mvBetaSimplex( rf, weight=2 ) )
+moves.append( mvDirichletSimplex( rf, weight=2 ) )
+
+
+# make the data-augmented CTCM model
+X ~ dnPhyloCTMC(tree=tree, Q=Q, rootFrequencies=rf, type="Standard")
+X.clamp(disc)
+
+
+
+#############
+# The Model #
+#############
+
+mymodel = model(X)
+
+monitors.append( mnModel(filename="output/3_empirical/3d_stochMapping/3d.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000) )
+monitors.append( mnJointConditionalAncestralState(tree=tree,
+                                                  ctmc=X,
+                                                  filename="output/3_empirical/3d_stochMapping/anc_states.log",
+                                                  type="Standard",
+                                                  printgen=1,
+                                                  withTips=true,
+                                                  withStartStates=false) )
+
+monitors.append( mnStochasticCharacterMap(ctmc=X,
+                                          filename="output/3_empirical/3d_stochMapping/stoch_map.log",
+                                          printgen=100,
+                                          include_simmap=true) )
+
+
+
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
+
+
+### run the MCMC ###
+mymcmc.burnin(generations=5000, tuningInterval=100)
+mymcmc.run(generations=50000)
+
+anc_states = readAncestralStateTrace("output/3_empirical/3d_stochMapping/anc_states.log")
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/3d_stochMapping/anc_states.tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=3)
+
+## quit ##
+q()

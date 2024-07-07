@@ -1,7 +1,10 @@
 output/*
+output/*/*
+output/*/*/*
 data/.Rhistory
 history.txt
 old/*
 jobs/*
 old/*/*
+testing/*
 */.Rhistory
