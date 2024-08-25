@@ -52,39 +52,11 @@ matchNodes = function(phy) {
 tree <- read.tree("data/3_empirical/mammal_diet.tre")
 index_to_rev <- matchNodes(tree)
 
-log <- read_tsv("output/3_empirical/3c_statedependentOU/trees.log")
+log <- read_tsv("output/3_empirical/3c_statedependentOU/augch_run2.trees")
 
 log <- as.data.frame(log$char_hist)
-write_tsv(log, "output/3_empirical/3c_statedependentOU/augch.trees")
+write_tsv(log, "output/3_empirical/3c_statedependentOU/augch_run2.trees", col_names = FALSE)
 
-simmap_to_stocMap <- function(input_path, output_path){
-  simmaps <- read.simmap(input_path, format="phylip")
-  simmaps_tsv <- read_tsv(input_path, col_names = FALSE)
-  df_rev <- data.frame()
-  
-  for (row_num in 1:length(simmaps)){
-    simmap <- simmaps[[row_num]]
-    df_rev[row_num, 1] <- row_num-1
-    for (i in 1:(length(simmap$maps))){
-      ape_node <- which(index_to_rev[,2]==i)
-      ape_edge <- which(simmap$edge[,2]==ape_node)
-      map <- simmap$maps[[ape_edge]]
-      str <- "{"
-      for (j in 1:length(map)){
-        str <- paste0(str, names(map[j]), ",",
-                      map[j], ":")
-        }
-      str <- substr(str, 1, nchar(str)-1)
-      str <- paste0(str, "}")
-      df_rev[row_num, i+1] <- str
-      }
-    df_rev[row_num, length(simmap$maps)+2] <- paste0("{",names(map[j]),",0}")
-    df_rev[row_num, length(simmap$maps)+3] <- simmaps_tsv[row_num,1]
-    }
-  
-  colnames(df_rev) <- c("Iteration", as.character(1:(length(simmap$maps)+1)), "simmap")
-  write_tsv(df_rev, output_path)
-}
 simmap_to_ancStates <- function(input_path, output_path){
   simmaps <- read.simmap(input_path, format="phylip")
   df_rev <- data.frame()
@@ -108,14 +80,24 @@ simmap_to_ancStates <- function(input_path, output_path){
   write_tsv(df_rev, output_path)
 }
 
+simmap_to_ancStates("output/3_empirical/3.2a_sdOU/augch.trees", "output/3_empirical/3.2a_sdOU/anc_states.log")
 
-simmap_to_stocMap("output/3_empirical/3c_statedependentOU/augch.trees", "output/3_empirical/3c_statedependentOU/stoc_map.log")
-simmap_to_stocMap("output/3_empirical/3b_statedependentBM/augch.trees", "output/3_empirical/3b_statedependentBM/stoc_map.log")
+# in rb
+#tree <- readTrees("data/3_empirical/mammal_diet.tre")[1]
+#anc_states = readAncestralStateTrace("output/3_empirical/3c_statedependentOU/anc_states_run2.log")
+#anc_tree = ancestralStateTree(
+#  tree=tree,
+#  ancestral_state_trace_vector=anc_states,
+#  include_start_states=false,
+#  file="output/3_empirical/3c_statedependentOU/anc_states_run2.tre",
+#  summary_statistic="MAP",
+#  reconstruction="marginal",
+#  burnin=0.0,
+#  nStates=3,
+#  site=1)
 
-simmap_to_ancStates("output/3_empirical/3c_statedependentOU/augch.trees", "output/3_empirical/3c_statedependentOU/anc_states.log")
-simmap_to_ancStates("output/3_empirical/3b_statedependentBM/augch.trees", "output/3_empirical/3b_statedependentBM/anc_states.log")
 
-ase <- processAncStates("output/3_empirical/3c_statedependentOU/anc_states.tre",
+ase <- processAncStates("output/3_empirical/3c_statedependentOU/anc_states_run2.tre",
                         # Specify state labels.
                         # These numbers correspond to
                         # your input data file.
@@ -124,52 +106,56 @@ ase <- processAncStates("output/3_empirical/3c_statedependentOU/anc_states.tre",
 # produce the plot object, showing MAP states at nodes.
 # color corresponds to state, size to the state's posterior probability
 p <- plotAncStatesMAP(t = ase,
-                      tip_labels_offset = 0.02,
+                      tip_labels_offset = 0.00,
                       #tip_labels = FALSE,
                       node_color_as = "state",
-                      node_color = c("Herbivore"="#44AA99", "Omnivore"="#DDCC77", "Carnivore"="#882255"),
-                      node_size = c(0.1, 4),
-                      tip_states_size = c(0.1, 4),
-                      tip_states_shape = 15,
+                      node_color = c("Herbivore"="#44aa99", "Omnivore"="#ddcc77", "Carnivore"="#882255"),
+                      node_size = c(0.1, 2.5),
+                      tip_states_size = c(0.01, 0.01),
+                      tip_states_shape = 1,
                       state_transparency = 0.70,
-                      tree_layout = "rect",
-                      tip_labels_size = 1) +
+                      tree_layout = "rectangular",
+                      tip_labels_size = 0.5) +
   # modify legend location using ggplot2
   theme(legend.position.inside = c(0.92,0.81))
 
-ggsave(paste0("figures/3_empirical/3c_statedependentOU/anc_MAP_wTipLabel.pdf"), p, width = 9, height = 12)
+
+ggsave(paste0("figures/3_empirical/3c_statedependentOU/anc_run2_wTipLabel.pdf"), p, width = 9, height = 20)
 
 
 p <- plotAncStatesPie(t = ase,
-                      pie_colors = c("Herbivore"="#44AA99", "Omnivore"="#DDCC77", "Carnivore"="#882255"),
+                      pie_colors = c("Herbivore"="#44aa99", "Omnivore"="#ddcc77", "Carnivore"="#882255"),
                       tip_labels_size = 1,
-                      tip_pies = FALSE,
-                      #tip_labels_offset = 0.02,
-                      tip_labels = FALSE,
-                      state_transparency = 0.75) +
+                      tip_pies = TRUE,
+                      tip_labels_offset = 0.02,
+                      #tip_labels = FALSE,
+                      state_transparency = 0.55,
+                      tree_layout = "circular") +
   # modify legend location using ggplot2
   theme(legend.position.inside = c(0.92,0.81))
 
-ggsave(paste0("figures/3_empirical/3b_statedependentBM/anc_Pie_woTipLabel.pdf"), p, width = 9, height = 12)
+ggsave(paste0("figures/3_empirical/3c_statedependentOU/pie_run2_wTipLabel.pdf"), p, width = 9, height = 12)
 
 
-tree <- readTrees("data/3_empirical/mammal_diet.tre")
-simmaps <- read.simmap("output/3_empirical/3b_statedependentBM/augch.trees", format="phylip")
+tree <- readTrees("data/3_empirical/mammal_foot.tre")
+simmaps <- read.simmap("output/3_empirical/3.2a_sdOU/augch.trees", format="phylip")
 stoc_map <- processStochMaps(tree,
                              simmap = simmaps,
                              states=c("0", "1", "2"))
 
-colnames(stoc_map)[6] = "Herbivore"
-colnames(stoc_map)[7] = "Omnivore"
-colnames(stoc_map)[8] = "Carnivore"
+colnames(stoc_map)[6] = "Digitigrady"
+colnames(stoc_map)[7] = "Plantigrady"
+colnames(stoc_map)[8] = "Unguligrady"
 
 p <- plotStochMaps(tree, maps=stoc_map,
                    tip_labels = TRUE,
+                   tree_layout = "circular",
                    line_width=0.25,
                    color_by = "MAP",
                    colors = c("Herbivore"="#44AA99",
-                              "Omnivore"="#DDCC77",
+                              "Omnivore"="#ddcc77",
                               "Carnivore"="#882255"),
                    tip_labels_size=1) +
   theme(legend.position.inside = c(0.92,0.81))
-ggsave(paste0("output/3_empirical/3b_statedependentBM/augch_map_wTipLabels.pdf"), p, width = 9, height = 12)
+ggsave(paste0("figures/3_empirical/3c_statedependentOU/augch_run2_circ_wTipLabels.pdf"), p, width = 9, height = 12)
+

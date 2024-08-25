@@ -3,8 +3,8 @@ library(TESS)
 cat("simulating trees.\n")
 
 # simulation parameters
-models = c("bms", "ast", "axt", "axx", "asx", "xst", "xxt", "xsx", "xxx")
-num_tips   = 500
+models = c("sdBM", "sdOU", "sdOUa", "sdOUs", "sdOUt", "sdOU-a", "sdOU-s", "sdOU-t")
+num_tips   = 1200
 reps       = 50
 
 grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
@@ -18,7 +18,7 @@ for(i in 1:nrow(grid)) {
   this_tree       = this_row[[2]]
   
   # create the directories if necessary
-  this_dir = paste0("data/2_simulation/2a_state_dependency/", this_model, "/t", this_tree)
+  this_dir = paste0("../IRT3/sdOU_local/data/simulation/", this_model, "/t", this_tree)
   if ( !dir.exists(this_dir) ) {
     dir.create(this_dir, recursive=TRUE, showWarnings=FALSE)
   }

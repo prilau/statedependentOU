@@ -5,8 +5,8 @@ source("scripts/readWriteCharacterData.R")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-models = c("bm", "ast", "axt", "axx", "asx", "xst", "xxt", "xsx", "xxx")
-num_tips   = 500
+models = c("sdBM", "sdOU", "sdOUa", "sdOUs", "sdOUt", "sdOU-a", "sdOU-s", "sdOU-t")
+num_tips   = 1200
 reps       = 50
 
 grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
@@ -15,7 +15,7 @@ grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 # first, we need to compute the tree length of each replicate
 tree_lengths = vector("list", length(num_tips))
 for(i in 1:length(num_tips)) {
-  this_dir = paste0("data/2_simulation/2a_state_dependency/")
+  this_dir = paste0("../sdOU_local/IRT3/data/simulation/")
   these_files = list.files(this_dir, pattern="tree.tre", recursive=TRUE, full.names = TRUE)
   these_trees = lapply(these_files, read.tree)
   these_tree_lengths = sapply(these_trees, function(tree) sum(tree$edge.length))
@@ -24,8 +24,8 @@ for(i in 1:length(num_tips)) {
 
 mean_tree_lengths = sapply(tree_lengths, mean)
 
-# specify rates so that the expected number of changes is 10
-rates = 50 / mean_tree_lengths
+# specify rates so that the expected number of changes is 200
+rates = 200 / mean_tree_lengths
 #names(rates) = models
 
 # specify the Mk2 rate matrix
@@ -49,7 +49,7 @@ for(i in 1:nrow(grid)) {
   this_tree       = this_row[[2]]
 
   # read the tree
-  this_dir = paste0("data/2_simulation/2a_state_dependency/", this_model, "/t", this_tree)
+  this_dir = paste0("../sdOU_local/IRT3/data/simulation/", this_model, "/t", this_tree)
   
   tree = read.tree(paste0(this_dir, "/tree.tre"))
   
@@ -83,7 +83,7 @@ for(i in 1:nrow(grid)) {
   state_2_tree$edge.length = maps[,3] / tree$edge.length
   
   # save these trees
-  this_sub_dir = paste0("data/2_simulation/2a_state_dependency/", this_model, "/t", this_tree)
+  this_sub_dir = paste0("../sdOU_local/IRT3/data/simulation/", this_model, "/t", this_tree)
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
