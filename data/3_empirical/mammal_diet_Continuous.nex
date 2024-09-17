@@ -1,7 +1,7 @@
 #NEXUS
 [Data written by write.nexus.data.R, Thu May  9 21:08:29 2024]
 BEGIN DATA;
-  DIMENSIONS NTAX=1192 NCHAR=1;
+  DIMENSIONS NTAX=1190 NCHAR=1;
   FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
   MATRIX
     Acerodon_jubatus                     0.0861776962410524
@@ -376,7 +376,6 @@ BEGIN DATA;
     Gerbillurus_setzeri                  -3.262305382795540
     Galemys_pyrenaicus                   -2.826833737092180
     Galerella_sanguinea                  -0.659712404473708
-    Galictis_cuja                        00000
     Gazella_dorcas                       2.7408400239252000
     Gazella_gazella                      3.0540011816779700
     Gazella_leptoceros                   3.1904763503465000
@@ -387,7 +386,6 @@ BEGIN DATA;
     Heimyscus_fumosus                    -4.080441657053110
     Helarctos_malayanus                  4.0430512678345500
     Heliophobius_argenteocinereus        -1.832581463748310
-    Hemibelideus_lemuroides              00000
     Gerbillurus_tytonis                  -3.513246885470780
     Gerbillurus_vallinus                 -3.343872315042890
     Gerbillus_andersoni                  -3.615628992374340
@@ -765,7 +763,7 @@ BEGIN DATA;
     Okapia_johnstoni                     5.4380793089232000
     Oligoryzomys_flavescens              -3.849048206266760
     Oligoryzomys_nigripes                -3.897134392934400
-    Ondatra_zibethicus                   -0.0080321716972640
+    Ondatra_zibethicus                   -0.008032171697264
     Onychogalea_fraenata                 1.5973653311998300
     Onychogalea_unguifera                1.8718021769015900
     Onychomys_leucogaster                -3.579128590154820
@@ -1065,7 +1063,7 @@ BEGIN DATA;
     Tarsipes_rostratus                   -4.631514161327690
     Tarsius_bancanus                     -2.171556830587640
     Vombatus_ursinus                     3.2580965380214800
-    Vulpes_cana                          -0.0010005003335830
+    Vulpes_cana                          -0.001000500333583
     Vulpes_chama                         1.0715836162801900
     Stenella_attenuata                   4.1850989254905700
     Stenella_coeruleoalba                4.9558270576012600

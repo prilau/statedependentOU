@@ -1,0 +1,52 @@
+#NEXUS
+[Data written by write.nexus.data.R, Sun Sep  8 20:20:06 2024]
+BEGIN DATA;
+  DIMENSIONS NTAX=43 NCHAR=1;
+  FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
+  MATRIX
+    Antilocapra_americana                           4.0382874241974
+    Addax_nasomaculatus                             3.89479849022768
+    Oryx_dammah                                     4.22302282506325
+    Oryx_gazella                                    3.61291628663038
+    Hippotragus_equinus                             3.68940546069843
+    Hippotragus_niger                               3.23336486586173
+    Alcelaphus_buselaphus_buselaphus                3.17411028924664
+    Connochaetes_gnou                               2.17603199274062
+    Connochaetes_taurinus_1                         3.4190038330485
+    Rupicapra_rupicapra_FJ207538                    3.24841013937482
+    Cephalophus_natalensis                          -0.399901876847742
+    Cephalophus_nigrifrons                          -2.24451157309771
+    Sylvicapra_grimmia                              3.72784570977034
+    Philantomba_monticola_1                         2.95052045898243
+    Oreotragus_oreotragus                           -1.56657697008132
+    Antidorcas_marsupialis                          1.81689010801606
+    Litocranius_walleri                             -3.81121928980866
+    Antilope_cervicapra                             -2.62986418070294
+    Eudorcas_rufifrons_2                            -2.85696765272078
+    Nanger_dama                                     -0.17685066631051
+    Nanger_granti                                   0.16896830628897
+    Gazella_dorcas_pelzelnii                        -5.70826171431997
+    Saiga_tatarica                                  2.90266898329724
+    Ourebia_ourebi                                  2.94162618385499
+    Madoqua_kirkii                                  3.2116962621509
+    Rahicerus_campestris                            2.67249629233639
+    Kobus_ellipsiprymnus                            3.70207128286153
+    Kobus_leche                                     4.78357789573866
+    Redunca_arundinum                               2.50966227046261
+    Redunca_fulvorufula                             3.79279246755332
+    Aepyceros_melampus                              3.72661445751505
+    Nesotragus_moschatus                            -1.01317092056711
+    Syncerus_caffer                                 3.01740891954508
+    Tragelaphus_oryx                                -3.85012298287069
+    Tragelaphus_strepsiceros                        -2.53807331634913
+    Tragelaphus_eurycerus                           -4.0292156526751
+    Tragelaphus_spekii                              -2.79651991775225
+    Tragelaphus_scriptus_3                          -0.447780804156886
+    Tragelaphus_angasii                             -0.130182847665989
+    Tragelaphus_imberbis                            -4.84806359583935
+    Capreolus_capreolus                             -7.01902398884343
+    Giraffa_camelopardalis_angolensis_NC012100      -7.13496118523849
+    Okapia_johnstoni                                -7.30941788368931
+  ;
+END;
+

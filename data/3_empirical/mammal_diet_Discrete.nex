@@ -1,7 +1,7 @@
 #NEXUS
 [Data written by write.nexus.data.R, Thu May  9 21:09:31 2024]
 BEGIN DATA;
-  DIMENSIONS NTAX=1192 NCHAR=1;
+  DIMENSIONS NTAX=1190 NCHAR=1;
   FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="012";
   MATRIX
     Acerodon_jubatus                     0
@@ -366,7 +366,6 @@ BEGIN DATA;
     Galago_senegalensis                  1
     Galemys_pyrenaicus                   2
     Galerella_sanguinea                  2
-    Galictis_cuja                        2
     Gazella_dorcas                       0
     Gazella_gazella                      0
     Gazella_leptoceros                   0
@@ -403,7 +402,6 @@ BEGIN DATA;
     Heimyscus_fumosus                    0
     Helarctos_malayanus                  1
     Heliophobius_argenteocinereus        0
-    Hemibelideus_lemuroides              0
     Hemicentetes_semispinosus            2
     Hemiechinus_auritus                  1
     Herpestes_naso                       2
