@@ -4,27 +4,30 @@ library(geiger)
 library(TESS)
 library(tidyverse)
 
-drawAlpha <- function(state_dependent){
+drawHalflife <- function(state_dependent=T){
   if(state_dependent == T){
-    alpha <- sort(rlnorm(n=3, meanlog=-2.5, sdlog=1))
+    halflife <- rlnorm(n=3, meanlog=4.349757, sdlog=1.044495)
+    names(halflife) = sample(c("0", "1", "2"))
   } else {
-    alpha <- rep(rlnorm(n=1, meanlog=-3, sdlog=1), 3)
+    halflife <- rep(rlnorm(n=1, meanlog=4.349757, sdlog=1.044495), 3)
+    names(halflife) = c("0", "1", "2")
   }
-  names(alpha) = c("1", "0", "2")
-  return(alpha)
-} 
-
-drawSigma2 <- function(state_dependent){
-  if(state_dependent == T){
-    sigma2 <- rlnorm(n=3, meanlog=-1, sdlog=1)
-  } else {
-    sigma2 <- rep(rlnorm(n=1, meanlog=-0.5, sdlog=1), 3)
-  }
-  names(sigma2) = c("0", "1", "2")
-  return(sigma2)
+  return(halflife)
 }
 
-drawTheta <- function(state_dependent){
+drawStv <- function(state_dependent=T){
+  if(state_dependent == T){
+    stv <- rlnorm(n=3, meanlog=log(12.39783716), sdlog=0.587405)
+    names(stv) = sample(c("0", "1", "2"))
+  } else {
+    stv <- rep(rlnorm(n=1, meanlog=log(12.39783716), sdlog=0.587405), 3)
+    names(stv) = c("0", "1", "2")
+  }
+  return(stv)
+}
+
+
+drawTheta <- function(state_dependent=T){
   if(state_dependent == T){
     theta <- c(rnorm(n=1, mean=-5, sd=1),
                rnorm(n=1, mean=0, sd=1),
@@ -36,21 +39,44 @@ drawTheta <- function(state_dependent){
   return(theta)
 }
 
+
+
+
+
+
+
+
 #drawRootState <- function(alphaRoot, sigma2Root, thetaRoot){
 #  rootState <- rnorm(n=1, mean=thetaRoot, sd = sigma2Root/(2* alphaRoot))
 #  return(rootState)
 #}
 
-simulateContinuous = function(tree, stateDependencies) {
+
+simulateContinuous = function(tree, stateDependencies=c(halflife=T, stv=T, theta=T)) {
 
   ## Re-parameterization
   #alpha <- log(2) / halflife
   #sigma2 <- stationaryvar * 2 * alpha
-
+  if (isTRUE(stateDependencies["halflife"])){
+    halflife <-  drawHalflife(state_dependent = T)
+  } else {
+    halflife <-  drawHalflife(state_dependent = F)
+  }
   
-  alpha <- drawAlpha(state_dependent = T)
-  sigma2 <- drawSigma2(state_dependent = T)
-  theta <- drawTheta(state_dependent = T)
+  if (isTRUE(stateDependencies["stv"])){
+    stv <-  drawStv(state_dependent = T)
+  } else {
+    stv <-  drawStv(state_dependent = F)
+  }
+  
+  if (isTRUE(stateDependencies["theta"])){
+    theta <-  drawStv(state_dependent = T)
+  } else {
+    theta <-  drawStv(state_dependent = F)
+  }
+  
+  alpha <- log(2) / halflife
+  sigma2 <- 2 * alpha * stv
   
   preorder <- rev(postorder(tree))
   edges <- tree$edge
@@ -103,31 +129,32 @@ simulateContinuous = function(tree, stateDependencies) {
   return(list(cont_list, alpha, sigma2, theta))
 }
 
-par <- tibble(alpha_0 = 0, alpha_1 = 0, alpha_2 = 0,
+pars <- tibble(alpha_0 = 0, alpha_1 = 0, alpha_2 = 0,
               sigma2_0 = 0, sigma2_1 = 0, sigma2_2 = 0,
               theta_0 = 0, theta_1 = 0, theta_2 = 0)
 #sim = vector("list", length = 50)
-for (i in 1:50){
-  filename <- paste0("data/2_simulation/false_positive_sd/artiodactyla/sim_",
+for (i in 1:3){
+  filename <- paste0("data/2_simulation/false_positive_sd/sim_",
                      i, "/history.Rda")
   load(filename)
-  sim <- simulateContinuous(history, c(T,T,T))
-  par[i,1] <- unname(sim[[2]][which(names(sim[[2]]) == "0")])
-  par[i,2] <- unname(sim[[2]][which(names(sim[[2]]) == "1")])
-  par[i,3] <- unname(sim[[2]][which(names(sim[[2]]) == "2")])
-  par[i,4] <- unname(sim[[3]][which(names(sim[[3]]) == "0")])
-  par[i,5] <- unname(sim[[3]][which(names(sim[[3]]) == "1")])
-  par[i,6] <- unname(sim[[3]][which(names(sim[[3]]) == "2")])
-  par[i,7] <- unname(sim[[4]][which(names(sim[[4]]) == "0")])
-  par[i,8] <- unname(sim[[4]][which(names(sim[[4]]) == "1")])
-  par[i,9] <- unname(sim[[4]][which(names(sim[[4]]) == "2")])
+  sim <- simulateContinuous(history, c(halflife=T, stv=T, theta=T))
+  pars[i,1] <- unname(sim[[2]][which(names(sim[[2]]) == "0")])
+  pars[i,2] <- unname(sim[[2]][which(names(sim[[2]]) == "1")])
+  pars[i,3] <- unname(sim[[2]][which(names(sim[[2]]) == "2")])
+  pars[i,4] <- unname(sim[[3]][which(names(sim[[3]]) == "0")])
+  pars[i,5] <- unname(sim[[3]][which(names(sim[[3]]) == "1")])
+  pars[i,6] <- unname(sim[[3]][which(names(sim[[3]]) == "2")])
+  pars[i,7] <- unname(sim[[4]][which(names(sim[[4]]) == "0")])
+  pars[i,8] <- unname(sim[[4]][which(names(sim[[4]]) == "1")])
+  pars[i,9] <- unname(sim[[4]][which(names(sim[[4]]) == "2")])
   
-  this_dir <- paste0("data/2_simulation/false_positive_sd/artiodactyla/sim_", i)
+  this_dir <- paste0("data/2_simulation/false_positive_sd/sim_", i)
   write.nexus.data(sim[[1]], file = paste0(this_dir, "/continuous.nex"),
                    format="Continuous")
 }
 
-save(par, file="data/2_simulation/false_positive_sd/artiodactyla/par.Rda")
+save(pars, file="data/2_simulation/false_positive_sd/pars.Rda")
+
 
 
 #simulateContinuous_bm = function(tree, rootState=0) {

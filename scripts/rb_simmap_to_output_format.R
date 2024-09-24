@@ -49,13 +49,15 @@ matchNodes = function(phy) {
   }
   return(node_map[,1:2])
 }
-tree <- read.tree("data/3_empirical/mammal_diet.tre")
+#tree <- read.tree("data/3_empirical/mammal_diet.tre")
+
+tree <- read.tree("data/3_empirical/mammal_diet_perMY.tre")
 index_to_rev <- matchNodes(tree)
 
-log <- read_tsv("output/3_empirical/3c_statedependentOU/augch_run2.trees")
+log <- read_tsv("output/2_simulation/false_positive_stateless/sim_1/augch_blackPrior_run_1.trees")
 
 log <- as.data.frame(log$char_hist)
-write_tsv(log, "output/3_empirical/3c_statedependentOU/augch_run2.trees", col_names = FALSE)
+write_tsv(log, "output/2_simulation/false_positive_stateless/sim_1/augch_blackPrior_run_1_modified.trees", col_names = FALSE)
 
 simmap_to_ancStates <- function(input_path, output_path){
   simmaps <- read.simmap(input_path, format="phylip")

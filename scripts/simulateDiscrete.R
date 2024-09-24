@@ -113,19 +113,19 @@ source("scripts/readWriteCharacterData.R")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_disc = 50
+num_disc = 3
 
 #grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 
 
 # first, we need to compute the tree length of each replicate
 #for(i in 1:length(num_tips)) {
-tree <- read.tree("data/1_validation/artiodactyla/artiodactyla.tree")
+tree <- read.tree("data/3_empirical/mammal_diet_perMY.tre")
 tree_length = sum(tree$edge.length)
 #}
 
 # specify rates so that the expected number of changes is 50
-rate = 25 / tree_length
+rate = 250 / tree_length
 #names(rates) = models
 
 # specify the Mk2 rate matrix
@@ -136,7 +136,7 @@ rownames(Q) = colnames(Q) = 1:3 - 1
 # simulate the discrete characters
 # track the number of rejected simulations based on proportional
 # representation
-colors = c("0"="blue","1"="red", "2"="yellow")
+colors = c("0"="#44aa99", "1"="#ddcc77", "2"="#882255")
 #num_rejections = numeric(length(num_tips))
 #num_simulations = numeric(length(num_tips))
 #names(num_rejections) = names(num_simulations) = num_tips
@@ -178,7 +178,7 @@ for(i in 1:num_disc) {
   state_2_tree$edge.length = maps[,3] / tree$edge.length
   
   # save these trees
-  this_sub_dir = paste0("../sdOU_local/IRT3/data/simulation/artiodactyla/sim_", i)
+  this_sub_dir = paste0("data/2_simulation/false_positive_stateless/sim_", i)
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
@@ -201,5 +201,5 @@ for(i in 1:num_disc) {
   # increment the progress bar
   setTxtProgressBar(bar, i / num_disc)
   
-}
+} 
 cat("\n")
