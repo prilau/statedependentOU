@@ -1,10 +1,10 @@
 ################################################################################
 #
-# RevBayes Example: Bayesian inference of rates of evolution under a
-#                   state-dependent Brownian-motion model
+# RevBayes Example: Bayesian inference of conitinuous trait evolution under a
+#                   state-dependent OU model
 #
 #
-# authors: Sebastian Hoehna
+# authors: Priscilla Lau
 #
 ################################################################################
 
@@ -55,12 +55,12 @@ rate_23 ~ dnLognormal(0,1)
 rate_31 ~ dnLognormal(0,1)
 rate_32 ~ dnLognormal(0,1)
 
-moves.append( mvScale(rate_12, weight=1.0) )
-moves.append( mvScale(rate_13, weight=1.0) )
-moves.append( mvScale(rate_21, weight=1.0) )
-moves.append( mvScale(rate_23, weight=1.0) )
-moves.append( mvScale(rate_31, weight=1.0) )
-moves.append( mvScale(rate_32, weight=1.0) )
+moves.append( mvAVMVN(rate_12, weight=1.0) )
+moves.append( mvAVMVN(rate_13, weight=1.0) )
+moves.append( mvAVMVN(rate_21, weight=1.0) )
+moves.append( mvAVMVN(rate_23, weight=1.0) )
+moves.append( mvAVMVN(rate_31, weight=1.0) )
+moves.append( mvAVMVN(rate_32, weight=1.0) )
 
 rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 
@@ -70,7 +70,7 @@ Q := fnFreeK(rates, rescaled=TRUE)
 
 # make the transition rate parameter
 lambda ~ dnLoguniform(1e-5, 2)
-moves.append( mvScale(lambda, weight=1.0) )
+moves.append( mvAVMVN(lambda, weight=1.0) )
 
 # make the data-augmented CTCM model
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
@@ -95,25 +95,22 @@ char_hist := X.characterHistories()
 # Specify the rate model #
 ##########################
 
+theta ~ dnDPP(1, dnSoftBoundUniformNormal(-9, 9, 1, 0.95), 3)
+#moves.append(mvSlide(theta, weight = 1.0) )
+halflife ~ dnDPP(1, dnLognormal(4.349757, 1.044495), 3) 
+#moves.append(mvScale(halflife, weight = 1.0) )
+alpha := abs(ln(2)/halflife)
+rho := 1 - ( 1 - exp( -2 * alpha * root_age ) ) / ( 2 * alpha[i] * root_age )
+stv ~ dnDPP(1, dnLognormal(ln(12.39783716), 0.587405), 3) 
+#moves.append(mvScale(stv, weight = 1.0) )
+sigma2 := stv * 2 * alpha
+
 avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
-
-for (i in 1:num_disc_states){
-  theta[i] ~ dnSoftBoundUniformNormal(-9, 9, 1, 0.95)
-  moves.append(mvSlide(theta[i], weight = 1.0) )
-  avmvn_move.addVariable(theta[i])
-  halflife[i] ~ dnLognormal(4.349757, 1.044495)
-  moves.append(mvScale(halflife[i], weight = 1.0) )
-  avmvn_move.addVariable(halflife[i])
-  alpha[i] := abs(ln(2)/halflife[i])
-  rho[i] := 1 - ( 1 - exp( -2 * alpha[i] * root_age ) ) / ( 2 * alpha[i] * root_age )
-  stv[i] ~ dnLognormal(ln(12.39783716), 0.587405)
-  moves.append(mvScale(stv[i], weight = 1.0) )
-  avmvn_move.addVariable(stv[i])
-  sigma2[i] := stv[i] * 2 * alpha[i]
-}
-
-
+avmvn_move.addVariable(stv)
+avmvn_move.addVariable(halflife)
+avmvn_move.addVariable(theta)
 moves.append( avmvn_move )
+
 
 
 theta_compare_12 := ifelse(theta[1] > theta[2], 1, 0)
@@ -127,6 +124,22 @@ alpha_compare_23 := ifelse(alpha[2] > alpha[3], 1, 0)
 sigma2_compare_12 := ifelse(sigma2[1] > sigma2[2], 1, 0)
 sigma2_compare_13 := ifelse(sigma2[1] > sigma2[3], 1, 0)
 sigma2_compare_23 := ifelse(sigma2[2] > sigma2[3], 1, 0)
+
+halflife_compare_12 := ifelse(halflife[1] > halflife[2], 1, 0)
+halflife_compare_13 := ifelse(halflife[1] > halflife[3], 1, 0)
+halflife_compare_23 := ifelse(halflife[2] > halflife[3], 1, 0)
+
+rho_compare_12 := ifelse(rho[1] > rho[2], 1, 0)
+rho_compare_13 := ifelse(rho[1] > rho[3], 1, 0)
+rho_compare_23 := ifelse(rho[2] > rho[3], 1, 0)
+
+stv_compare_12 := ifelse(stv[1] > stv[2], 1, 0)
+stv_compare_13 := ifelse(stv[1] > stv[3], 1, 0)
+stv_compare_23 := ifelse(stv[2] > stv[3], 1, 0)
+
+
+
+
 
 
 ##########################
@@ -143,9 +156,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/3_empirical/3h_statedependentOU_blackPrior/3h.log", printgen=10) )
-monitors.append( mnScreen(printgen=10, theta_compare_13) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/3h_statedependentOU_blackPrior/augch.trees", printgen=100 ) )
+monitors.append( mnModel(filename="output/3_empirical/3i_DPP/3i.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, alpha) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/3i_DPP/augch.trees", printgen=100 ) )
 
 ################
 # The Analysis #
@@ -156,8 +169,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=50, tuningInterval=100)
-mymcmc.run(generations=50)
+mymcmc.burnin(generations=5000, tuningInterval=100)
+mymcmc.run(generations=50000)
 
 
 

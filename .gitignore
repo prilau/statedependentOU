@@ -1,13 +1,5 @@
 output/*
-output/*/*
-output/*/*/*
-data/.Rhistory
 history.txt
-old/*
 jobs/*
-old/*/*
-testing/*
 figures/*
-figures/*/*
-figures/*/*/*
 */.Rhistory

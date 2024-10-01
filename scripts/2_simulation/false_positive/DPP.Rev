@@ -1,0 +1,157 @@
+################################################################################
+#
+# RevBayes Example: Bayesian inference of conitinuous trait evolution under a
+#                   state-dependent OU model
+#
+#
+# authors: Priscilla Lau
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+characterCont <- 1
+characterDisc <- 1
+
+### Read in the tree
+T <- readTrees("data/2_simulation/mammal_diet_perMY_n500.tre")[1]
+ntips <- T.ntips()
+nbranches <- 2 * ntips - 2
+
+### Read in the continuous-character data
+cont <- readContinuousCharacterData("data/2_simulation/false_positive/sim_" + SIM_INDEX + "/continuous_" + sdORsx + ".nex")
+cont.excludeAll()
+cont.includeCharacter(characterCont)
+
+disc <- readDiscreteCharacterData("data/2_simulation/false_positive/sim_" + SIM_INDEX + "/discrete.nex")
+num_disc_states <- disc.getStateDescriptions().size()
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+monitors = VectorMonitors()
+
+##########################
+# Specify the tree model #
+##########################
+
+tree <- T
+root_age <- tree.rootAge()
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+#rate_12 ~ dnLognormal(0,1)
+#rate_13 ~ dnLognormal(0,1)
+#rate_21 ~ dnLognormal(0,1)
+#rate_23 ~ dnLognormal(0,1)
+#rate_31 ~ dnLognormal(0,1)
+#rate_32 ~ dnLognormal(0,1)
+#
+#moves.append( mvAVMVN(rate_12, weight=1.0) )
+#moves.append( mvAVMVN(rate_13, weight=1.0) )
+#moves.append( mvAVMVN(rate_21, weight=1.0) )
+#moves.append( mvAVMVN(rate_23, weight=1.0) )
+#moves.append( mvAVMVN(rate_31, weight=1.0) )
+#moves.append( mvAVMVN(rate_32, weight=1.0) )
+#
+#rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
+#
+#Q := fnFreeK(rates, rescaled=TRUE)
+
+Q <- fnJC(num_disc_states)
+
+
+# make the transition rate parameter
+lambda ~ dnLogNormal(ln(1e-2), 0.4)
+moves.append( mvScale(lambda, weight=1.0) )
+avmvn_move.addVariable(lambda)
+move.append(avmvn_move)
+# make the data-augmented CTCM model
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X.clamp(disc)
+
+# include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
+
+
+
+# keep track of the number of transitions
+for(i in 1:nbranches) {
+    num_changes[i] := sum(X.numCharacterChanges(i))
+}
+total_num_changes := sum(num_changes)
+
+char_hist := X.characterHistories()
+
+
+##########################
+# Specify the rate model #
+##########################
+
+theta ~ dnDPP(1, dnSoftBoundUniformNormal(-9, 9, 1, 0.95), 2) 
+moves.append( mvDPPValueSliding(theta, weight=1.0 ) )
+halflife ~ dnDPP(1, dnLognormal(4.349757, 1.044495), 2) 
+moves.append( mvDPPValueScaling(halflife, weight=1.0 ) )
+alpha := abs(ln(2)/halflife)
+rho := 1 - ( 1 - exp( -2 * alpha * root_age ) ) / ( 2 * alpha * root_age )
+stv ~ dnDPP(1, dnLognormal(ln(12.39783716), 0.587405), 2) 
+moves.append( mvDPPValueScaling(stv, weight=1.0 ) )
+sigma2 := stv * 2 * alpha
+
+theta_compare_12 := ifelse(theta[1] > theta[2], 1, 0)
+dthetas := theta[1] - theta[2]
+alpha_compare_12 := ifelse(alpha[1] > alpha[2], 1, 0)
+sigma2_compare_12 := ifelse(sigma2[1] > sigma2[2], 1, 0)
+halflife_compare_12 := ifelse(halflife[1] > halflife[2], 1, 0)
+rho_compare_12 := ifelse(rho[1] > rho[2], 1, 0)
+stv_compare_12 := ifelse(stv[1] > stv[2], 1, 0)
+
+
+
+
+
+
+##########################
+# Specify the OU process #
+##########################
+
+Y ~ dnPhyloOUSD(char_hist, theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+Y.clamp(cont)
+
+#############
+# The Model #
+#############
+
+mymodel = model(Y)
+
+### set up the monitors that will output parameter values to file and screen
+monitors.append( mnModel(filename="output/2_simulation/false_positive/logs/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_DPP.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, alpha) )
+monitors.append( mnFile( char_hist, filename="output/2_simulation/false_positive/augch_trees/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_DPP.trees", printgen=100 ) )
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
+
+### run the MCMC ###
+mymcmc.burnin(generations=5000, tuningInterval=10)
+mymcmc.run(generations=50000)
+
+
+
+## quit ##
+q()
+
