@@ -48,25 +48,6 @@ root_age <- tree.rootAge()
 # Specify the discrete-character model #
 ########################################
 
-# make the Q matrix
-#rate_12 ~ dnLognormal(0,1)
-#rate_13 ~ dnLognormal(0,1)
-#rate_21 ~ dnLognormal(0,1)
-#rate_23 ~ dnLognormal(0,1)
-#rate_31 ~ dnLognormal(0,1)
-#rate_32 ~ dnLognormal(0,1)
-#
-#moves.append( mvAVMVN(rate_12, weight=1.0) )
-#moves.append( mvAVMVN(rate_13, weight=1.0) )
-#moves.append( mvAVMVN(rate_21, weight=1.0) )
-#moves.append( mvAVMVN(rate_23, weight=1.0) )
-#moves.append( mvAVMVN(rate_31, weight=1.0) )
-#moves.append( mvAVMVN(rate_32, weight=1.0) )
-#
-#rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
-#
-#Q := fnFreeK(rates, rescaled=TRUE)
-
 Q <- fnJC(num_disc_states)
 
 

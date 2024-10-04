@@ -29,11 +29,9 @@ drawStv <- function(state_dependent=T){
 
 drawTheta <- function(state_dependent=T){
   if(state_dependent == T){
-    theta <- c(rnorm(n=1, mean=-3, sd=0.5),
-               rnorm(n=1, mean=0, sd=0.5),
-               rnorm(n=1, mean=3, sd=0.5))
+    theta <- c(runif(n=3, -10, 10))
   } else {
-    theta <- rep(rnorm(n=1, mean=0, sd=1), 3)
+    theta <- rep(runif(n=1, -10, 10), 3)
   }
   names(theta) = c("0", "1", "2")
   return(theta)
@@ -70,9 +68,9 @@ simulateContinuous = function(tree, stateDependencies=c(halflife=T, stv=T, theta
   }
   
   if (isTRUE(stateDependencies["theta"])){
-    theta <-  drawStv(state_dependent = T)
+    theta <-  drawTheta(state_dependent = T)
   } else {
-    theta <-  drawStv(state_dependent = F)
+    theta <-  drawTheta(state_dependent = F)
   }
   
   alpha <- log(2) / halflife
@@ -137,7 +135,7 @@ pars_stateless <- tibble(alpha_0 = 0,  alpha_1 = 0,
                          theta_0 = 0,  theta_1 = 0)
 #sim = vector("list", length = 50)
 for (i in 1:3){
-  filename <- paste0("data/2_simulation/false_positive/sim_",
+  filename <- paste0("data/2_simulation/convergence/sim_",
                      i, "/history.Rda")
   load(filename)
   sim_sd <- simulateContinuous(history, c(halflife=T, stv=T, theta=T))
@@ -156,15 +154,30 @@ for (i in 1:3){
   pars_stateless[i,5] <- unname(sim_stateless[[4]][which(names(sim_stateless[[4]]) == "0")])
   pars_stateless[i,6] <- unname(sim_stateless[[4]][which(names(sim_stateless[[4]]) == "1")])
   
-  this_dir <- paste0("data/2_simulation/false_positive/sim_", i)
+  this_dir <- paste0("data/2_simulation/convergence/sim_", i)
   write.nexus.data(sim_sd[[1]], file = paste0(this_dir, "/continuous_sd.nex"),
                    format="Continuous")
   write.nexus.data(sim_stateless[[1]], file = paste0(this_dir, "/continuous_stateless.nex"),
                    format="Continuous")
 } 
 
-save(pars_sd, file="data/2_simulation/false_positive/pars_sd.Rda")
-save(pars_stateless, file="data/2_simulation/false_positive/pars_stateless.Rda")
+root_age <- max(node.depth.edgelength(history))
+pars_sd <- pars_sd %>%
+  mutate(halflife_0 = log(2) / alpha_0,
+         halflife_1 = log(2) / alpha_1,
+         stv_0 = sigma2_0 / (2 * alpha_0),
+         stv_1 = sigma2_1 / (2 * alpha_1),
+         rho_0 = 1 - ( 1 - exp( -2 * alpha_0 * root_age ) ) / ( 2 * alpha_0 * root_age ),
+         rho_1 = 1 - ( 1 - exp( -2 * alpha_1 * root_age ) ) / ( 2 * alpha_1 * root_age ))
+pars_stateless <- pars_stateless %>%
+  mutate(halflife_0 = log(2) / alpha_0,
+         halflife_1 = log(2) / alpha_1,
+         stv_0 = sigma2_0 / (2 * alpha_0),
+         stv_1 = sigma2_1 / (2 * alpha_1),
+         rho_0 = 1 - ( 1 - exp( -2 * alpha_0 * root_age ) ) / ( 2 * alpha_0 * root_age ),
+         rho_1 = 1 - ( 1 - exp( -2 * alpha_1 * root_age ) ) / ( 2 * alpha_1 * root_age ))
+save(pars_sd, file="data/2_simulation/convergence/pars_sd.Rda")
+save(pars_stateless, file="data/2_simulation/convergence/pars_stateless.Rda")
 
 
 
