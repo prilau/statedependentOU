@@ -22,11 +22,11 @@ ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/2_simulation/false_positive/sim_" + SIM_INDEX + "/continuous_" + sdORsx + ".nex")
+cont <- readContinuousCharacterData("data/2_simulation/convergence/sim_" + SIM_INDEX + "/continuous_" + sdORsx + ".nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/2_simulation/false_positive/sim_" + SIM_INDEX + "/discrete.nex")
+disc <- readDiscreteCharacterData("data/2_simulation/convergence/sim_" + SIM_INDEX + "/discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -125,9 +125,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/2_simulation/false_positive/logs/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_unlinkedPrior.log", printgen=10) )
+monitors.append( mnModel(filename="output/2_simulation/convergence/logs/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_unlinkedPrior.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, alpha) )
-monitors.append( mnFile( char_hist, filename="output/2_simulation/false_positive/augch_trees/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_unlinkedPrior.trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/2_simulation/convergence/augch_trees/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_unlinkedPrior.trees", printgen=100 ) )
 
 ################
 # The Analysis #
