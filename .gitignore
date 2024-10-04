@@ -1,4 +1,5 @@
 output/*
 history.txt
 jobs/*
+figures/*
 */.Rhistory
