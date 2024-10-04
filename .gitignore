@@ -2,4 +2,5 @@ output/*
 history.txt
 jobs/*
 figures/*
+slurm*
 */.Rhistory
