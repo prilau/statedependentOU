@@ -34,7 +34,7 @@ disc.includeCharacter(characterDisc)
 
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
-avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_move = mvAVMVN(weight=1, waitBeforeLearning=500, waitBeforeUsing=1000)
 monitors = VectorMonitors()
 
 ##########################
@@ -52,10 +52,10 @@ Q <- fnJC(num_disc_states)
 
 
 # make the transition rate parameter
-lambda ~ dnLogNormal(ln(1e-2), 0.4)
+lambda ~ dnLognormal(ln(1e-2), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
 avmvn_move.addVariable(lambda)
-move.append(avmvn_move)
+moves.append(avmvn_move)
 # make the data-augmented CTCM model
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
