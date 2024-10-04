@@ -2,7 +2,7 @@ library(ggplot2)
 library(phytools)
 library(readr)
 library(RevGadgets)
-source("scripts/revgadgets_StochMap.R")
+source("scripts/4_plots/revgadgets_StochMap.R")
 
 matchNodes = function(phy) {
   
@@ -49,9 +49,9 @@ matchNodes = function(phy) {
   }
   return(node_map[,1:2])
 }
-#tree <- read.tree("data/3_empirical/mammal_diet.tre")
 
 tree <- read.tree("data/3_empirical/mammal_diet_perMY.tre")
+tree <- read.tree("data/2_simulation/mammal_diet_perMY_n500.tre")
 index_to_rev <- matchNodes(tree)
 
 log <- read_tsv("output/2_simulation/false_positive_stateless/sim_1/augch_blackPrior_run_1.trees")
