@@ -181,6 +181,75 @@ save(pars_stateless, file="data/2_simulation/convergence/pars_stateless.Rda")
 
 
 
+pars_3state_sd <- tibble(alpha_0 = 0,  alpha_1 = 0, alpha_2 = 0,
+                  sigma2_0 = 0, sigma2_1 = 0, sigma2_2 = 0,
+                  theta_0 = 0,  theta_1 = 0, theta_2 = 0)
+#pars_3state_stateless <- tibble(alpha_0 = 0,  alpha_1 = 0,
+#                         sigma2_0 = 0, sigma2_1 = 0,
+#                         theta_0 = 0,  theta_1 = 0)
+#sim = vector("list", length = 50)
+for (i in 1:5){
+  filename <- paste0("data/2_simulation/convergence/sim_",
+                     i+3, "/history.Rda")
+  load(filename)
+  sim_sd <- simulateContinuous(history, c(halflife=T, stv=T, theta=T))
+  #sim_stateless <- simulateContinuous(history, c(halflife=F, stv=F, theta=F))
+  pars_3state_sd[i,1] <- unname(sim_sd[[2]][which(names(sim_sd[[2]]) == "0")])
+  pars_3state_sd[i,2] <- unname(sim_sd[[2]][which(names(sim_sd[[2]]) == "1")])
+  pars_3state_sd[i,3] <- unname(sim_sd[[2]][which(names(sim_sd[[2]]) == "2")])
+  pars_3state_sd[i,4] <- unname(sim_sd[[3]][which(names(sim_sd[[3]]) == "0")])
+  pars_3state_sd[i,5] <- unname(sim_sd[[3]][which(names(sim_sd[[3]]) == "1")])
+  pars_3state_sd[i,6] <- unname(sim_sd[[3]][which(names(sim_sd[[3]]) == "2")])
+  pars_3state_sd[i,7] <- unname(sim_sd[[4]][which(names(sim_sd[[4]]) == "0")])
+  pars_3state_sd[i,8] <- unname(sim_sd[[4]][which(names(sim_sd[[4]]) == "1")])
+  pars_3state_sd[i,9] <- unname(sim_sd[[4]][which(names(sim_sd[[4]]) == "2")])
+  
+  #pars_3state_stateless[i,1] <- unname(sim_stateless[[2]][which(names(sim_stateless[[2]]) == "0")])
+  #pars_3state_stateless[i,2] <- unname(sim_stateless[[2]][which(names(sim_stateless[[2]]) == "1")])
+  #pars_3state_stateless[i,3] <- unname(sim_stateless[[2]][which(names(sim_stateless[[2]]) == "2")])
+  #pars_3state_stateless[i,4] <- unname(sim_stateless[[3]][which(names(sim_stateless[[3]]) == "0")])
+  #pars_3state_stateless[i,5] <- unname(sim_stateless[[3]][which(names(sim_stateless[[3]]) == "1")])
+  #pars_3state_stateless[i,6] <- unname(sim_stateless[[3]][which(names(sim_stateless[[3]]) == "2")])
+  #pars_3state_stateless[i,7] <- unname(sim_stateless[[4]][which(names(sim_stateless[[4]]) == "0")])
+  #pars_3state_stateless[i,8] <- unname(sim_stateless[[4]][which(names(sim_stateless[[4]]) == "1")])
+  #pars_3state_stateless[i,9] <- unname(sim_stateless[[4]][which(names(sim_stateless[[4]]) == "2")])
+  
+  this_dir <- paste0("data/2_simulation/convergence/sim_", i+3)
+  write.nexus.data(sim_sd[[1]], file = paste0(this_dir, "/continuous_sd.nex"),
+                   format="Continuous")
+  #write.nexus.data(sim_stateless[[1]], file = paste0(this_dir, "/continuous_stateless.nex"),
+  #                 format="Continuous")
+} 
+
+root_age <- max(node.depth.edgelength(history))
+pars_3state_sd <- pars_3state_sd %>%
+  mutate(halflife_0 = log(2) / alpha_0,
+         halflife_1 = log(2) / alpha_1,
+         halflife_2 = log(2) / alpha_2,
+         stv_0 = sigma2_0 / (2 * alpha_0),
+         stv_1 = sigma2_1 / (2 * alpha_1),
+         stv_2 = sigma2_2 / (2 * alpha_2),
+         rho_0 = 1 - ( 1 - exp( -2 * alpha_0 * root_age ) ) / ( 2 * alpha_0 * root_age ),
+         rho_1 = 1 - ( 1 - exp( -2 * alpha_1 * root_age ) ) / ( 2 * alpha_1 * root_age ),
+         rho_2 = 1 - ( 1 - exp( -2 * alpha_2 * root_age ) ) / ( 2 * alpha_2 * root_age ))
+#pars_3state_stateless <- pars_stateless %>%
+#  mutate(halflife_0 = log(2) / alpha_0,
+#         halflife_1 = log(2) / alpha_1,
+#         halflife_2 = log(2) / alpha_2,
+#         stv_0 = sigma2_0 / (2 * alpha_0),
+#         stv_1 = sigma2_1 / (2 * alpha_1),
+#         stv_2 = sigma2_2 / (2 * alpha_2),
+#         rho_0 = 1 - ( 1 - exp( -2 * alpha_0 * root_age ) ) / ( 2 * alpha_0 * root_age ),
+#         rho_1 = 1 - ( 1 - exp( -2 * alpha_1 * root_age ) ) / ( 2 * alpha_1 * root_age ),
+#         rho_2 = 1 - ( 1 - exp( -2 * alpha_2 * root_age ) ) / ( 2 * alpha_2 * root_age ))
+save(pars_3state_sd, file="data/2_simulation/convergence/pars_3state_sd.Rda")
+#save(pars_3state_stateless, file="data/2_simulation/convergence/pars_3state_stateless.Rda")
+
+
+
+
+
+
 #simulateContinuous_bm = function(tree, rootState=0) {
 #  preorder <- rev(postorder(tree))
 #  edges <- tree$edge
@@ -210,9 +279,9 @@ save(pars_stateless, file="data/2_simulation/convergence/pars_stateless.Rda")
 #  
 #  cont_list <- list()
 #  for (i in 1:length(tree$tip.label)){
-    tip <- tree$tip.label[i]
-    cont_list[[tip]] <- mu_at_nodes[i]
-  }
+#    tip <- tree$tip.label[i]
+#    cont_list[[tip]] <- mu_at_nodes[i]
+#  }
 #  
 #  return(cont_list)
 #}
@@ -264,5 +333,3 @@ save(pars_stateless, file="data/2_simulation/convergence/pars_stateless.Rda")
 #  setTxtProgressBar(bar, i / nrow(grid))
 #}
 #cat("\n")
-
-
