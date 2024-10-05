@@ -54,12 +54,15 @@ tree <- read.tree("data/3_empirical/mammal_diet_perMY.tre")
 tree <- read.tree("data/2_simulation/mammal_diet_perMY_n500.tre")
 index_to_rev <- matchNodes(tree)
 
-log <- read_tsv("output/2_simulation/false_positive_stateless/sim_1/augch_blackPrior_run_1.trees")
+dir_in = "output/2_simulation/convergence/augch_trees/"
+for (file in list.files(dir_in)){
+  path = paste0(dir_in, file)
+  log <- read_tsv(path)
+  log <- as.data.frame(log$char_hist)
+  write_tsv(log, file=path, col_names = FALSE)
+}
 
-log <- as.data.frame(log$char_hist)
-write_tsv(log, "output/2_simulation/false_positive_stateless/sim_1/augch_blackPrior_run_1_modified.trees", col_names = FALSE)
-
-simmap_to_ancStates <- function(input_path, output_path){
+#simmap_to_ancStates <- function(input_path, output_path){
   simmaps <- read.simmap(input_path, format="phylip")
   df_rev <- data.frame()
   
@@ -81,23 +84,28 @@ simmap_to_ancStates <- function(input_path, output_path){
   colnames(df_rev) <- c("Iteration", header)
   write_tsv(df_rev, output_path)
 }
+#simmap_to_ancStates("output/3_empirical/3.2a_sdOU/augch.trees", "output/3_empirical/3.2a_sdOU/anc_states.log")
 
-simmap_to_ancStates("output/3_empirical/3.2a_sdOU/augch.trees", "output/3_empirical/3.2a_sdOU/anc_states.log")
+# Do this in RevBayes!
+# tree <- readTrees("data/2_simulation/mammal_diet_perMY_n500.tre")[1]
+# 
+# for (file in listFiles("output/2_simulation/convergence/augch_trees/")){
+#   anc_states = readAncestralStateTrace(file)
+#   anc_tree = ancestralStateTree(
+#     tree=tree,
+#     ancestral_state_trace_vector=anc_states,
+#     include_start_states=false,
+#     file=file + "ancStates.tre",
+#     summary_statistic="MAP",
+#     reconstruction="marginal",
+#     burnin=0.1,
+#     nStates=3,
+#     site=1)
+# }
 
-# in rb
-#tree <- readTrees("data/3_empirical/mammal_diet.tre")[1]
-#anc_states = readAncestralStateTrace("output/3_empirical/3c_statedependentOU/anc_states_run2.log")
-#anc_tree = ancestralStateTree(
-#  tree=tree,
-#  ancestral_state_trace_vector=anc_states,
-#  include_start_states=false,
-#  file="output/3_empirical/3c_statedependentOU/anc_states_run2.tre",
-#  summary_statistic="MAP",
-#  reconstruction="marginal",
-#  burnin=0.0,
-#  nStates=3,
-#  site=1)
 
+
+#Plotting
 
 ase <- processAncStates("output/3_empirical/3c_statedependentOU/anc_states_run2.tre",
                         # Specify state labels.
