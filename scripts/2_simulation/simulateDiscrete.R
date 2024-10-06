@@ -123,7 +123,7 @@ cat("\n")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_disc = 3
+num_disc = 5
 
 #grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 
@@ -188,23 +188,23 @@ for(i in 1:num_disc) {
   #maps = history$mapped.edge[,c("0","1","2")]
   maps = history$mapped.edge[,c("0","1")]
   
-  state_0_tree = tree
-  state_0_tree$edge.length = maps[,1] / tree$edge.length
-  
-  state_1_tree = tree
-  state_1_tree$edge.length = maps[,2] / tree$edge.length
+  #state_0_tree = tree
+  #state_0_tree$edge.length = maps[,1] / tree$edge.length
+  #
+  #state_1_tree = tree
+  #state_1_tree$edge.length = maps[,2] / tree$edge.length
   
   #state_2_tree = tree
   #state_2_tree$edge.length = maps[,3] / tree$edge.length
   
   # save these trees
-  this_sub_dir = paste0("data/2_simulation/false_positive/sim_", i)
+  this_sub_dir = paste0("data/2_simulation/convergence/sim_", i, "_binState")
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
   
-  write.tree(state_0_tree, file=paste0(this_sub_dir, "/state_0.tre"))
-  write.tree(state_1_tree, file=paste0(this_sub_dir, "/state_1.tre"))
+  #write.tree(state_0_tree, file=paste0(this_sub_dir, "/state_0.tre"))
+  #write.tree(state_1_tree, file=paste0(this_sub_dir, "/state_1.tre"))
   #write.tree(state_2_tree, file=paste0(this_sub_dir, "/state_2.tre"))
   
   # save the discrete trait as a nexus file

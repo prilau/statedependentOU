@@ -29,7 +29,7 @@ drawStv <- function(state_dependent=T){
 
 drawTheta <- function(state_dependent=T){
   if(state_dependent == T){
-    theta <- c(runif(n=3, -10, 10))
+    theta <- c(rnorm(n=3, 0, 4))
   } else {
     theta <- rep(runif(n=1, -10, 10), 3)
   }
@@ -134,9 +134,9 @@ pars_stateless <- tibble(alpha_0 = 0,  alpha_1 = 0,
                          sigma2_0 = 0, sigma2_1 = 0,
                          theta_0 = 0,  theta_1 = 0)
 #sim = vector("list", length = 50)
-for (i in 1:3){
+for (i in 1:5){
   filename <- paste0("data/2_simulation/convergence/sim_",
-                     i, "/history.Rda")
+                     i, "_binState/history.Rda")
   load(filename)
   sim_sd <- simulateContinuous(history, c(halflife=T, stv=T, theta=T))
   sim_stateless <- simulateContinuous(history, c(halflife=F, stv=F, theta=F))
@@ -154,7 +154,7 @@ for (i in 1:3){
   pars_stateless[i,5] <- unname(sim_stateless[[4]][which(names(sim_stateless[[4]]) == "0")])
   pars_stateless[i,6] <- unname(sim_stateless[[4]][which(names(sim_stateless[[4]]) == "1")])
   
-  this_dir <- paste0("data/2_simulation/convergence/sim_", i)
+  this_dir <- paste0("data/2_simulation/convergence/sim_", i, "_binState")
   write.nexus.data(sim_sd[[1]], file = paste0(this_dir, "/continuous_sd.nex"),
                    format="Continuous")
   write.nexus.data(sim_stateless[[1]], file = paste0(this_dir, "/continuous_stateless.nex"),
