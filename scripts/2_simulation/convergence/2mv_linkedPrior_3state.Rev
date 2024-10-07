@@ -48,7 +48,6 @@ root_age <- tree.rootAge()
 # Specify the discrete-character model #
 ########################################
 
-
 Q <- fnJC(num_disc_states)
 
 
@@ -80,18 +79,37 @@ char_hist := X.characterHistories()
 # Specify the rate model #
 ##########################
 
-for (i in 1:num_disc_states){
-  theta[i] ~ dnSoftBoundUniformNormal(-9, 9, 1, 0.95)
-  avmvn_move.addVariable(theta[i])
+theta[1] ~ dnSoftBoundUniformNormal(-9, 9, 1, 0.95)
+moves.append(mvSlide(theta[1], weight = 1.0) )
+avmvn_move.addVariable(theta[1])
+
+
+# 1.044495 is scaled H such that q_0.975/q_0.025 = 60
+halflife[1] ~ dnLognormal(4.349757, 1.044495)
+moves.append(mvScale(halflife[1], weight = 1.0) )
+avmvn_move.addVariable(halflife[1])
+alpha[1] := abs(ln(2)/halflife[1])
+rho[1] := 1 - ( 1 - exp( -2 * alpha[1] * root_age ) ) / ( 2 * alpha[1] * root_age )
+
+# 12.39783716 is observed variance
+stv[1] ~ dnLognormal(ln(12.39783716), 0.587405)
+moves.append(mvScale(stv[1], weight = 1.0) )
+avmvn_move.addVariable(stv[1])
+sigma2[1] := stv[1] * 2 * alpha[1]
+
+
+for (i in 2:num_disc_states){
+  theta[i] ~ dnNormal(theta[i-1], 4)
   moves.append(mvSlide(theta[i], weight = 1.0) )
-  halflife[i] ~ dnLognormal(4.349757, 1.044495)
-  avmvn_move.addVariable(halflife[i])
+  avmvn_move.addVariable(theta[i])
+  halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
   moves.append(mvScale(halflife[i], weight = 1.0) )
+  avmvn_move.addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
   rho[i] := 1 - ( 1 - exp( -2 * alpha[i] * root_age ) ) / ( 2 * alpha[i] * root_age )
-  stv[i] ~ dnLognormal(ln(12.39783716), 0.587405)
-  avmvn_move.addVariable(stv[i])
+  stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
   moves.append(mvScale(stv[i], weight = 1.0) )
+  avmvn_move.addVariable(stv[i])
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
 
@@ -125,9 +143,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/2_simulation/convergence/logs/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_unlinkedPrior_set_2.log", printgen=10) )
+monitors.append( mnModel(filename="output/2_simulation/convergence/logs/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_linkedPrior_3state.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, alpha) )
-monitors.append( mnFile( char_hist, filename="output/2_simulation/convergence/augch_trees/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_unlinkedPrior_set_2.trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/2_simulation/convergence/augch_trees/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_linkedPrior_3state.trees", printgen=100 ) )
 
 ################
 # The Analysis #
