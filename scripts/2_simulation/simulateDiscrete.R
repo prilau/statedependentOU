@@ -8,7 +8,7 @@ source("scripts/readWriteCharacterData.R")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_sim       = 5
+num_sim       = 200
 
 #grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 
@@ -33,67 +33,34 @@ this_rate = 100 / tree_length
 # specify the Mk2 rate matrix
 Q = matrix(0.5, 3, 3)
 diag(Q) = -1
-rownames(Q) = colnames(Q) = 1:3 - 1
+rownames(Q) = colnames(Q) = 1:3 
 
 # simulate the discrete characters
 # track the number of rejected simulations based on proportional
 # representation
-colors = c("0"="#44aa99", "1"="#ddcc77", "2"="#882255")
+colors = c("1"="#44aa99", "2"="#ddcc77", "3"="#882255")
 #num_rejections = numeric(length(num_tips))
 #num_simulations = numeric(length(num_tips))
 #names(num_rejections) = names(num_simulations) = num_tips
 
 bar = txtProgressBar(style=3, width=40)
-for(i in 4:(num_sim+3)) {
-  
-  #this_row = grid[i,]
-  #this_model   = this_row[[1]]
-  #this_tree       = this_row[[2]]
-
-  # read the tree
-  #this_dir = paste0("data/2_simulation/", this_model, "/t", this_tree)
-  
-  #tree = read.tree(paste0(this_dir, "/tree.tre"))
-  
-  # get the rate
-  #this_rate = rates[as.character(this_model)]
-  #this_rate = rates
+for(i in 1:num_sim) {
   
   # simulate the character
   history = sim.history(tree, this_rate * Q, nsim=1, message=FALSE)
   
-  # make sure at least 20% of the tips are in either state
-  while (!(mean(history$states == "0") > 0.10 & mean(history$states == "1") > 0.10 & mean(history$states == "2") > 0.10) ) {
-    history = sim.history(tree, rate * Q, nsim=1, message=FALSE)
-    #num_rejections[as.character(num_tips)] = num_rejections[as.character(num_tips)] + 1
+  # make sure at least 10% of the tips are in either state
+  while (!(mean(history$states == "1") > 0.10 & mean(history$states == "2") > 0.10 & mean(history$states == "3") > 0.10) ) {
+    history = sim.history(tree, this_rate * Q, nsim=1, message=FALSE)
   }
-  #num_simulations[as.character(num_tips)] = num_simulations[as.character(num_tips)] + 1
   
-  # make state-0 and state-1 trees
-  # the branch length of state-i trees is the proportional
-  # amount of time each branch spends in state i
-  
-  maps = history$mapped.edge[,c("0","1","2")]
-  
-  #state_0_tree = tree
-  #state_0_tree$edge.length = maps[,1] / tree$edge.length
-  #
-  #state_1_tree = tree
-  #state_1_tree$edge.length = maps[,2] / tree$edge.length
-  #
-  #state_2_tree = tree
-  #state_2_tree$edge.length = maps[,3] / tree$edge.length
-  #
-  ## save these trees
-  this_sub_dir = paste0("data/2_simulation/convergence/sim_", i)
+  maps = history$mapped.edge[,c("1","2","3")]
+
+  this_sub_dir = paste0("../sdOU_local/thesis/2_simulation/triState/sim_", i)
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
-  
-  #write.tree(state_0_tree, file=paste0(this_sub_dir, "/state0.tre"))
-  #write.tree(state_1_tree, file=paste0(this_sub_dir, "/state1.tre"))
-  #write.tree(state_2_tree, file=paste0(this_sub_dir, "/state2.tre"))
-  
+
   # save the discrete trait as a nexus file
   writeCharacterData(t(t(history$states)), file=paste0(this_sub_dir, "/discrete.nex"), type="Standard")
   
@@ -106,11 +73,19 @@ for(i in 4:(num_sim+3)) {
   dev.off()
   
   # increment the progress bar
-  #setTxtProgressBar(bar, i / nrow(grid))
+  setTxtProgressBar(bar, i / num_sim)
   
 }
 
 cat("\n")
+
+
+
+
+
+
+
+
 
 
 
@@ -150,8 +125,8 @@ rownames(Q) = colnames(Q) = 1:2 - 1
 # simulate the discrete characters
 # track the number of rejected simulations based on proportional
 # representation
-#colors = c("0"="#44aa99", "1"="#ddcc77", "2"="#882255")
-colors = c("0"="#44aa99", "1"="#ddcc77")
+#colors = c("1"="#44aa99", "2"="#ddcc77", "2"="#882255")
+colors = c("1"="#44aa99", "2"="#ddcc77")
 #num_rejections = numeric(length(num_tips))
 #num_simulations = numeric(length(num_tips))
 #names(num_rejections) = names(num_simulations) = num_tips
@@ -171,41 +146,27 @@ for(i in 1:num_disc) {
   history = sim.history(tree, rate * Q, nsim=1, message=FALSE)
   
   # make sure at least 20% of the tips are in either state
-  #while (! (mean(history$states == "0") > 0.125 & mean(history$states == "1") > 0.125 & mean(history$states == "2") > 0.125) ) {
+  #while (! (mean(history$states == "1") > 0.125 & mean(history$states == "2") > 0.125 & mean(history$states == "2") > 0.125) ) {
   #  history = sim.history(tree, rate * Q, nsim=1, message=FALSE)
   #  #num_rejections[as.character(num_tips)] = num_rejections[as.character(num_tips)] + 1
   #}
-  while (! (mean(history$states == "0") > 0.2 & mean(history$states == "1") > 0.2 ) ) {
+  while (! (mean(history$states == "1") > 0.2 & mean(history$states == "2") > 0.2 ) ) {
     history = sim.history(tree, rate * Q, nsim=1, message=FALSE)
     #num_rejections[as.character(num_tips)] = num_rejections[as.character(num_tips)] + 1
   }
   #num_simulations[as.character(num_tips)] = num_simulations[as.character(num_tips)] + 1
   
-  # make state-0 and state-1 trees
   # the branch length of state-i trees is the proportional
   # amount of time each branch spends in state i
   
-  #maps = history$mapped.edge[,c("0","1","2")]
-  maps = history$mapped.edge[,c("0","1")]
-  
-  #state_0_tree = tree
-  #state_0_tree$edge.length = maps[,1] / tree$edge.length
-  #
-  #state_1_tree = tree
-  #state_1_tree$edge.length = maps[,2] / tree$edge.length
-  
-  #state_2_tree = tree
-  #state_2_tree$edge.length = maps[,3] / tree$edge.length
+  #maps = history$mapped.edge[,c("1","2","2")]
+  maps = history$mapped.edge[,c("1","2")]
   
   # save these trees
   this_sub_dir = paste0("data/2_simulation/convergence/sim_", i, "_binState")
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
-  
-  #write.tree(state_0_tree, file=paste0(this_sub_dir, "/state_0.tre"))
-  #write.tree(state_1_tree, file=paste0(this_sub_dir, "/state_1.tre"))
-  #write.tree(state_2_tree, file=paste0(this_sub_dir, "/state_2.tre"))
   
   # save the discrete trait as a nexus file
   writeCharacterData(t(t(history$states)), file=paste0(this_sub_dir, "/discrete.nex"), type="Standard")
