@@ -143,10 +143,10 @@ enterParTable <- function(par_table, sim_sd, sim_sx, num_state, sim){
 }
 
 
-num_sim = 5
+num_sim = 200
 num_state = 3
-dir_in = "data/triState/"
-dir_out = "data/triState/"
+dir_in = "data/2_simulation/triState/"
+dir_out = "data/2_simulation/triState/"
 
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
@@ -165,4 +165,4 @@ for (i in 1:num_sim){
                    format="Continuous")
 } 
 
-write.csv(par_values, file="data/triState/pars.csv")
+write.csv(par_values, file="data/2_simulation/triState/pars.csv")

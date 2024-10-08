@@ -89,11 +89,6 @@ cat("\n")
 
 
 
-
-
-
-
-
 # BINARY STATE
 cat("simulating discrete characters.\n")
 
