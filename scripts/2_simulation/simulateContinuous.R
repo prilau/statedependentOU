@@ -148,6 +148,7 @@ num_state = 3
 dir_in = "data/2_simulation/triState/"
 dir_out = "data/2_simulation/triState/"
 
+par_values <- createParTable(num_state)
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
                      i, "/history.Rda")

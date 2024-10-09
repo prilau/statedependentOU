@@ -17,29 +17,6 @@ plot_dthetas <- function(df, med_true, dir_out, num_sim){
 
 
 
-plot_pgreater <- function(df, med_true, dir_out, num_sim){
-
-}
-
-
-P_state0_greater <- tibble(c_alpha=c(0.5371,	0.9031,	0.6821,	0.5674,	0.6312),
-                           c_halflife=c(0.4629,	0.0969,	0.3179,	0.4326,	0.3688),
-                           c_rho=c(0.5233,	0.8865,	0.665	,0.5494	,0.6256),
-                           c_sigma2=c(0.6293,	0.9218,	0.8347,	0.3348,	0.8349),
-                           c_stv=c(0.4976,	0.4312,	0.5017,	0.3653,	0.5572),
-                           c_theta=c(0.6396,	0.022	,0.4308	,0.4041	,0.6125))
-                      
-
-isTRUE(any(P_state0_greater$c_alpha > 0.975) | any(P_state0_greater$c_alpha < 0.025))
-isTRUE(any(P_state0_greater$c_halflife > 0.975) | any(P_state0_greater$c_halflife < 0.025))
-isTRUE(any(P_state0_greater$c_rho > 0.975) | any(P_state0_greater$c_rho < 0.025))
-isTRUE(any(P_state0_greater$c_sigma2 > 0.975) | any(P_state0_greater$c_sigma2 < 0.025))
-isTRUE(any(P_state0_greater$c_stv > 0.975) | any(P_state0_greater$c_stv < 0.025))
-isTRUE(any(P_state0_greater$c_theta > 0.975) | any(P_state0_greater$c_theta < 0.025))
-
-
-
-
 
 # plot true dthetas, sd vs stateless
 num_sim=5
