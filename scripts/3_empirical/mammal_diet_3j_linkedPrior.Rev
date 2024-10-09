@@ -192,9 +192,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/3_empirical/3j_linkedPrior/3j.log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/3j_linkedPrior/3j_run_2.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/3j_linkedPrior/augch.trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/3j_linkedPrior/augch_run_2.trees", printgen=100 ) )
 
 ################
 # The Analysis #
