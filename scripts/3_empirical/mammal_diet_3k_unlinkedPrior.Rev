@@ -114,40 +114,41 @@ for (i in 1:num_disc_states){
 
 moves.append( avmvn_move )
 
+
 alpha_compare_12 := ifelse(alpha[1] > alpha[2], 1, 0)
 alpha_compare_13 := ifelse(alpha[1] > alpha[3], 1, 0)
 alpha_compare_23 := ifelse(alpha[2] > alpha[3], 1, 0)
-dalpha_12 := alpha[1] - alpha[2]
-dalpha_13 := alpha[1] - alpha[3]
-dalpha_23 := alpha[2] - alpha[3]
+dalpha_12 := log(alpha[1] / alpha[2], 10)
+dalpha_13 := log(alpha[1] / alpha[3], 10)
+dalpha_23 := log(alpha[2] / alpha[3], 10)
 
 halflife_compare_12 := ifelse(halflife[1] > halflife[2], 1, 0)
 halflife_compare_13 := ifelse(halflife[1] > halflife[3], 1, 0)
 halflife_compare_23 := ifelse(halflife[2] > halflife[3], 1, 0)
-dhalflife_12 := halflife[1] - halflife[2]
-dhalflife_13 := halflife[1] - halflife[3]
-dhalflife_23 := halflife[2] - halflife[3]
+dhalflife_12 := log(halflife[1] / halflife[2], 10)
+dhalflife_13 := log(halflife[1] / halflife[3], 10)
+dhalflife_23 := log(halflife[2] / halflife[3], 10)
 
 rho_compare_12 := ifelse(rho[1] > rho[2], 1, 0)
 rho_compare_13 := ifelse(rho[1] > rho[3], 1, 0)
 rho_compare_23 := ifelse(rho[2] > rho[3], 1, 0)
-drho_12 := rho[1] - rho[2]
-drho_13 := rho[1] - rho[3]
-drho_23 := rho[2] - rho[3]
+drho_12 := log(rho[1] / rho[2], 10)
+drho_13 := log(rho[1] / rho[3], 10)
+drho_23 := log(rho[2] / rho[3], 10)
 
 sigma2_compare_12 := ifelse(sigma2[1] > sigma2[2], 1, 0)
 sigma2_compare_13 := ifelse(sigma2[1] > sigma2[3], 1, 0)
 sigma2_compare_23 := ifelse(sigma2[2] > sigma2[3], 1, 0)
-dsigma2_12 := sigma2[1] - sigma2[2]
-dsigma2_13 := sigma2[1] - sigma2[3]
-dsigma2_23 := sigma2[2] - sigma2[3]
+dsigma2_12 := log(sigma2[1] / sigma2[2], 10)
+dsigma2_13 := log(sigma2[1] / sigma2[3], 10)
+dsigma2_23 := log(sigma2[2] / sigma2[3], 10)
 
 stv_compare_12 := ifelse(stv[1] > stv[2], 1, 0)
 stv_compare_13 := ifelse(stv[1] > stv[3], 1, 0)
 stv_compare_23 := ifelse(stv[2] > stv[3], 1, 0)
-dstv_12 := stv[1] - stv[2]
-dstv_13 := stv[1] - stv[3]
-dstv_23 := stv[2] - stv[3]
+dstv_12 := log(stv[1] / stv[2], 10)
+dstv_13 := log(stv[1] / stv[3], 10)
+dstv_23 := log(stv[2] / stv[3], 10)
 
 theta_compare_12 := ifelse(theta[1] > theta[2], 1, 0)
 theta_compare_13 := ifelse(theta[1] > theta[3], 1, 0)
@@ -155,6 +156,10 @@ theta_compare_23 := ifelse(theta[2] > theta[3], 1, 0)
 dtheta_12 := theta[1] - theta[2]
 dtheta_13 := theta[1] - theta[3]
 dtheta_23 := theta[2] - theta[3]
+
+
+
+
 
 
 

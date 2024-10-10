@@ -22,7 +22,7 @@ plot_dthetas <- function(df, med_true, dir_out, num_sim){
 num_sim=5
 dir_in="output/2_simulation/binState/logs/"
 dir_out="figures/2_simulation/binState/"
-load("data/2_simulation/binState/pars_sd.Rda")
+load("data/2_simulation/binState/par_values.Rda")
 
 for (i in 1:num_sim){
   prefix_sd <- paste0("sim_", i, "_sd")
@@ -42,7 +42,7 @@ for (i in 1:num_sim){
   df_med_true <- dfx %>%
     group_by(state) %>%
     summarize(med = median(dthetas))
-  df_med_true$true <- c(pars_sd$theta_0[i] - pars_sd$theta_1[i], 0)
+  df_med_true$true <- c(par_values$theta_0[i] - par_values$theta_1[i], 0)
   
   if (!dir.exists(dir_out)){
     dir.create(dir_out, showWarnings = FALSE)
@@ -53,50 +53,110 @@ for (i in 1:num_sim){
 
 
 # plot true dthetas against P(state_0 > state_1)
-num_sim=5
-dir_in="output/2_simulation/binState/logs/"
-dir_out="figures/2_simulation/binState/"
-load("data/2_simulation/binState/pars_sd.Rda")
+num_sim=100
+dir_in="output/2_simulation/sd_logs/"
+dir_out="figures/2_simulation/triState/"
+par_values <- read.csv("data/2_simulation/triState/pars.csv") %>% 
+  filter(sim < 101,
+         state == "sd")
+
+
+
 pars <- c("theta", "alpha", "sigma2", "rho", "stv", "halflife")
-df <- list()
+
+
 for (i in 1:num_sim){
-  prefix_sd <- paste0("sim_", i, "_sd")
-  filename_sd <- paste0(dir_in, list.files(dir_in)[grep(prefix_sd, list.files(dir_in))])
-  df[[i]] <- readTrace(filename_sd, burnin = 0.1)[[1]]
-  df[[i]]$sim = i
+  filename_sd <- paste0(dir_in, "sim_", i, "_sd_run_1_2mv_linkedPrior.log")
+  #filename_sd <- paste0(dir_in, list.files(dir_in)[grep(prefix_sd, list.files(dir_in))])
+  df <- readTrace(filename_sd, burnin = 0.1)[[1]]
+  df$sim = i
+  if (i == 1){
+    dfx <- df
+  } else {
+    dfx <- bind_rows(dfx, df)
+  }
 }
 
 
 
-dfx <- bind_rows(df[[1]], df[[2]], df[[3]], df[[4]], df[[5]]) %>%
+dfx <- dfx %>%
   select(all_of(contains(c("compare", "sim"))))
 
-ratios <- tibble(sim = 1:5)
-ratios$theta =    pars_sd$theta_0    - pars_sd$theta_1
-ratios$alpha =    log10(pars_sd$alpha_0    / pars_sd$alpha_1)
-ratios$halflife = log10(pars_sd$halflife_0 / pars_sd$halflife_1)
-ratios$sigma2 =   log10(pars_sd$sigma2_0   / pars_sd$sigma2_1)
-ratios$stv =      log10(pars_sd$stv_0      / pars_sd$stv_1)
-ratios$rho =      log10(pars_sd$rho_0      / pars_sd$rho_1)
-thresholds <- tibble(sim=1:5, upper=0.975, lower=0.025)
+ratios <- tibble(sim = 1:100)
+ratios$theta12 =    par_values$theta_1    - par_values$theta_2
+ratios$alpha12 =    log10(par_values$alpha_1    / par_values$alpha_2)
+ratios$halflife12 = log10(par_values$halflife_1 / par_values$halflife_2)
+ratios$sigma212 =   log10(par_values$sigma2_1   / par_values$sigma2_2)
+ratios$stv12 =      log10(par_values$stv_1      / par_values$stv_2)
+ratios$rho12 =      log10(par_values$rho_1      / par_values$rho_2)
+
+ratios$theta13 =    par_values$theta_1    - par_values$theta_3
+ratios$alpha13 =    log10(par_values$alpha_1    / par_values$alpha_3)
+ratios$halflife13 = log10(par_values$halflife_1 / par_values$halflife_3)
+ratios$sigma213 =   log10(par_values$sigma2_1   / par_values$sigma2_3)
+ratios$stv13 =      log10(par_values$stv_1      / par_values$stv_3)
+ratios$rho13 =      log10(par_values$rho_1      / par_values$rho_3)
+
+ratios$theta23 =    par_values$theta_2    - par_values$theta_3
+ratios$alpha23 =    log10(par_values$alpha_2    / par_values$alpha_3)
+ratios$halflife23 = log10(par_values$halflife_2 / par_values$halflife_3)
+ratios$sigma223 =   log10(par_values$sigma2_2   / par_values$sigma2_3)
+ratios$stv23 =      log10(par_values$stv_2      / par_values$stv_3)
+ratios$rho23 =      log10(par_values$rho_2      / par_values$rho_3)
+
+
+thresholds <- tibble(sim=1:100, upper=0.975, lower=0.025)
 
 for (par in pars){
   dfx_par <- pivot_longer(dfx, starts_with(par), names_to = "par")
   dfx_prob <- dfx_par %>%
     group_by(par, sim) %>%
     summarize(prob = mean(value))
-  dfx_delta_prob <- tibble(par = ratios[[par]],
-                           prob = dfx_prob$prob)
-
   
-  p <- ggplot(dfx_delta_prob, aes(x=par, y=prob)) +
+  par_12 <- paste0(par, "12")
+  par_13 <- paste0(par, "13")
+  par_23 <- paste0(par, "23")
+  dfx_delta_prob <- tibble(par = c(ratios[[par_12]], ratios[[par_13]], ratios[[par_23]]),
+                           prob = dfx_prob$prob)
+  
+  # plot individual reps as points
+  p1 <- ggplot(dfx_delta_prob, aes(x=par, y=prob)) +
     geom_point(aes(x = par, y=prob)) +
     theme_classic() +
-    labs(x = "log10(state_0 / state_1)", y = "P(state_0 > state_1)") + 
+    labs(x = "log10(state_i / state_j)", y = "P(state_i > state_j)") + 
     geom_hline(mapping = aes(yintercept = upper), data=thresholds, linetype = "dashed", color = "brown") + 
     geom_hline(mapping = aes(yintercept = lower), data=thresholds, linetype = "dashed", color = "brown") +
     ylim(c(0, 1)) +
     ggtitle(par)
-  filename <- paste0(dir_out, "p_greater_vs_delta_", par, ".pdf")
-  ggsave(filename, p, width = 200, height = 120, units = "mm")
+  filename <- paste0(dir_out, "power_points_", par, ".pdf")
+  ggsave(filename, p1, width = 200, height = 120, units = "mm")
+  
+  
+  # plot rolling medians
+  dfx_bin <- dfx_delta_prob %>% 
+    mutate(bin = round(par/2, digits = 1)*2) %>% 
+    group_by(bin)
+  
+  dfx_mean_bin <- dfx_bin %>% 
+    summarise(mean_prob = mean(prob))
+  
+  p2 <- ggplot(dfx_bin, aes(x=bin, y=prob)) +
+    geom_boxplot(aes(x=bin, y=prob, group=bin)) +
+    #geom_line(data=dfx_mean_bin, aes(x=bin, y=mean_prob), color="blue") +
+    theme_classic() +
+    labs(x = "log10(state_i / state_j)", y = "P(state_i > state_j)") + 
+    geom_hline(mapping = aes(yintercept = upper), data=thresholds, linetype = "dashed", color = "brown") + 
+    geom_hline(mapping = aes(yintercept = lower), data=thresholds, linetype = "dashed", color = "brown") +
+    ylim(c(0, 1)) +
+    ggtitle(par)
+  
+  filename <- paste0(dir_out, "power_binned_", par, ".pdf")
+  ggsave(filename, p2, width = 200, height = 120, units = "mm")
+  
 }
+
+
+
+
+
+

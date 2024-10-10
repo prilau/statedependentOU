@@ -143,12 +143,13 @@ enterParTable <- function(par_table, sim_sd, sim_sx, num_state, sim){
 }
 
 
-num_sim = 200
+num_sim = 1000
 num_state = 3
 dir_in = "data/2_simulation/triState/"
 dir_out = "data/2_simulation/triState/"
-
 par_values <- createParTable(num_state)
+
+bar = txtProgressBar(style=3, width=40)
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
                      i, "/history.Rda")
@@ -164,6 +165,8 @@ for (i in 1:num_sim){
                    format="Continuous")
   write.nexus.data(sim_sx[[7]], file = paste0(this_dir, "/continuous_sx.nex"),
                    format="Continuous")
+  setTxtProgressBar(bar, i / num_sim)
 } 
 
-write.csv(par_values, file="data/2_simulation/triState/pars.csv")
+write.csv(par_values, file="data/2_simulation/triState/pars_1000.csv")
+

@@ -8,7 +8,7 @@ source("scripts/readWriteCharacterData.R")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_sim       = 200
+num_sim       = 800
 
 #grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 
@@ -44,7 +44,7 @@ colors = c("1"="#44aa99", "2"="#ddcc77", "3"="#882255")
 #names(num_rejections) = names(num_simulations) = num_tips
 
 bar = txtProgressBar(style=3, width=40)
-for(i in 1:num_sim) {
+for(i in 201:(200+num_sim)) {
   
   # simulate the character
   history = sim.history(tree, this_rate * Q, nsim=1, message=FALSE)
@@ -56,7 +56,7 @@ for(i in 1:num_sim) {
   
   maps = history$mapped.edge[,c("1","2","3")]
 
-  this_sub_dir = paste0("../sdOU_local/thesis/2_simulation/triState/sim_", i)
+  this_sub_dir = paste0("data/2_simulation/triState/sim_", i)
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
