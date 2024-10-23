@@ -2,13 +2,11 @@ library(TESS)
 library(phytools)
 source("scripts/readWriteCharacterData.R")
 
-
-
 # 3 STATES
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_sim       = 800
+num_sim       = 1800
 
 #grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 
@@ -93,14 +91,14 @@ cat("\n")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_disc = 5
+num_sim = 1800
 
 #grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 
 
 # first, we need to compute the tree length of each replicate
 #for(i in 1:length(num_tips)) {
-tree <- read.tree("data/2_simulation/mammal_diet_perMY_n500.tre")
+tree <- read.tree("data/2_simulation/mammal_diet_height1_n500.tre")
 tree_length = sum(tree$edge.length)
 #}
 
@@ -114,20 +112,20 @@ rate = 100 / tree_length
 #rownames(Q) = colnames(Q) = 1:3 - 1
 Q = matrix(1, 2, 2)
 diag(Q) = -1
-rownames(Q) = colnames(Q) = 1:2 - 1
+rownames(Q) = colnames(Q) = 1:2
 
 
 # simulate the discrete characters
 # track the number of rejected simulations based on proportional
 # representation
 #colors = c("1"="#44aa99", "2"="#ddcc77", "2"="#882255")
-colors = c("1"="#44aa99", "2"="#ddcc77")
+colors = c("1"="#44aa99", "2"="#882255")
 #num_rejections = numeric(length(num_tips))
 #num_simulations = numeric(length(num_tips))
 #names(num_rejections) = names(num_simulations) = num_tips
 
 bar = txtProgressBar(style=3, width=40)
-for(i in 1:num_disc) {
+for(i in 1:num_sim) {
   
   # read the tree
   #this_dir = paste0("../sdOU_local/IRT3/data/simulation/", this_model, "/t", this_tree)
@@ -158,7 +156,7 @@ for(i in 1:num_disc) {
   maps = history$mapped.edge[,c("1","2")]
   
   # save these trees
-  this_sub_dir = paste0("data/2_simulation/convergence/sim_", i, "_binState")
+  this_sub_dir = paste0("data/2_simulation/power_theta/sim_", i)
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
@@ -175,7 +173,7 @@ for(i in 1:num_disc) {
   dev.off()
   
   # increment the progress bar
-  setTxtProgressBar(bar, i / num_disc)
+  setTxtProgressBar(bar, i / num_sim)
   
 } 
 cat("\n")
