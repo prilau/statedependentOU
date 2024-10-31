@@ -14,13 +14,6 @@ drawHalflife <- function(linked, state_dependent, num_state, root_age){
         x = rnorm(1, 0, 0.2)
       }
       halflife[2] <- halflife[1] + x
-    } else if (num_state == 3){
-      x <- rnorm(1, 0, 0.2)
-      while (abs(x) > halflife[1] | halflife[1]+x > 1 | halflife[1]-x < 0.05){
-        x = rnorm(1, 0, 0.2)
-      }
-      halflife[2] <- halflife[1] + x
-      halflife[3] <- halflife[1] - x
     } else {
       print(paste("Linked stv only supports 2 and 3-state currently."))
     }
@@ -36,25 +29,25 @@ drawHalflife <- function(linked, state_dependent, num_state, root_age){
   return(halflife)
 }
 
-drawStv <- function(linked, state_dependent, num_state){
+drawStv <- function(linked, state_dependent, num_state, emp){
   #not yet finished
   if (isTRUE(linked)){
     # can it be extended to more than 2 states?
-    stv <- c(runif(1, -8, 8))
+    stv <- c(runif(1, 0.5*emp, 2*emp))
     if(num_state == 2){
-      stv[2] <- stv[1] + rnorm(1, 0, 4)
-    } else if (num_state == 3){
-      x <- rnorm(1, 0, 4)
+      x <- rnorm(1, 0, 0.5*emp)
+      while (stv[1]-abs(x) < 0){
+        x = rnorm(1, 0, 0.5*emp)
+      }
       stv[2] <- stv[1] + x
-      stv[3] <- stv[1] - x
     } else {
-      print(paste("Linked stv only supports 2 and 3-state currently."))
+      print(paste("Linked stv only supports binary state currently."))
     }
   } else {
     if(isTRUE(state_dependent)){
-      stv <- rlnorm(n=num_state, meanlog=log(12.39783716), sdlog=0.587405)
+      stv <- rlnorm(n=num_state, meanlog=log(emp), sdlog=0.587405)
     } else {
-      stv <- rep(rlnorm(n=1, meanlog=log(12.39783716), sdlog=0.587405), num_state)
+      stv <- rep(rlnorm(n=1, meanlog=log(emp), sdlog=0.587405), num_state)
     }
   }
   names(stv) = c(1:(num_state))
@@ -92,10 +85,6 @@ drawTheta <- function(linked, state_dependent, num_state){
   names(theta) = c(1:(num_state))
   return(theta)
 }
-
-# spread of cont trait also depends on alpha --> different priors for theta in inference?
-
-
 
 simulateContinuous = function(tree, alpha, sigma2, theta) {
   preorder <- rev(postorder(tree))
@@ -205,15 +194,17 @@ for (i in 1:num_sim){
 write.csv(par_values, file="data/2_simulation/triState/pars_1000.csv")
 
 
+#simulation for exploring power of each OU parameter
+tree <- read.tree("data/2_simulation/mammal_diet_height1_n500.tre")
+root_age = max(node.depth.edgelength(tree))
+
+num_sim = 200 # #simulations for each combination of background OU parameters
+num_state = 2 # #discrete states
+emp = 12.39783716 # empirical variance of ln(body size in kg) of 1190 mammals
 
 # simulation for power of theta
-
-num_sim = 200
-num_state = 2
-emp = 12.39783716
 stv = c(0.5 * emp, emp, 2 * emp)
 halflife = c(0.1, 0.3, 0.6)
-root_age = max(node.depth.edgelength(tree))
 grid = expand.grid(sim=1:num_sim, stv=stv, halflife=halflife)
 grid$alpha = log(2) / grid$halflife
 grid$sigma2 = 2 * grid$alpha * grid$stv
@@ -249,6 +240,101 @@ for (i in 1:nrow(grid)){
   setTxtProgressBar(bar, i / nrow(grid))
   
 } 
+write.csv(grid, file="data/2_simulation/power_theta/pars.csv")
 
-write.csv(grid, file="data/2_simulation/power_theta/sim_pars.csv")
 
+
+
+# simulate continuous traits for power_alpha
+stv = c(0.5 * emp, emp, 2 * emp)
+theta_1 = c(1, 3, 5)
+grid = expand.grid(sim=1:num_sim, stv=stv, theta_1=theta_1,
+                   alpha_1=NA, alpha_2=NA, sigma2_1=NA, sigma2_2=NA)
+grid$theta_2 = -grid$theta_1
+
+dir_in = "data/2_simulation/power_alpha/"
+dir_out = "data/2_simulation/power_alpha/"
+
+bar = txtProgressBar(style=3, width=40)
+for (i in 1:nrow(grid)){
+  file_in <- paste0(dir_in, "sim_",
+                    i, "/history.Rda")
+  load(file_in)
+  
+  this_alpha = log(2) / drawHalflife(linked=T, num_state=num_state, root_age=root_age)
+  this_sigma2 <- c()
+  for (j in 1:num_state){
+    alpha_state = paste0("alpha_", j)
+    sigma2_state = paste0("sigma2_", j)
+    grid[[alpha_state]][i] <- this_alpha[j]
+    grid[[sigma2_state]][i] <- 2 * this_alpha[j] * grid$stv[i]
+    this_sigma2 <- append(this_sigma2, grid[[sigma2_state]][i])
+  }
+  this_theta <- c(grid$theta_1[i], grid$theta_2[i])
+  names(this_theta) = c(1:num_state)
+  names(this_sigma2) = c(1:num_state)
+  
+  sim <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
+                            theta=this_theta)
+  grid$delta_cont[i] = max(unlist(sim)) - min(unlist(sim))
+  
+  this_dir <- paste0(dir_out, "sim_", i)
+  write.nexus.data(sim, file = paste0(this_dir, "/continuous.nex"),
+                   format="Continuous")
+  
+  setTxtProgressBar(bar, i / nrow(grid))
+  
+} 
+
+grid$rho_1 = 1 - ( 1 - exp( -2 * grid$alpha_1 * root_age ) ) / ( 2 * grid$alpha_1 * root_age )
+grid$rho_2 = 1 - ( 1 - exp( -2 * grid$alpha_2 * root_age ) ) / ( 2 * grid$alpha_2 * root_age )
+
+write.csv(grid, file="data/2_simulation/power_alpha/pars.csv")
+
+
+# simulate continuous traits for power_sigma2
+halflife=c(0.1, 0.3, 0.6)
+theta_1 = c(1, 3, 5)
+grid = expand.grid(sim=1:num_sim, halflife=halflife, theta_1=theta_1,
+                   stv_1=NA, stv_2=NA, sigma2_1=NA, sigma2_2=NA)
+grid$theta_2 = -grid$theta_1
+grid$alpha = log(2) / grid$halflife
+grid$rho = 1 - ( 1 - exp( -2 * grid$alpha * root_age ) ) / ( 2 * grid$alpha * root_age )
+
+dir_in = "data/2_simulation/power_sigma2/"
+dir_out = "data/2_simulation/power_sigma2/"
+
+bar = txtProgressBar(style=3, width=40)
+for (i in 1:nrow(grid)){
+  file_in <- paste0(dir_in, "sim_",
+                    i, "/history.Rda")
+  load(file_in)
+  
+  this_alpha = c(rep(grid$alpha[i], num_state))
+  names(this_alpha) = c(1:num_state)
+  this_theta <- c(grid$theta_1[i], grid$theta_2[i])
+  names(this_theta) = c(1:num_state)
+  
+  this_stv = drawStv(linked=T, num_state=num_state, emp=emp)
+  grid$stv_1[i] = this_stv[[1]]
+  grid$stv_2[i] = this_stv[[2]]
+  
+  this_sigma2 <- 2 * this_alpha * this_stv
+  grid$sigma2_1[i] = this_sigma2[[1]]
+  grid$sigma2_2[i] = this_sigma2[[2]]
+
+  
+  sim <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
+                            theta=this_theta)
+  grid$delta_cont[i] = max(unlist(sim)) - min(unlist(sim))
+  grid$var_cont[i] = var(unlist(sim))
+  
+  this_dir <- paste0(dir_out, "sim_", i)
+  write.nexus.data(sim, file = paste0(this_dir, "/continuous.nex"),
+                   format="Continuous")
+  
+  setTxtProgressBar(bar, i / nrow(grid))
+  
+} 
+
+write.csv(grid, file="data/2_simulation/power_sigma2/pars.csv")

@@ -20,7 +20,7 @@ num_sim       = 1800
 #  tree_lengths[[i]] = these_tree_lengths
 #}
 
-tree <- read.tree("data/2_simulation/mammal_diet_perMY_n500.tre")
+tree <- read.tree("data/2_simulation/mammal_diet_height1_n500.tre")
 tree_length = sum(tree$edge.length)
 #mean_tree_lengths = sapply(tree_lengths, mean)
 
@@ -156,7 +156,7 @@ for(i in 1:num_sim) {
   maps = history$mapped.edge[,c("1","2")]
   
   # save these trees
-  this_sub_dir = paste0("data/2_simulation/power_theta/sim_", i)
+  this_sub_dir = paste0("data/2_simulation/power_sigma2/sim_", i)
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }
@@ -168,9 +168,9 @@ for(i in 1:num_sim) {
   save(history, file=paste0(this_sub_dir, "/history.Rda"))
   
   # write a pdf
-  pdf(paste0(this_sub_dir, "/history.pdf"))
-  plot(history, col=colors)
-  dev.off()
+  #pdf(paste0(this_sub_dir, "/history.pdf"))
+  #plot(history, col=colors)
+  #dev.off()
   
   # increment the progress bar
   setTxtProgressBar(bar, i / num_sim)

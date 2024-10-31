@@ -85,7 +85,7 @@ avmvn_move.addVariable(theta[1])
 
 
 # 1.044495 is scaled H such that q_0.975/q_0.025 = 60
-halflife[1] ~ dnLognormal(4.349757, 1.044495)
+halflife[1] ~ dnLognormal(-0.94856035, 1.044495)
 moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_move.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
