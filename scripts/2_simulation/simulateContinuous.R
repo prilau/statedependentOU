@@ -4,51 +4,21 @@ library(geiger)
 library(TESS)
 library(tidyverse)
 
-drawHalflife <- function(linked, state_dependent, num_state, root_age){
-  if (isTRUE(linked)){
-    # can it be extended to more than 2 states?
-    halflife <- c(runif(1, 0.1*root_age, root_age))
-    if(num_state == 2){
-      x = rnorm(1, 0, 0.2)
-      while (abs(x) > halflife[1] | halflife[1]+x > 1 ){
-        x = rnorm(1, 0, 0.2)
-      }
-      halflife[2] <- halflife[1] + x
-    } else {
-      print(paste("Linked stv only supports 2 and 3-state currently."))
-    }
+drawHalflife <- function(state_dependent, num_state, root_age){
+  if(state_dependent == T){
+    halflife <- runif(n=num_state, 0.1*root_age, root_age)
   } else {
-    if(state_dependent == T){
-      halflife <- runif(n=num_state, 0.1*root_age, root_age)
-    } else {
-      #halflife <- rep(rlnorm(n=1, meanlog=4.349757, sdlog=1.044495), 3)
-      halflife <- rep(runif(n=1, 0.1*root_age, root_age), 3)
-    }
+    halflife <- rep(runif(n=1, 0.1*root_age, root_age), 3)
   }
   names(halflife) = c(1:(num_state))
   return(halflife)
 }
 
-drawStv <- function(linked, state_dependent, num_state, emp){
-  #not yet finished
-  if (isTRUE(linked)){
-    # can it be extended to more than 2 states?
-    stv <- c(runif(1, 0.5*emp, 2*emp))
-    if(num_state == 2){
-      x <- rnorm(1, 0, 0.5*emp)
-      while (stv[1]-abs(x) < 0){
-        x = rnorm(1, 0, 0.5*emp)
-      }
-      stv[2] <- stv[1] + x
-    } else {
-      print(paste("Linked stv only supports binary state currently."))
-    }
+drawStv <- function(state_dependent, num_state, emp){
+  if(isTRUE(state_dependent)){
+    stv <- runif(n=num_state, 0.5*emp, 2*emp)
   } else {
-    if(isTRUE(state_dependent)){
-      stv <- rlnorm(n=num_state, meanlog=log(emp), sdlog=0.587405)
-    } else {
-      stv <- rep(rlnorm(n=1, meanlog=log(emp), sdlog=0.587405), num_state)
-    }
+    stv <- rep(runif(n=1, 0.5*emp, 2*emp), num_state)
   }
   names(stv) = c(1:(num_state))
   return(stv)
@@ -121,49 +91,6 @@ simulateContinuous = function(tree, alpha, sigma2, theta) {
   return(cont_list)
 }
 
-
-createParTable <- function(num_state){
-  pars = c("alpha", "halflife", "sigma2", "stv", "rho", "theta")
-  headers <- c()
-  for (par in pars){
-    for (i in 1:num_state){
-      headers <- append(headers, paste0(c(par, i), collapse = "_"))
-    }
-  }
-  headers <- append(headers, c("sim", "state"))
-  
-  par_values <- tibble()
-  for (header in headers){
-    par_values[[header]] = 0
-  }
-  return(par_values)
-}
-
-enterParTable <- function(par_table, sim_sd, sim_sx, num_state, sim){
-  j=sim*2-1
-  k=sim*2
-  
-  for (m in 1:num_state){
-    par_values[j,0*num_state+m] <- unname(sim_sd[[1]][m])
-    par_values[j,1*num_state+m] <- unname(sim_sd[[2]][m])
-    par_values[j,2*num_state+m] <- unname(sim_sd[[3]][m])
-    par_values[j,3*num_state+m] <- unname(sim_sd[[4]][m])
-    par_values[j,4*num_state+m] <- unname(sim_sd[[5]][m])
-    par_values[j,5*num_state+m] <- unname(sim_sd[[6]][m])
-    
-    par_values[k,0*num_state+m] <- unname(sim_sx[[1]][m])
-    par_values[k,1*num_state+m] <- unname(sim_sx[[2]][m])
-    par_values[k,2*num_state+m] <- unname(sim_sx[[3]][m])
-    par_values[k,3*num_state+m] <- unname(sim_sx[[4]][m])
-    par_values[k,4*num_state+m] <- unname(sim_sx[[5]][m])
-    par_values[k,5*num_state+m] <- unname(sim_sx[[6]][m])
-  }
-  
-  par_values$sim[j] = par_values$sim[k] = i
-  par_values$state[j] <- "sd"
-  par_values$state[k] <- "sx"
-  return(par_values)
-}
 
 # sim for false positive
 num_sim = 1000
@@ -248,8 +175,8 @@ write.csv(grid, file="data/2_simulation/power_theta/pars.csv")
 # simulate continuous traits for power_alpha
 stv = c(0.5 * emp, emp, 2 * emp)
 theta_1 = c(1, 3, 5)
-grid = expand.grid(sim=1:num_sim, stv=stv, theta_1=theta_1,
-                   alpha_1=NA, alpha_2=NA, sigma2_1=NA, sigma2_2=NA)
+grid = expand.grid(sim=1:num_sim, stv=stv, theta_1=theta_1, halflife_1=NA,
+                   halflife_2=NA, alpha_1=NA, alpha_2=NA, sigma2_1=NA, sigma2_2=NA)
 grid$theta_2 = -grid$theta_1
 
 dir_in = "data/2_simulation/power_alpha/"
@@ -261,29 +188,28 @@ for (i in 1:nrow(grid)){
                     i, "/history.Rda")
   load(file_in)
   
-  this_alpha = log(2) / drawHalflife(linked=T, num_state=num_state, root_age=root_age)
-  this_sigma2 <- c()
-  for (j in 1:num_state){
-    alpha_state = paste0("alpha_", j)
-    sigma2_state = paste0("sigma2_", j)
-    grid[[alpha_state]][i] <- this_alpha[j]
-    grid[[sigma2_state]][i] <- 2 * this_alpha[j] * grid$stv[i]
-    this_sigma2 <- append(this_sigma2, grid[[sigma2_state]][i])
-  }
+  # column 4:5 are halflifes
+  grid[i,4:5] = drawHalflife(state_dependent = T, num_state=num_state, root_age=root_age)
+  # column 6:7 are alphas
+  grid[i,6:7] = log(2) / c(grid$halflife_1[i], grid$halflife_2[i])
+  # column 8:9 are sigma2s
+  grid[i,8:9] <- 2 * this_alpha * grid$stv[i]
+  
+  this_alpha = c(grid$alpha_1[i], grid$alpha_2[i])
+  this_sigma2 <- c(grid$sigma2_1[i], grid$sigma2_2[i])
   this_theta <- c(grid$theta_1[i], grid$theta_2[i])
-  names(this_theta) = c(1:num_state)
-  names(this_sigma2) = c(1:num_state)
+  names(this_alpha) = names(this_theta) = names(this_sigma2) = c(1:num_state)
   
   sim <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
                             theta=this_theta)
   grid$delta_cont[i] = max(unlist(sim)) - min(unlist(sim))
+  grid$var_cont[i] = var(unlist(sim))
   
   this_dir <- paste0(dir_out, "sim_", i)
   write.nexus.data(sim, file = paste0(this_dir, "/continuous.nex"),
                    format="Continuous")
   
   setTxtProgressBar(bar, i / nrow(grid))
-  
 } 
 
 grid$rho_1 = 1 - ( 1 - exp( -2 * grid$alpha_1 * root_age ) ) / ( 2 * grid$alpha_1 * root_age )
@@ -315,7 +241,7 @@ for (i in 1:nrow(grid)){
   this_theta <- c(grid$theta_1[i], grid$theta_2[i])
   names(this_theta) = c(1:num_state)
   
-  this_stv = drawStv(linked=T, num_state=num_state, emp=emp)
+  this_stv = drawStv(state_dependent=T, num_state=num_state, emp=emp)
   grid$stv_1[i] = this_stv[[1]]
   grid$stv_2[i] = this_stv[[2]]
   

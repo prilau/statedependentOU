@@ -84,14 +84,14 @@ moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_move.addVariable(theta[1])
 
 
-# 1.044495 is scaled H such that q_0.975/q_0.025 = 60
+# 1.044495 is scaled such that q_0.975/q_0.025 = 60
+# -0.94856035 is scaled such that q0.025 = 0.05 and q_0.975 = 3 (tree height = 1)
 halflife[1] ~ dnLognormal(-0.94856035, 1.044495)
 moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_move.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 rho[1] := 1 - ( 1 - exp( -2 * alpha[1] * root_age ) ) / ( 2 * alpha[1] * root_age )
 
-# 12.39783716 is observed variance
 stv[1] ~ dnLognormal(ln(STV), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_move.addVariable(stv[1])
