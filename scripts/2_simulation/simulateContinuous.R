@@ -98,7 +98,8 @@ num_state = 2
 tree <- read.tree("data/2_simulation/mammal_diet_height1_n500.tre")
 root_age = max(node.depth.edgelength(tree))
 emp = 12.39783716
-grid = expand.grid(sim=1:num_sim, stv=NA, halflife=NA, theta=NA)
+grid = expand.grid(sim=1:num_sim, stv=NA, halflife=NA,
+                   theta=NA, delta_cont=NA, var_cont=NA)
 
 dir_in = "data/2_simulation/false_positive/"
 dir_out = "data/2_simulation/false_positive/"
@@ -118,11 +119,12 @@ for (i in 1:num_sim){
   this_theta <- drawTheta(linked=F, state_dependent=F, num_state)
   grid$theta[i] <- this_theta[[1]]
   
-  sim_sx <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
+  sim <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
                                theta=this_theta)
-  
+  grid$delta_cont[i] <- max(unlist(sim)) - min(unlist(sim))
+  grid$var_cont[i] = var(unlist(sim))
   this_dir <- paste0(dir_out, "sim_", i)
-  write.nexus.data(sim_sx, file = paste0(this_dir, "/continuous.nex"),
+  write.nexus.data(sim, file = paste0(this_dir, "/continuous.nex"),
                    format="Continuous")
   setTxtProgressBar(bar, i / num_sim)
 } 

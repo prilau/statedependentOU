@@ -148,7 +148,7 @@ monitors.append( mnScreen(printgen=1000, theta) )
 mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=10)
+mymcmc.burnin(generations=5000, tuningInterval=100)
 mymcmc.run(generations=50000)
 
 

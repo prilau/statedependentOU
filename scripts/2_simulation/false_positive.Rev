@@ -17,16 +17,16 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/2_simulation/mammal_diet_perMY_n500.tre")[1]
+T <- readTrees("data/2_simulation/mammal_diet_height1_n500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/2_simulation/triState/sim_" + SIM_INDEX + "/continuous_" + sdORsx + ".nex")
+cont <- readContinuousCharacterData("data/2_simulation/false_positive/sim_" + SIM_INDEX + "/continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/2_simulation/triState/sim_" + SIM_INDEX + "/discrete.nex")
+disc <- readDiscreteCharacterData("data/2_simulation/false_positive/sim_" + SIM_INDEX + "/discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -79,7 +79,7 @@ char_hist := X.characterHistories()
 # Specify the rate model #
 ##########################
 
-theta[1] ~ dnSoftBoundUniformNormal(-9, 9, 1, 0.95)
+theta[1] ~ dnSoftBoundUniformNormal(-20, 20, 1, 0.95)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_move.addVariable(theta[1])
 
@@ -92,7 +92,7 @@ alpha[1] := abs(ln(2)/halflife[1])
 rho[1] := 1 - ( 1 - exp( -2 * alpha[1] * root_age ) ) / ( 2 * alpha[1] * root_age )
 
 # 12.39783716 is observed variance
-stv[1] ~ dnLognormal(ln(12.39783716), 0.587405)
+stv[1] ~ dnLognormal(ln(STV), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_move.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
@@ -117,46 +117,22 @@ moves.append( avmvn_move )
 
 
 alpha_compare_12 := ifelse(alpha[1] > alpha[2], 1, 0)
-alpha_compare_13 := ifelse(alpha[1] > alpha[3], 1, 0)
-alpha_compare_23 := ifelse(alpha[2] > alpha[3], 1, 0)
 dalpha_12 := alpha[1] - alpha[2]
-dalpha_13 := alpha[1] - alpha[3]
-dalpha_23 := alpha[2] - alpha[3]
 
 halflife_compare_12 := ifelse(halflife[1] > halflife[2], 1, 0)
-halflife_compare_13 := ifelse(halflife[1] > halflife[3], 1, 0)
-halflife_compare_23 := ifelse(halflife[2] > halflife[3], 1, 0)
 dhalflife_12 := halflife[1] - halflife[2]
-dhalflife_13 := halflife[1] - halflife[3]
-dhalflife_23 := halflife[2] - halflife[3]
 
 rho_compare_12 := ifelse(rho[1] > rho[2], 1, 0)
-rho_compare_13 := ifelse(rho[1] > rho[3], 1, 0)
-rho_compare_23 := ifelse(rho[2] > rho[3], 1, 0)
 drho_12 := rho[1] - rho[2]
-drho_13 := rho[1] - rho[3]
-drho_23 := rho[2] - rho[3]
 
 sigma2_compare_12 := ifelse(sigma2[1] > sigma2[2], 1, 0)
-sigma2_compare_13 := ifelse(sigma2[1] > sigma2[3], 1, 0)
-sigma2_compare_23 := ifelse(sigma2[2] > sigma2[3], 1, 0)
 dsigma2_12 := sigma2[1] - sigma2[2]
-dsigma2_13 := sigma2[1] - sigma2[3]
-dsigma2_23 := sigma2[2] - sigma2[3]
 
 stv_compare_12 := ifelse(stv[1] > stv[2], 1, 0)
-stv_compare_13 := ifelse(stv[1] > stv[3], 1, 0)
-stv_compare_23 := ifelse(stv[2] > stv[3], 1, 0)
 dstv_12 := stv[1] - stv[2]
-dstv_13 := stv[1] - stv[3]
-dstv_23 := stv[2] - stv[3]
 
 theta_compare_12 := ifelse(theta[1] > theta[2], 1, 0)
-theta_compare_13 := ifelse(theta[1] > theta[3], 1, 0)
-theta_compare_23 := ifelse(theta[2] > theta[3], 1, 0)
 dtheta_12 := theta[1] - theta[2]
-dtheta_13 := theta[1] - theta[3]
-dtheta_23 := theta[2] - theta[3]
 
 
 
@@ -174,9 +150,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/2_simulation/triState/logs/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_linkedPrior.log", printgen=10) )
+monitors.append( mnModel(filename="output/2_simulation/false_positive/sim_" + SIM_INDEX + "_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, alpha) )
-monitors.append( mnFile( char_hist, filename="output/2_simulation/triState/augch_trees/sim_" + SIM_INDEX + "_" + sdORsx + "_run_" + RUN_INDEX + "_2mv_linkedPrior.trees", printgen=100 ) )
+#monitors.append( mnFile( char_hist, filename="output/2_simulation/triState/augch_trees/sim_" + SIM_INDEX + "_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 ################
 # The Analysis #
@@ -186,7 +162,7 @@ monitors.append( mnFile( char_hist, filename="output/2_simulation/triState/augch
 mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=10)
+mymcmc.burnin(generations=5000, tuningInterval=100)
 mymcmc.run(generations=50000)
 
 
