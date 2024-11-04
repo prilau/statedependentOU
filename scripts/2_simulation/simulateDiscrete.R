@@ -91,7 +91,7 @@ cat("\n")
 cat("simulating discrete characters.\n")
 
 # simulation parameters
-num_sim = 1800
+num_sim = 1000
 
 #grid = expand.grid(models=models, tree=1:reps, stringsAsFactors=FALSE)
 
@@ -156,7 +156,7 @@ for(i in 1:num_sim) {
   maps = history$mapped.edge[,c("1","2")]
   
   # save these trees
-  this_sub_dir = paste0("data/2_simulation/power_sigma2/sim_", i)
+  this_sub_dir = paste0("data/2_simulation/false_positive/sim_", i)
   if ( !dir.exists(this_sub_dir) ) {
     dir.create(this_sub_dir, recursive=TRUE, showWarnings=FALSE)
   }

@@ -8,7 +8,7 @@ drawHalflife <- function(state_dependent, num_state, root_age){
   if(state_dependent == T){
     halflife <- runif(n=num_state, 0.1*root_age, root_age)
   } else {
-    halflife <- rep(runif(n=1, 0.1*root_age, root_age), 3)
+    halflife <- rep(runif(n=1, 0.1*root_age, root_age), num_state)
   }
   names(halflife) = c(1:(num_state))
   return(halflife)
@@ -47,9 +47,9 @@ drawTheta <- function(linked, state_dependent, num_state){
     }
   } else {
     if(isTRUE(state_dependent)){
-      theta <- c(runif(n=num_state, -8, 8))
+      theta <- c(runif(n=num_state, -10, 10))
     } else {
-      theta <- rep(runif(n=1, -8, 8), num_state)
+      theta <- rep(runif(n=1, -10, 10), num_state)
     }
   }
   names(theta) = c(1:(num_state))
@@ -94,10 +94,14 @@ simulateContinuous = function(tree, alpha, sigma2, theta) {
 
 # sim for false positive
 num_sim = 1000
-num_state = 3
-dir_in = "data/2_simulation/triState/"
-dir_out = "data/2_simulation/triState/"
-par_values <- createParTable(num_state)
+num_state = 2
+tree <- read.tree("data/2_simulation/mammal_diet_height1_n500.tre")
+root_age = max(node.depth.edgelength(tree))
+emp = 12.39783716
+grid = expand.grid(sim=1:num_sim, stv=NA, halflife=NA, theta=NA)
+
+dir_in = "data/2_simulation/false_positive/"
+dir_out = "data/2_simulation/false_positive/"
 
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:num_sim){
@@ -105,20 +109,27 @@ for (i in 1:num_sim){
                      i, "/history.Rda")
   load(file_in)
   
-  sim_sd <- simulateContinuous(history, c(halflife=T, stv=T, theta=T), num_state)
-  sim_sx <- simulateContinuous(history, c(halflife=F, stv=F, theta=F), num_state)
+  this_halflife <- drawHalflife(state_dependent=F, num_state, root_age)
+  grid$halflife[i] <- this_halflife[[1]]
+  this_alpha <- log(2) / this_halflife
+  this_stv <- drawStv(state_dependent=F, num_state, emp)
+  grid$stv[i] <- this_stv[[1]]
+  this_sigma2 <- 2 * this_alpha * this_stv
+  this_theta <- drawTheta(linked=F, state_dependent=F, num_state)
+  grid$theta[i] <- this_theta[[1]]
   
-  par_values <- enterParTable(par_table, sim_sd, sim_sx, num_state, sim=i)
+  sim_sx <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
+                               theta=this_theta)
   
   this_dir <- paste0(dir_out, "sim_", i)
-  write.nexus.data(sim_sd[[7]], file = paste0(this_dir, "/continuous_sd.nex"),
-                   format="Continuous")
-  write.nexus.data(sim_sx[[7]], file = paste0(this_dir, "/continuous_sx.nex"),
+  write.nexus.data(sim_sx, file = paste0(this_dir, "/continuous.nex"),
                    format="Continuous")
   setTxtProgressBar(bar, i / num_sim)
 } 
-
-write.csv(par_values, file="data/2_simulation/triState/pars_1000.csv")
+grid$alpha = log(2) / grid$halflife
+grid$sigma2 = 2 * grid$alpha * grid$stv
+grid$rho = 1 - ( 1 - exp( -2 * grid$alpha * root_age ) ) / ( 2 * grid$alpha * root_age )
+write.csv(grid, file=paste0(dir_out, "pars.csv"))
 
 
 #simulation for exploring power of each OU parameter
