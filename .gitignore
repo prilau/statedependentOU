@@ -2,7 +2,6 @@
 output/*
 history.txt
 jobs/*
-figures/*
 slurm*
 */.Rhistory
 data/2_simulation/*/history.Rda
