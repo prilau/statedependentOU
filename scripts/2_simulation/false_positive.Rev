@@ -122,9 +122,6 @@ dalpha_12 := alpha[1] - alpha[2]
 halflife_compare_12 := ifelse(halflife[1] > halflife[2], 1, 0)
 dhalflife_12 := halflife[1] - halflife[2]
 
-rho_compare_12 := ifelse(rho[1] > rho[2], 1, 0)
-drho_12 := rho[1] - rho[2]
-
 sigma2_compare_12 := ifelse(sigma2[1] > sigma2[2], 1, 0)
 dsigma2_12 := sigma2[1] - sigma2[2]
 
@@ -152,7 +149,6 @@ mymodel = model(Y)
 ### set up the monitors that will output parameter values to file and screen
 monitors.append( mnModel(filename="output/2_simulation/false_positive/sim_" + SIM_INDEX + "_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, alpha) )
-#monitors.append( mnFile( char_hist, filename="output/2_simulation/triState/augch_trees/sim_" + SIM_INDEX + "_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 ################
 # The Analysis #
