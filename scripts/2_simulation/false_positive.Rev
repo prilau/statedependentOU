@@ -62,10 +62,7 @@ X.clamp(disc)
 
 # include proposals for the discrete character history
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
-
-
-
+                                                                                                                    
 # keep track of the number of transitions
 for(i in 1:nbranches) {
     num_changes[i] := sum(X.numCharacterChanges(i))
@@ -116,20 +113,20 @@ for (i in 2:num_disc_states){
 moves.append( avmvn_move )
 
 
-alpha_compare_12 := ifelse(alpha[1] > alpha[2], 1, 0)
-dalpha_12 := alpha[1] - alpha[2]
+alpha_compare := ifelse(alpha[1] > alpha[2], 1, 0)
+dalpha := alpha[1] - alpha[2]
 
-halflife_compare_12 := ifelse(halflife[1] > halflife[2], 1, 0)
-dhalflife_12 := halflife[1] - halflife[2]
+halflife_compare := ifelse(halflife[1] > halflife[2], 1, 0)
+dhalflife := halflife[1] - halflife[2]
 
-sigma2_compare_12 := ifelse(sigma2[1] > sigma2[2], 1, 0)
-dsigma2_12 := sigma2[1] - sigma2[2]
+sigma2_compare := ifelse(sigma2[1] > sigma2[2], 1, 0)
+dsigma2 := sigma2[1] - sigma2[2]
 
-stv_compare_12 := ifelse(stv[1] > stv[2], 1, 0)
-dstv_12 := stv[1] - stv[2]
+stv_compare := ifelse(stv[1] > stv[2], 1, 0)
+dstv := stv[1] - stv[2]
 
-theta_compare_12 := ifelse(theta[1] > theta[2], 1, 0)
-dtheta_12 := theta[1] - theta[2]
+theta_compare := ifelse(theta[1] > theta[2], 1, 0)
+dtheta := theta[1] - theta[2]
 
 
 
@@ -165,4 +162,5 @@ mymcmc.run(generations=50000)
 
 ## quit ##
 q()
+
 
