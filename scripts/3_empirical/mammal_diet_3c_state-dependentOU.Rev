@@ -17,7 +17,7 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/mammal_diet.tre")[1]
+T <- readTrees("data/3_empirical/mammal_diet_perMY.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
@@ -34,6 +34,7 @@ disc.includeCharacter(characterDisc)
 
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
+avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
 monitors = VectorMonitors()
 
 ##########################
@@ -69,16 +70,17 @@ Q := fnFreeK(rates, rescaled=TRUE)
 
 
 # make the transition rate parameter
-lambda ~ dnLoguniform(1e-5, 2)
+lambda ~ dnLognormal(ln(0.01), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
+avmvn_move.addVariable(lambda)
 
 # make the data-augmented CTCM model
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
 
 
 
@@ -94,16 +96,33 @@ char_hist := X.characterHistories()
 ##########################
 # Specify the rate model #
 ##########################
+theta[1] ~ dnSoftBoundUniformNormal(-10, 10, 1, 0.95)
+moves.append(mvSlide(theta[1], weight = 1.0) )
+avmvn_move.addVariable(theta[1])
 
-for (i in 1:num_disc_states){
-  alpha[i] ~ dnExponential( abs(root_age / 2.0 / ln(2.0)) )
-  moves.append(mvScale(alpha[i], weight = 1.0) )
-  theta[i] ~ dnUniform(-8, 12)
+halflife[1] ~ dnLognormal(4.3613845, 1.044495)
+moves.append(mvScale(halflife[1], weight = 1.0) )
+avmvn_move.addVariable(halflife[1])
+alpha[1] := abs(ln(2)/halflife[1])
+
+stv[1] ~ dnLognormal(ln(12.39783716), 0.587405)
+moves.append(mvScale(stv[1], weight = 1.0) )
+avmvn_move.addVariable(stv[1])
+sigma2[1] := stv[1] * 2 * alpha[1]
+
+
+for (i in 2:num_disc_states){
+  theta[i] ~ dnNormal(theta[i-1], 4)
   moves.append(mvSlide(theta[i], weight = 1.0) )
-  sigma2[i] ~ dnLoguniform(1e-5, 10)
-  moves.append(mvScale(sigma2[i], weight = 1.0) )
-  halflife[i] := ln(2.0) / alpha[i]
-  rho[i] := 1 - ( 1 - exp( -2 * alpha[i] * root_age ) ) / ( 2 * alpha[i] * root_age )
+  avmvn_move.addVariable(theta[i])
+  halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
+  moves.append(mvScale(halflife[i], weight = 1.0) )
+  avmvn_move.addVariable(halflife[i])
+  alpha[i] := abs(ln(2)/halflife[i])
+  stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
+  moves.append(mvScale(stv[i], weight = 1.0) )
+  avmvn_move.addVariable(stv[i])
+  sigma2[i] := stv[i] * 2 * alpha[i]
 }
 
 
@@ -122,9 +141,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/3_empirical/3c_statedependentOU/log.log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/sdOU_run_" + RUN_INDEX +.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/3c_statedependentOU/augch.trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_run_" + RUN_INDEX + "augch.trees", printgen=100 ) )
 
 ################
 # The Analysis #
@@ -136,7 +155,7 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=50000)
+mymcmc.run(generations=100000, tuningInterval=200)
 
 
 
