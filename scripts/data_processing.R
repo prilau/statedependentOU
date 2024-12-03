@@ -6,7 +6,6 @@ diet <- read.csv("data/3_empirical/mammal_diet_Discrete.txt", sep = "\t")
 diet <- diet %>% filter(Diet != "?") %>% 
   rename(species = Species.Name...Wilson...Reeder.2005)
 
-foot <- read.nexus.data("Desktop/sdOU_local/IRT3/data/kubo_2019/disc_footpostures_wo_footpads.nex")
 
 tree <- read.nexus("data/3_empirical/mammal_2019.trees")[[1]]
 old <- strsplit(tree$tip.label, "_")
