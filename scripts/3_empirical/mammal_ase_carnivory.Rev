@@ -71,18 +71,18 @@ X.clamp(disc)
 
 mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/ase_carnivory/trace2.log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/ase_carnivory/trace.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
 monitors.append( mnJointConditionalAncestralState(tree=tree,
                                                   ctmc=X,
-                                                  filename="output/3_empirical/ase_carnivory/states2.log",
+                                                  filename="output/3_empirical/ase_carnivory/states.log",
                                                   type="Standard",
                                                   printgen=10,
                                                   withTips=true,
                                                   withStartStates=false) )
 
 monitors.append( mnStochasticCharacterMap(ctmc=X,
-                                          filename="output/3_empirical/ase_carnivory/num_change2.log",
+                                          filename="output/3_empirical/ase_carnivory/simmap.log",
                                           printgen=10,
                                           include_simmap=true) )
 
@@ -103,13 +103,13 @@ mymcmc.run(generations= 20000, tuningInterval=200)
 
 anc_states = readAncestralStateTrace("output/3_empirical/ase_carnivory/states.log")
 anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_carnivory/anc_states.tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=2)
-anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_carnivory/simmap2.log")
+anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_carnivory/simmap.log")
 char_map_tree = characterMapTree(tree=tree,
                  ancestral_state_trace_vector=anc_states_stoch_map,
                  character_file="output/3_empirical/ase_carnivory/marginal_character.tree",
                  posterior_file="output/3_empirical/ase_carnivory/marginal_posterior.tree",
                  burnin=0.0,
-                 num_time_slices=500)
+                 num_time_slices=1000)
 
 
 ## quit ##
