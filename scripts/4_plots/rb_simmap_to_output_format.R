@@ -1,9 +1,11 @@
 library(cowplot)
 library(ggplot2)
+library(ggtree)
 library(gridExtra)
 library(phytools)
 library(readr)
 library(RevGadgets)
+library(tidyverse)
 source("scripts/4_plots/revgadgets_StochMap.R")
 
 
@@ -65,6 +67,7 @@ source("scripts/4_plots/revgadgets_StochMap.R")
 #Plotting
 tree <- readTrees("data/3_empirical/mammal_perMY_n2955.tre")
 t <- read.tree("data/3_empirical/mammal_perMY_n2955.tre")
+df_hpa <- read.csv("data/3_empirical/mammal_Discrete.csv")
 
 ##############
 # tip states #
@@ -76,7 +79,7 @@ t <- tidytree::groupOTU(tree, tip_states)
 
 colors <- c("Not picky"="#bbccee", "Picky"="#222255")
 
-p <- ggtree(t, layout = "circular", color = "grey", linewidth = 0.1) +
+p <- ggtree(t, layout = "circular", color = "#848884", linewidth = 0.1) +
   ggtree::geom_tippoint(ggplot2::aes(colour = group), size = 0.1, shape = 1, alpha = 0.4) +
   #geom_tiplab(aes(color=group), size = 0.4, offset = 0.5) +
   scale_color_manual(values=colors) +
@@ -98,13 +101,13 @@ p <- plotAncStatesMAP(t = ase,
                       node_color_as = "state",
                       node_color = c("Not picky"="#bbccee", "Picky"="#222255"),
                       node_size = c(0.05, 1.2),
-                      tip_states = FALSE,
+                      tip_states = TRUE,
                       #tip_states_size = c(0.01, 0.01),
                       #tip_states_shape = 1,
                       state_transparency = 0.6,
                       tree_layout = "circular",
                       #tip_labels_size = 0.5
-                      tree_color = "#D3D3D3",
+                      tree_color = "#848884",
                       tree_linewidth = 0.1) +
   # modify legend location using ggplot2
   theme(legend.position.inside = c(0.6,0.81))
@@ -115,19 +118,41 @@ ggsave(paste0("figures/3_empirical/ase_picky/ase_map.pdf"), p, width = 8, height
 p <- plotAncStatesPie(t = ase,
                       pie_colors = c("Not picky"="#bbccee", "Picky"="#222255"),
                       #tip_labels_size = 1,
-                      tip_pies = FALSE,
+                      tip_pies = TRUE,
                       #tip_labels_offset = 0.5,
                       node_pie_size = 0.4,
                       tip_pie_size = 0.2,
                       tree_layout = "circular",
                       tip_labels = FALSE,
                       state_transparency = 0.6,
-                      tree_color = "#D3D3D3",
+                      tree_color = "#848884",
                       tree_linewidth = 0.1) +
   # modify legend location using ggplot2
   theme(legend.position.inside = c(0.6,0.81))
 
 ggsave(paste0("figures/3_empirical/ase_picky/ase_pie.pdf"), p, width = 8, height = 6)
+
+# stochastic map
+# picky eater #
+simmaps <- list()
+simmaps[[1]] <- read.simmap("output/3_empirical/ase_picky/marginal_character.tree", format="phylip")
+stoc_map <- processStochMaps(tree,
+                             simmap = simmaps,
+                             states=c("0", "1"))
+
+colnames(stoc_map)[6] = "Not picky"
+colnames(stoc_map)[7] = "Picky"
+
+p <- plotStochMaps(tree, maps=stoc_map,
+                   tip_labels = FALSE,
+                   tree_layout = "circular",
+                   line_width=0.1,
+                   color_by = "MAP",
+                   colors = c("Not picky"="#BBCCEE",
+                              "Picky"="#222255")) +
+  theme(legend.position.inside = c(0.6,0.81))
+ggsave(paste0("figures/3_empirical/ase_picky/stoch_map.pdf"), p, width = 8, height = 6)
+
 
 #############
 # carnivory #
@@ -138,14 +163,14 @@ tip_states[["Not carnivore"]] = df_hpa %>% filter(carnivore == 0) %>% select(bin
 t <- tidytree::groupOTU(tree, tip_states)
 
 colors <- c("Not carnivore"="#ffcccc", "Carnivore"="#663333")
-p1 <- ggtree(t, layout = "circular", color = "grey", linewidth = 0.1) +
+p1 <- ggtree(t, layout = "circular", color = "#848884", linewidth = 0.1) +
   ggtree::geom_tippoint(ggplot2::aes(colour = group), size = 0.1, shape = 1, alpha = 0.4) +
   #geom_tiplab(aes(color=group), size = 0.4, offset = 0.5) +
   scale_color_manual(values=colors) +
   theme(legend.position = "none")
   #guides(color = guide_legend( 
   #  override.aes=list(size = 4, shape = 20, alpha = 0.8)))
-ggsave(paste0("figures/3_empirical/ase_carnivory/tip_states.pdf"), p, width = 8, height = 6)
+ggsave(paste0("figures/3_empirical/ase_carnivory/tip_states.pdf"), p1, width = 8, height = 6)
 
 
 ase <- processAncStates("output/3_empirical/ase_carnivory/anc_states.tre",
@@ -168,30 +193,31 @@ p2 <- plotAncStatesMAP(t = ase,
                       state_transparency = 0.6,
                       tree_layout = "circular",
                       #tip_labels_size = 0.5
-                      tree_color = "#D3D3D3",
+                      tree_color = "#848884",
                       tree_linewidth = 0.1) +
   # modify legend location using ggplot2
   guides(color = "none")
-legend_size <- get_legend(p2)
-p2 <- p2 + guides(color = "none", size = "none")
+#legend_size <- get_legend(p2)
+#p2 <- p2 + guides(color = "none", size = "none")
 
-ggsave(paste0("figures/3_empirical/ase_carnivory/ase_map.pdf"), p, width = 16, height = 9)
+ggsave(paste0("figures/3_empirical/ase_carnivory/ase_map.pdf"), p2, width = 16, height = 9)
 
 p3 <- plotAncStatesPie(t = ase,
                       pie_colors = c("Not carnivore"="#ffcccc", "Carnivore"="#663333"),
                       #tip_labels_size = 1,
-                      tip_pies = FALSE,
+                      tip_pies = TRUE,
                       #tip_labels_offset = 0.5,
                       node_pie_size = 0.4,
                       tip_pie_size = 0.2,
                       tree_layout = "circular",
                       tip_labels = FALSE,
                       state_transparency = 0.6,
-                      tree_color = "#D3D3D3",
+                      tree_color = "#848884",
                       tree_linewidth = 0.1)
 
-ggsave(paste0("figures/3_empirical/ase_carnivory/ase_pie.pdf"), p, width = 16, height = 9)
+ggsave(paste0("figures/3_empirical/ase_carnivory/ase_pie.pdf"), p3, width = 8, height = 6)
 
+# stochastic mapping
 simmaps <- list()
 simmaps[[1]] <- read.simmap("output/3_empirical/ase_carnivory/marginal_character.tree", format="phylip")
 stoc_map <- processStochMaps(tree,
@@ -214,26 +240,91 @@ ggsave(paste0("figures/3_empirical/ase_carnivory/stoch_map.pdf"), p4, width = 8,
 p_all <- arrangeGrob(p1, p2, p4, p3, nrow = 2)
 ggsave("figures/3_empirical/ase_carnivory/ase_all.pdf", p_all, width = 16, height = 16)
 
-##################
-# stochastic map #
-##################
+#############
+# triState  #
+#############
+tip_states <- list()
+tip_states[["Carnivore"]] = df_hpa %>% filter(carnivore == 1) %>% select(binomial_name) %>% unlist() %>% unname()
+tip_states[["Herbivore"]] = df_hpa %>% filter(herbivore == 1) %>% select(binomial_name) %>% unlist() %>% unname()
+tip_states[["Omnivore"]] = df_hpa %>% filter(omnivore == 1) %>% select(binomial_name) %>% unlist() %>% unname()
+t <- tidytree::groupOTU(tree, tip_states)
 
-# picky eater #
+colors <- c("Herbivore"="#44AA99", "Omnivore" = "#DDCC77", "Carnivore"="#663333")
+p1 <- ggtree(t, layout = "circular", color = "#848884", linewidth = 0.1) +
+  ggtree::geom_tippoint(ggplot2::aes(colour = group), size = 0.1, shape = 1, alpha = 0.4) +
+  #geom_tiplab(aes(color=group), size = 0.4, offset = 0.5) +
+  scale_color_manual(values=colors) +
+  theme(legend.position = "none")
+#guides(color = guide_legend( 
+#  override.aes=list(size = 4, shape = 20, alpha = 0.8)))
+ggsave(paste0("figures/3_empirical/ase_triState/tip_states.pdf"), p1, width = 8, height = 6)
+
+
+ase <- processAncStates("output/3_empirical/ase_triState/anc_states.tre",
+                        # Specify state labels.
+                        # These numbers correspond to
+                        # your input data file.
+                        state_labels=c("0"="Herbivore", "1"="Omnivore", "2"="Carnivore"))
+
+# produce the plot object, showing MAP states at nodes.
+# color corresponds to state, size to the state's posterior probability
+p2 <- plotAncStatesMAP(t = ase,
+                       #tip_labels_offset = 0.5,
+                       node_color = c("Herbivore"="#44AA99", "Omnivore" = "#DDCC77", "Carnivore"="#663333"),
+                       tip_labels = FALSE,
+                       tip_states = TRUE,
+                       node_color_as = "state",
+                       node_size = c(0.05, 1.2),
+                       #tip_states_size = c(0.01, 0.01),
+                       #tip_states_shape = 1,
+                       state_transparency = 0.6,
+                       tree_layout = "circular",
+                       #tip_labels_size = 0.5
+                       tree_color = "#848884",
+                       tree_linewidth = 0.1) +
+  # modify legend location using ggplot2
+  guides(color = "none")
+#legend_size <- get_legend(p2)
+#p2 <- p2 + guides(color = "none", size = "none")
+
+ggsave(paste0("figures/3_empirical/ase_triState/ase_map.pdf"), p2, width = 16, height = 9)
+
+p3 <- plotAncStatesPie(t = ase,
+                       pie_colors = c("Herbivore"="#44AA99", "Omnivore" = "#DDCC77", "Carnivore"="#663333"),
+                       #tip_labels_size = 1,
+                       tip_pies = TRUE,
+                       #tip_labels_offset = 0.5,
+                       node_pie_size = 0.4,
+                       tip_pie_size = 0.2,
+                       tree_layout = "circular",
+                       tip_labels = FALSE,
+                       state_transparency = 0.6,
+                       tree_color = "#848884",
+                       tree_linewidth = 0.1)
+
+ggsave(paste0("figures/3_empirical/ase_triState/ase_pie.pdf"), p3, width = 8, height = 6)
+
+# stochastic mapping
 simmaps <- list()
-simmaps[[1]] <- read.simmap("output/3_empirical/ase_picky/marginal_character.tree", format="phylip")
+simmaps[[1]] <- read.simmap("output/3_empirical/ase_triState/marginal_character.tree", format="phylip")
 stoc_map <- processStochMaps(tree,
                              simmap = simmaps,
-                             states=c("0", "1"))
+                             states=c("0", "1", "2"))
 
-colnames(stoc_map)[6] = "Not picky"
-colnames(stoc_map)[7] = "Picky"
 
-p <- plotStochMaps(tree, maps=stoc_map,
-                   tip_labels = FALSE,
-                   tree_layout = "circular",
-                   line_width=0.1,
-                   color_by = "MAP",
-                   colors = c("Not picky"="#BBCCEE",
-                              "Picky"="#222255")) +
-  theme(legend.position.inside = c(0.6,0.81))
-ggsave(paste0("figures/3_empirical/ase_picky/stoch_map.pdf"), p, width = 8, height = 6)
+colnames(stoc_map)[6] = "Herbivore"
+colnames(stoc_map)[7] = "Omnivore"
+colnames(stoc_map)[8] = "Carnivore"
+p4 <- plotStochMaps(tree, maps=stoc_map,
+                    tip_labels = FALSE,
+                    tree_layout = "circular",
+                    line_width=0.1,
+                    color_by = "MAP",
+                    colors = c("Herbivore"="#44AA99", "Omnivore" = "#DDCC77", "Carnivore"="#663333")) +
+  guides(color = "none")
+ggsave(paste0("figures/3_empirical/ase_triState/stoch_map.pdf"), p4, width = 8, height = 6)
+
+
+#p_all <- arrangeGrob(p1, p2, p4, p3, nrow = 2)
+#ggsave("figures/3_empirical/ase_triState/ase_all.pdf", p_all, width = 16, height = 16)
+

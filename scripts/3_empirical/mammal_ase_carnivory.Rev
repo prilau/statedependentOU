@@ -13,14 +13,14 @@
 #######################
 
 ### Select the character to analyze
-characterDisc <- 2
+characterDisc <- 1
 
 ### Read in the tree
 T <- readTrees("data/3_empirical/mammal_perMY_n2955.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet_binary_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet_carnivory_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -98,8 +98,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=2000, tuningInterval=100)
-mymcmc.run(generations= 20000, tuningInterval=200)
+mymcmc.burnin(generations=500, tuningInterval=100)
+mymcmc.run(generations= 5000, tuningInterval=200)
 
 anc_states = readAncestralStateTrace("output/3_empirical/ase_carnivory/states.log")
 anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_carnivory/anc_states.tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=2)
@@ -109,7 +109,7 @@ char_map_tree = characterMapTree(tree=tree,
                  character_file="output/3_empirical/ase_carnivory/marginal_character.tree",
                  posterior_file="output/3_empirical/ase_carnivory/marginal_posterior.tree",
                  burnin=0.0,
-                 num_time_slices=1000)
+                 num_time_slices=500)
 
 
 ## quit ##

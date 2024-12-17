@@ -1,4 +1,5 @@
 library(ape)
+library(ggplot2)
 library(tidyverse)
 
 # read in trait data
@@ -29,7 +30,8 @@ df_hpa <- df %>%
          herbivore = ifelse(dphy_plant == 100, 1, 0),
          carnivore = ifelse(dphy_invertebrate + dphy_vertebrate == 100, 1, 0),
          picky_herb = picky * 1 + herbivore * 2,
-         picky_carn = picky * 1 + carnivore * 2)
+         picky_carn = picky * 1 + carnivore * 2,
+         omnivore = ifelse(herbivore == 1 | carnivore == 1, 0, 1),)
 
 # read in tree
 tree <- read.nexus("data/3_empirical/raw/4705sp_mammal-time_Álvarez-Carretero_2022.tree")
@@ -43,7 +45,7 @@ tips_keep <- intersect(tree$tip.label, df_hpa$binomial_name)
 tree <- keep.tip(tree, tips_keep)
 # remove species not found in tree
 df_hpa <- df_hpa %>% filter(binomial_name %in% tips_keep)
-
+write.csv(df_hpa, "data/3_empirical/mammal_Discrete.csv")
 
 # plot characters on tree
 # script modified from Boyko et al. (2023)
@@ -99,6 +101,13 @@ for (i in 1:nrow(df_hpa)){
 write.nexus.data(mammal_disc_binary, "data/3_empirical/mammal_diet_binary_Discrete.nex", format = "standard")
 write.nexus.data(mammal_disc_combined, "data/3_empirical/mammal_diet_combined_Discrete.nex", format = "standard")
 write.nexus.data(mammal_log_kg, "data/3_empirical/mammal_log_kg_Continuous.nex", format = "continuous")
+
+mammal_disc_tristate <- list()
+for (i in 1:nrow(df_hpa)){
+  sp <- df_hpa$binomial_name[i]
+  mammal_disc_tristate[[sp]] = df_hpa$herbivore[i] * 1 + df_hpa$omnivore[i] * 2 + df_hpa$carnivore[i] * 3 - 1
+}
+write.nexus.data(mammal_disc_tristate, "data/3_empirical/mammal_diet_tristate_Discrete.nex", format = "standard")
 
 # save tree
 write.tree(tree, file="data/3_empirical/mammal_perMY_n2955.tre")
