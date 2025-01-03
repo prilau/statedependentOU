@@ -4,7 +4,7 @@
 #                   state-dependent Brownian-motion model
 #
 #
-# authors: Sebastian Hoehna
+# authors: Priscilla Lau
 #
 ################################################################################
 
@@ -17,16 +17,16 @@ characterCont <- 1
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/mammal_perMY_n2955.tre")[1]
+T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
 ### Read in the continuous-character data
-cont <- readContinuousCharacterData("data/3_empirical/mammal_log_kg_Continuous.nex")
+cont <- readContinuousCharacterData("data/3_empirical/mammal_log_kg_r500_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet_picky_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_carnivory_r500_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -55,8 +55,8 @@ rate_21 ~ dnLognormal(0,1)
 moves.append( mvScale(rate_12, weight=1.0) )
 moves.append( mvScale(rate_21, weight=1.0) )
 
-
 rates := [rate_12, rate_21]
+
 Q := fnFreeK(rates, rescaled=TRUE)
 
 
@@ -71,8 +71,8 @@ X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=300.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=300.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
 
 
 
@@ -133,9 +133,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/3_empirical/sdOU_picky/sdOU_run_" + RUN_INDEX + ".log", printgen=10) )
-monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_picky/sdOU_run_" + RUN_INDEX + "_augch.trees", printgen=100 ) )
+monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_carnivory/sdOU_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnScreen(printgen=100, theta) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_carnivory/sdOU_run_" + RUN_INDEX + "_augch.trees", printgen=100 ) )
 
 ################
 # The Analysis #
@@ -146,9 +146,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=50000, tuningInterval=200)
-
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_carnivory/sdOU_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=55000, , tuningInterval=200, checkpointInterval=100, checkpointFile="output/3_empirical/sdOU_r500_carnivory/sdOU_run_" + RUN_INDEX + ".state")
 
 
 ## quit ##
