@@ -134,7 +134,7 @@ mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
 monitors.append( mnModel(filename="output/3_empirical/sdOU_carnivory/sdOU_run_" + RUN_INDEX + ".log", printgen=10) )
-monitors.append( mnScreen(printgen=1000, theta) )
+monitors.append( mnScreen(printgen=100, theta) )
 monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_carnivory/sdOU_run_" + RUN_INDEX + "_augch.trees", printgen=100 ) )
 
 ################
@@ -146,8 +146,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=50000, tuningInterval=200)
+#mymcmc.burnin(generations=5000, tuningInterval=100)
+mymcmc.run(generations=55000, tuningInterval=200)
 
 
 
