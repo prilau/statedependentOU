@@ -26,7 +26,7 @@ cont <- readContinuousCharacterData("data/3_empirical/mammal_log_kg_r500_Continu
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_picky_r500_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_picky_carnivore_r500_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -51,12 +51,31 @@ root_age <- tree.rootAge()
 # make the Q matrix
 rate_12 ~ dnLognormal(0,1)
 rate_21 ~ dnLognormal(0,1)
+rate_13 ~ dnLognormal(0,1)
+rate_31 ~ dnLognormal(0,1)
+rate_14 ~ dnLognormal(0,1)
+rate_41 ~ dnLognormal(0,1)
+rate_23 ~ dnLognormal(0,1)
+rate_32 ~ dnLognormal(0,1)
+rate_24 ~ dnLognormal(0,1)
+rate_42 ~ dnLognormal(0,1)
+rate_34 ~ dnLognormal(0,1)
+rate_43 ~ dnLognormal(0,1)
 
 moves.append( mvScale(rate_12, weight=1.0) )
 moves.append( mvScale(rate_21, weight=1.0) )
+moves.append( mvScale(rate_13, weight=1.0) )
+moves.append( mvScale(rate_31, weight=1.0) )
+moves.append( mvScale(rate_14, weight=1.0) )
+moves.append( mvScale(rate_41, weight=1.0) )
+moves.append( mvScale(rate_23, weight=1.0) )
+moves.append( mvScale(rate_32, weight=1.0) )
+moves.append( mvScale(rate_24, weight=1.0) )
+moves.append( mvScale(rate_42, weight=1.0) )
+moves.append( mvScale(rate_34, weight=1.0) )
+moves.append( mvScale(rate_43, weight=1.0) )
 
-
-rates := [rate_12, rate_21]
+rates := [rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43]
 Q := fnFreeK(rates, rescaled=TRUE)
 
 
@@ -93,7 +112,7 @@ moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_move.addVariable(theta[1])
 
 halflife[1] ~ dnLognormal(4.3613845, 1.044495)
-moves.append(mvScale(halflife[1], weight = 1.0) )
+moves.append(mvScale(halflife[1], weight = 2.0) )
 avmvn_move.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
@@ -108,7 +127,7 @@ for (i in 2:num_disc_states){
   moves.append(mvSlide(theta[i], weight = 1.0) )
   avmvn_move.addVariable(theta[i])
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
-  moves.append(mvScale(halflife[i], weight = 1.0) )
+  moves.append(mvScale(halflife[i], weight = 2.0) )
   avmvn_move.addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
   stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
@@ -133,9 +152,9 @@ Y.clamp(cont)
 mymodel = model(Y)
 
 ### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_picky/sdOU_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_pica/sdOU_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_picky/sdOU_run_" + RUN_INDEX + "_augch.trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_pica/sdOU_run_" + RUN_INDEX + "_augch.trees", printgen=100 ) )
 
 ################
 # The Analysis #
@@ -146,8 +165,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_picky/sdOU_run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=55000, tuningInterval=200, checkpointInterval=100, checkpointFile="output/3_empirical/sdOU_r500_picky/sdOU_run_" + RUN_INDEX + ".state")
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_pica/sdOU_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=55000, tuningInterval=200, checkpointInterval=100, checkpointFile="output/3_empirical/sdOU_r500_pica/sdOU_run_" + RUN_INDEX + ".state")
 
 
 ## quit ##

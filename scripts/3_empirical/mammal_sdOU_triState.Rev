@@ -34,7 +34,7 @@ disc.includeCharacter(characterDisc)
 
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
-avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_move = mvAVMVN(weight=50, waitBeforeLearning=500, waitBeforeUsing=1000)
 monitors = VectorMonitors()
 
 ##########################
@@ -74,13 +74,13 @@ lambda ~ dnLognormal(ln(0.01), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
 avmvn_move.addVariable(lambda)
 
-# make the data-augmented CTCM model
+# make the data-augmented CTMC model
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=500.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=500.0) )
 
 
 
@@ -101,7 +101,7 @@ moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_move.addVariable(theta[1])
 
 halflife[1] ~ dnLognormal(4.3613845, 1.044495)
-moves.append(mvScale(halflife[1], weight = 1.0) )
+moves.append(mvScale(halflife[1], weight = 5.0) )
 avmvn_move.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
@@ -116,7 +116,7 @@ for (i in 2:num_disc_states){
   moves.append(mvSlide(theta[i], weight = 1.0) )
   avmvn_move.addVariable(theta[i])
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
-  moves.append(mvScale(halflife[i], weight = 1.0) )
+  moves.append(mvScale(halflife[i], weight = 5.0) )
   avmvn_move.addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
   stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
@@ -154,8 +154,10 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations=50000, tuningInterval=200)
+#mymcmc.burnin(generations=5000, tuningInterval=100)
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_triState/sdOU_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=25000, tuningInterval=200, checkpointInterval=100, checkpointFile="output/3_empirical/sdOU_triState/sdOU_run_" + RUN_INDEX + ".state")
+
 
 
 
