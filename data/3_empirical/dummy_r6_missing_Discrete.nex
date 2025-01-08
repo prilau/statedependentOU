@@ -1,0 +1,13 @@
+#NEXUS
+BEGIN DATA;
+  DIMENSIONS NTAX=6 NCHAR=1;
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="01";
+  MATRIX
+    t1   ?
+    t2   ?
+    t3   ?
+    t4   ?
+    t5   ?
+    t6   ?
+  ;
+END;

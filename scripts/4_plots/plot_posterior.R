@@ -1,20 +1,21 @@
 library(RevGadgets)
 library(tidyverse)
 library(grid)
+library(latex2exp)
 
-greenPrior <- readTrace(path = "output/3_empirical/3g_statedependentOU_greenPrior/3g.log", burnin = 0.1)
-blackPrior <- readTrace(path = "output/3_empirical/3h_statedependentOU_blackPrior/3h.log", burnin = 0.1)
 
-changenames <- colnames(greenPrior[[1]])
-names(changenames) <- paste0("g_", colnames(greenPrior[[1]]))
-greenPrior[[1]] <- greenPrior[[1]] %>% rename(all_of(changenames))
-
-changenames <- colnames(blackPrior[[1]])
-names(changenames) <- paste0("h_", colnames(blackPrior[[1]]))
-blackPrior[[1]] <- blackPrior[[1]] %>% rename(all_of(changenames))
-
-comparePriors <- list()
-comparePriors[[1]] <- cbind(greenPrior[[1]], blackPrior[[1]])
+# run 1 was empty
+# run 3 did not converge for theta
+pick_tr <- readTrace(path = c("output/3_empirical/sdOU_r500_picky/sdOU_run_2.log",
+                              "output/3_empirical/sdOU_r500_picky/sdOU_run_4.log",
+                              "output/3_empirical/sdOU_r500_picky/sdOU_run_5.log"), burnin = 0.1)
+# run 2 did not converge for theta (but the mixing is actually better hmm)
+carn_tr <- readTrace(path = c("output/3_empirical/sdOU_r500_carnivory/sdOU_run_1.log",
+                              "output/3_empirical/sdOU_r500_carnivory/sdOU_run_3.log",
+                              "output/3_empirical/sdOU_r500_carnivory/sdOU_run_4.log",
+                              "output/3_empirical/sdOU_r500_carnivory/sdOU_run_5.log"), burnin = 0.1)
+# only run 4 mix fine
+pica_tr <- readTrace(path = c("output/3_empirical/sdOU_r500_pica/sdOU_run_4.log"), burnin = 0.1)
 
 
 plotPosteriors <- function(trace, colors, vars, plotTitle=NA){
@@ -27,61 +28,72 @@ plotPosteriors <- function(trace, colors, vars, plotTitle=NA){
 }
 
 
-colors <- c("#44aa99", "#ddcc77", "#882255")
-h_alpha <- plotPosteriors(blackPrior, colors, vars=c("h_alpha[1]", "h_alpha[2]", "h_alpha[3]"))
-h_sigma2 <- plotPosteriors(blackPrior, colors, vars=c("h_sigma2[1]", "h_sigma2[2]", "h_sigma2[3]"))
-h_theta <- plotPosteriors(blackPrior, colors, vars=c("h_theta[1]", "h_theta[2]", "h_theta[3]"))
-h_halflife <- plotPosteriors(blackPrior, colors, vars=c("h_halflife[1]", "h_halflife[2]", "h_halflife[3]"))
-h_stv <- plotPosteriors(blackPrior, colors, vars=c("h_stv[1]", "h_stv[2]", "h_stv[3]"))
-h_rho <- plotPosteriors(blackPrior, colors, vars=c("h_rho[1]", "h_rho[2]", "h_rho[3]"))
+pick_colors <- c('#BBCCEE', '#222255')
+carn_colors <- c('#FFCCCC', '#663333')
+pica_colors <- c('#C4D5CC', '#A6A6BF', '#778080','#442B44')
+pick_theta    <- plotPosteriors(pick_tr, pick_colors, vars=c("theta[1]", "theta[2]"))
+pick_halflife <- plotPosteriors(pick_tr, pick_colors, vars=c("halflife[1]", "halflife[2]"))
+pick_stv      <- plotPosteriors(pick_tr, pick_colors, vars=c("stv[1]", "stv[2]"))
 
-g_alpha <- plotPosteriors(greenPrior, colors, vars=c("g_alpha[1]", "g_alpha[2]", "g_alpha[3]"))
-g_sigma2 <- plotPosteriors(greenPrior, colors, vars=c("g_sigma2[1]", "g_sigma2[2]", "g_sigma2[3]"))
-g_theta <- plotPosteriors(greenPrior, colors, vars=c("g_theta[1]", "g_theta[2]", "g_theta[3]"))
-g_halflife <- plotPosteriors(greenPrior, colors, vars=c("g_halflife[1]", "g_halflife[2]", "g_halflife[3]"))
-g_stv <- plotPosteriors(greenPrior, colors, vars=c("g_stv[1]", "g_stv[2]", "g_stv[3]"))
-g_rho <- plotPosteriors(greenPrior, colors, vars=c("g_rho[1]", "g_rho[2]", "g_rho[3]"))
+carn_theta    <- plotPosteriors(carn_tr, carn_colors, vars=c("theta[1]", "theta[2]"))
+carn_halflife <- plotPosteriors(carn_tr, carn_colors, vars=c("halflife[1]", "halflife[2]"))
+carn_stv      <- plotPosteriors(carn_tr, carn_colors, vars=c("stv[1]", "stv[2]"))
 
+pica_theta    <- plotPosteriors(pica_tr, pica_colors, vars=c("theta[1]", "theta[2]", "theta[3]", "theta[4]"))
+pica_halflife <- plotPosteriors(pica_tr, pica_colors, vars=c("halflife[1]", "halflife[2]", "halflife[3]", "halflife[4]"))
+pica_stv      <- plotPosteriors(pica_tr, pica_colors, vars=c("stv[1]", "stv[2]", "stv[3]", "stv[4]"))
 
 
 grid.newpage()
 grid.draw( # draw the following matrix of plots
   rbind( # bind together the columns into a matrix
-    cbind(ggplotGrob(h_alpha    + theme(axis.title.x    = element_blank(),
-                                        legend.position = "none")),
-          ggplotGrob(h_sigma2   + theme(axis.title.y    = element_blank(),
-                                        axis.title.x    = element_blank(),
-                                        legend.position = "none")),
-          ggplotGrob(h_theta    + theme(axis.title.y    = element_blank(),
+    cbind(ggplotGrob(pick_theta +
+                       coord_cartesian(xlim=c(-10, 15)) +
+                       theme(axis.title.y    = element_blank(),
+                                           axis.title.x    = element_blank(),
+                                           legend.position = "none") +
+                       ggtitle(TeX("$\\theta$"))),
+          ggplotGrob(pick_halflife + coord_cartesian(xlim=c(0, 3000))
+                     + theme(axis.title.y    = element_blank(),
+                             axis.title.x    = element_blank(),
+                             legend.position = "none") +
+                       ggtitle(TeX("$t_{0.5}$"))),
+          ggplotGrob(pick_stv + coord_cartesian(xlim=c(0, 100))
+                     + theme(axis.title.y    = element_blank(),
                                         axis.title.x    = element_blank())
-                     + scale_color_manual(labels = c("Herbivores", "Omnivores", "Carnivores"),
-                                          values = c("#44aa99", "#ddcc77", "#882255")))),
-    cbind(ggplotGrob(h_halflife + theme(legend.position = "none")),
-          ggplotGrob(h_stv      + theme(axis.title.y    = element_blank(),
-                                        legend.position = "none")),
-          ggplotGrob(h_rho      + theme(axis.title.y    = element_blank(),
-                                        legend.position = "none")))
+                     + ggtitle(TeX("$V$"))
+                     + scale_color_manual(labels = c("Not carnivores", "Carnivores"),
+                                          values = c('#FFCCCC', '#663333')))),
+    cbind(ggplotGrob(carn_theta +
+                       coord_cartesian(xlim=c(-10, 15)) +
+                       theme(axis.title.x    = element_blank(),
+                             legend.position = "none",
+                             plot.title = element_blank())),
+          ggplotGrob(carn_halflife + coord_cartesian(xlim=c(0, 3000))
+                     + theme(axis.title.x    = element_blank(),
+                             axis.title.y    = element_blank(), 
+                             legend.position = "none", plot.title = element_blank())),
+          ggplotGrob(carn_stv + coord_cartesian(xlim=c(0, 100))
+                     + theme(axis.title.x    = element_blank(),
+                             axis.title.y    = element_blank(),
+                             plot.title = element_blank())
+          + scale_color_manual(labels = c("Not picky", "Picky"),
+                               values = c('#BBCCEE', '#222255')))),
+    cbind(ggplotGrob(pica_theta    + coord_cartesian(xlim=c(-10, 15)) +
+                       theme(axis.title.y    = element_blank(),
+                             axis.title.x    = element_blank(),
+                             legend.position = "none",
+                             plot.title = element_blank())),
+          ggplotGrob(pica_halflife + coord_cartesian(xlim=c(0, 3000))
+                     + theme(axis.title.y    = element_blank(),
+                             legend.position = "none", plot.title = element_blank())),
+          ggplotGrob(pica_stv + coord_cartesian(xlim=c(0, 100))
+                     + theme(axis.title.x    = element_blank(),
+                             axis.title.y    = element_blank(),
+                             plot.title = element_blank()) +
+            scale_color_manual(labels = c("Not picky, not carnivores", "Not picky, carnivores", "Picky, not carnivores", "Picky, carnivores"),
+                               values = c('#C4D5CC', '#A6A6BF', '#778080','#442B44'))))
     )
-)
-
-grid.newpage()
-grid.draw( # draw the following matrix of plots
-  rbind( # bind together the columns into a matrix
-    cbind(ggplotGrob(g_alpha    + theme(axis.title.x    = element_blank(),
-                                        legend.position = "none")),
-          ggplotGrob(g_sigma2   + theme(axis.title.y    = element_blank(),
-                                        axis.title.x    = element_blank(),
-                                        legend.position = "none")),
-          ggplotGrob(g_theta    + theme(axis.title.y    = element_blank(),
-                                        axis.title.x    = element_blank())
-                     + scale_color_manual(labels = c("Herbivores", "Omnivores", "Carnivores"),
-                                          values = c("#44aa99", "#ddcc77", "#882255")))),
-    cbind(ggplotGrob(g_halflife + theme(legend.position = "none")),
-          ggplotGrob(g_stv      + theme(axis.title.y    = element_blank(),
-                                        legend.position = "none")),
-          ggplotGrob(g_rho      + theme(axis.title.y    = element_blank(),
-                                        legend.position = "none")))
-  )
 )
 
 

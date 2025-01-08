@@ -1,3 +1,4 @@
+statedependentOU.Rproj
 testing/*
 .Rhistory
 output/*
@@ -6,3 +7,4 @@ jobs/*
 slurm*
 */.Rhistory
 data/2_simulation/*/history.Rda
+.Rproj.user

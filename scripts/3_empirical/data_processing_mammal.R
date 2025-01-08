@@ -73,6 +73,8 @@ trait_picky <- read.csv("data/3_empirical/raw/COMBINE_imputed_Soria_2021.csv") %
   mutate(picky = ifelse(det_fruit >=90 | det_inv >=90 | det_vend>=90 | det_vect>=90 | det_vfish >=90 | det_vunk >=90 | det_scav >=90 | det_nect >=90 | det_seed >=90 | det_plantother >=90, 1, 0)) %>% 
   select(Binomial.1.2, picky)
 
+set.seed(1234)
+tree_r6 <- keep.tip(tree, sample(trait$Binomial.1.2, 6)) 
 tips_r500 <- sample(trait_picky$Binomial.1.2, 500)
 tree_r500 <- keep.tip(tree, tips_r500)
 max(node.depth.edgelength(tree))
@@ -84,7 +86,9 @@ while (max(node.depth.edgelength(tree)) < 202){
 trait_r500 <- trait %>% filter(Binomial.1.2 %in% tips_r500)
 trait_picky_r500 <- trait_picky %>% filter(Binomial.1.2 %in% tips_r500)
 trait_combined_r500 <- merge(trait_r500, trait_picky_r500, by="Binomial.1.2") %>% 
-  mutate(picky_carn = carnivore + picky * 2)
+  mutate(picky_carn = carnivore + picky * 2,
+         picky_herb = herbivore + picky * 2,
+         picky_diet)
 
 # save traits as nexus files
 mammal_diet_r500 <- mammal_carn_r500 <- mammal_pick_r500 <- mammal_pica_r500 <- list()
