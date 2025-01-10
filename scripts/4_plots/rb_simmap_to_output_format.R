@@ -9,11 +9,10 @@ library(tidyverse)
 source("scripts/4_plots/revgadgets_StochMap.R")
 
 
-#tree <- read.tree("data/3_empirical/mammal_diet_perMY.tre")
-#tree <- read.tree("data/2_simulation/mammal_diet_perMY_n500.tre")
+#tree <- read.tree("data/3_empirical/dummy_r6.tre")
 #index_to_rev <- matchNodes(tree)
 #
-#dir_in = "output/2_simulation/convergence/augch_trees/"
+#dir_in = "output/3_empirical/aug_tipMissingDiscrete/"
 #for (file in list.files(dir_in)){
 #  path = paste0(dir_in, file)
 #  log <- read_tsv(path)
@@ -22,7 +21,9 @@ source("scripts/4_plots/revgadgets_StochMap.R")
 #}
 #
 ##simmap_to_ancStates <- function(input_path, output_path){
+#input_path <- paste0(dir_in, list.files(dir_in))
 #simmaps <- read.simmap(input_path, format="phylip")
+#
 #df_rev <- data.frame()
 #
 #for (row_num in 1:length(simmaps)){
@@ -42,25 +43,26 @@ source("scripts/4_plots/revgadgets_StochMap.R")
 #header <- paste0("end_", as.character(1:(length(simmap$maps)+1)))
 #colnames(df_rev) <- c("Iteration", header)
 #write_tsv(df_rev, output_path)
-
+#
 #simmap_to_ancStates("output/3_empirical/3.2a_sdOU/augch.trees", "output/3_empirical/3.2a_sdOU/anc_states.log")
 
-# Do this in RevBayes!
-# tree <- readTrees("data/2_simulation/mammal_diet_perMY_n500.tre")[1]
-# 
-# for (file in listFiles("output/2_simulation/convergence/augch_trees/")){
-#   anc_states = readAncestralStateTrace(file)
-#   anc_tree = ancestralStateTree(
-#     tree=tree,
-#     ancestral_state_trace_vector=anc_states,
-#     include_start_states=false,
-#     file=file + "ancStates.tre",
-#     summary_statistic="MAP",
-#     reconstruction="marginal",
-#     burnin=0.1,
-#     nStates=3,
-#     site=1)
-# }
+
+#Do this in RevBayes!
+#tree <- readTrees("data/3_empirical/dummy_r6.tre")[1]
+#
+#for (file in listFiles("output/3_empirical/aug_tipMissingDiscrete/augch/")){
+#  anc_states = readAncestralStateTrace(file)
+#  anc_tree = ancestralStateTree(
+#    tree=tree,
+#    ancestral_state_trace_vector=anc_states,
+#    include_start_states=false,
+#    file=file + "ancStates.tre",
+#    summary_statistic="MAP",
+#    reconstruction="marginal",
+#    burnin=0.1,
+#    nStates=3,
+#    site=1)
+#}
 
 
 
