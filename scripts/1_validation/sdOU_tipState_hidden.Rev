@@ -15,11 +15,11 @@ characterDisc <- 1
 characterCont <- 1
 
 ### Read in the tree
-T <- readTrees("data/1_validation/dummy/dummy_r6.tre")[1]
+T <- readTrees("data/1_validation/dummy/dummy_r" + NTIP + "_" + RUN_INDEX + ".tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/1_validation/dummy/dummy_r6_tipState_hidden_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/dummy/dummy_r" + NTIP + "_tipState_hidden_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 
 num_hidden_states <- 2
@@ -27,7 +27,7 @@ disc_exp <- disc.expandCharacters( num_hidden_states )
 disc_exp.excludeAll()
 disc_exp.includeCharacter(characterDisc)
 
-cont <- readContinuousCharacterData("data/1_validation/dummy/dummy_r6_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/dummy/dummy_r" + NTIP + "_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
@@ -91,24 +91,15 @@ char_hist := X.characterHistories()
 ##############################
 
 # set up OU parameters
-for (i in 1:num_disc_states) {
-  for (j in 1:num_hidden_states) {
-    theta[i][j] <- 0.0
-    halflife[i][j] <- 0.0
-    alpha[i][j] <- 0.0
-    stv[i][j] <- 0.0
-    sigma2[i][j] <- 0.0
-  }
-}
 
 
-theta[1][1] ~ dnSoftBoundUniformNormal(-5, 5, 1, 0.95)
-moves.append(mvSlide(theta[1][1], weight = 1.0) )
-avmvn_move.addVariable(theta[1][1])
+theta[1] ~ dnSoftBoundUniformNormal(-5, 5, 1, 0.95)
+moves.append(mvSlide(theta[1], weight = 1.0) )
+avmvn_move.addVariable(theta[1])
 
-theta[2][1] ~ dnNormal(theta[1][1], 4)
-moves.append(mvSlide(theta[2][1], weight = 1.0) )
-avmvn_move.addVariable(theta[2][1])
+theta[2] ~ dnNormal(theta[1], 4)
+moves.append(mvSlide(theta[2], weight = 1.0) )
+avmvn_move.addVariable(theta[2])
 
 theta_gain[1] ~ dnLognormal(0.5, ln(2))
 moves.append(mvScale(theta_gain[1], weight = 1.0) )
@@ -118,38 +109,38 @@ theta_gain[2] ~ dnLognormal(0.5, ln(2))
 moves.append(mvScale(theta_gain[2], weight = 1.0) )
 avmvn_move.addVariable(theta_gain[2])
 
-theta[2][2] := theta[2][1] + theta_gain[1]
-theta[1][2] := theta[1][1] + theta_gain[2]
+theta[3] := theta[1] + theta_gain[1]
+theta[4] := theta[2] + theta_gain[2]
 
-halflife[1][1] ~ dnLognormal(-1.234, 1.044495)
-moves.append(mvScale(halflife[1][1], weight = 1.0) )
-avmvn_move.addVariable(halflife[1][1])
-alpha[1][1] := abs(ln(2)/halflife[1][1])
+halflife[1] ~ dnLognormal(-1.234, 1.044495)
+moves.append(mvScale(halflife[1], weight = 1.0) )
+avmvn_move.addVariable(halflife[1])
+alpha[1] := abs(ln(2)/halflife[1])
 
-halflife[2][1] ~ dnLognormal(ln(halflife[1][1]), 1.044495)
-moves.append(mvScale(halflife[2][1], weight = 1.0) )
-avmvn_move.addVariable(halflife[2][1])
-alpha[2][1] := abs(ln(2)/halflife[2][1])
+halflife[2] ~ dnLognormal(ln(halflife[1]), 1.044495)
+moves.append(mvScale(halflife[2], weight = 1.0) )
+avmvn_move.addVariable(halflife[2])
+alpha[2] := abs(ln(2)/halflife[2])
 
-halflife[1][2] := halflife[1][1]
-halflife[2][2] := halflife[2][1]
-alpha[1][2] := alpha[1][1]
-alpha[2][2] := alpha[2][1]
+halflife[3] := halflife[1]
+halflife[4] := halflife[2]
+alpha[3] := alpha[1]
+alpha[4] := alpha[2]
 
-stv[1][1] ~ dnLognormal(ln(13), 0.587405)
-moves.append(mvScale(stv[1][1], weight = 1.0) )
-avmvn_move.addVariable(stv[1][1])
-sigma2[1][1] := stv[1][1] * 2 * alpha[1][1]
+stv[1] ~ dnLognormal(ln(13), 0.587405)
+moves.append(mvScale(stv[1], weight = 1.0) )
+avmvn_move.addVariable(stv[1])
+sigma2[1] := stv[1] * 2 * alpha[1]
 
-stv[2][1] ~ dnLognormal(ln(stv[1][1]), 0.587405)
-moves.append(mvScale(stv[2][1], weight = 1.0) )
-avmvn_move.addVariable(stv[2][1])
-sigma2[2][1] := stv[2][1] * 2 * alpha[2][1]
+stv[2] ~ dnLognormal(ln(stv[1]), 0.587405)
+moves.append(mvScale(stv[2], weight = 1.0) )
+avmvn_move.addVariable(stv[2])
+sigma2[2] := stv[2] * 2 * alpha[2]
 
-stv[1][2] := stv[1][1]
-stv[2][2] := stv[2][1]
-sigma2[1][2] := sigma2[1][1]
-sigma2[2][2] := sigma2[2][1]
+stv[3] := stv[1]
+stv[4] := stv[2]
+sigma2[3] := sigma2[1]
+sigma2[4] := sigma2[2]
 
 
 ##########################
@@ -165,9 +156,9 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-#monitors.append( mnModel(filename="output/1_validation/sdOU_tipState_hidden/run_" + RUN_INDEX + ".log", printgen=10) )
+#monitors.append( mnModel(filename="output/1_validation/sdOU_tipState_hidden/tree_" + RUN_INDEX + ".log", printgen=10) )
 #monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/1_validation/sdOU_tipState_hidden/run_" + RUN_INDEX + ".trees", printgen=10 ) )
+monitors.append( mnFile( char_hist, filename="output/1_validation/sdOU_tipState_hidden/r" + NTIP + "_tree_" + RUN_INDEX + ".trees", printgen=10 ) )
 
 
 

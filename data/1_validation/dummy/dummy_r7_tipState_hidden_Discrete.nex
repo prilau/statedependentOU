@@ -1,13 +1,14 @@
 #NEXUS
 BEGIN DATA;
-  DIMENSIONS NTAX=6 NCHAR=1;
+  DIMENSIONS NTAX=7 NCHAR=1;
   FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="01";
   MATRIX
-    t1   ?
-    t2   ?
-    t3   ?
-    t4   ?
-    t5   ?
-    t6   ?
+    t1   1
+    t2   0
+    t3   1
+    t4   1
+    t5   0
+    t6   0
+    t7   0
   ;
 END;

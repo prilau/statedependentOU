@@ -3,7 +3,7 @@ library(phytools)
 library(ggplot2)
 library(tidyverse)
 
-dir_in = "output/3_empirical/aug_tipMissingDiscrete/"
+dir_in = "output/1_validation/aug_tipState_missing"
 
 # Uncomment the block below if outputs are freshly from RevBayes
 
