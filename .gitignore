@@ -8,3 +8,4 @@ slurm*
 */.Rhistory
 data/2_simulation/*/history.Rda
 .Rproj.user
+.DS_Store
