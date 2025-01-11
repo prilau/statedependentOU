@@ -146,9 +146,10 @@ c(length(which(state_count_per_tip$t6 == 0)) / length(which(state_count_per_tip$
 tree <- read.nexus("data/3_empirical/raw/4705sp_mammal-time_Álvarez-Carretero_2022.tree")
 
 n=7
-m=5
+m=3
 tree_small <- keep.tip(tree, sample(tree$tip.label, n))
 tree_small$tip.label <- paste0("t", 1:n)
 max(node.depth.edgelength(tree_small))
 plot(tree_small)
-write.tree(tree_small, paste0("data/1_validation/dummy/dummy_r6_", m, ".tre"))
+write.tree(tree_small, paste0("data/1_validation/dummy/dummy_r7_", m, ".tre"))
+

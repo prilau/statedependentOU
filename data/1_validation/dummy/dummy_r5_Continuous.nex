@@ -1,6 +1,6 @@
 #NEXUS
 BEGIN DATA;
-  DIMENSIONS NTAX=7 NCHAR=1;
+  DIMENSIONS NTAX=5 NCHAR=1;
   FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
   MATRIX
     t1                   -1.38
@@ -8,7 +8,5 @@ BEGIN DATA;
     t3                   -3.72
     t4                   4.87
     t5                   -3.21
-    t6                   1.67
-    t7                   0.58
   ;
 END;
