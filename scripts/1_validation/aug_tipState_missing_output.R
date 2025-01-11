@@ -3,22 +3,16 @@ library(phytools)
 library(ggplot2)
 library(tidyverse)
 
-source("scripts/4_plots/revgadgets_StochMap.R")
-
 dir_in = "output/3_empirical/aug_tipMissingDiscrete/"
 
 # Uncomment the block below if outputs are freshly from RevBayes
 
-#tree <- read.tree("data/3_empirical/dummy_r6.tre")
-#index_to_rev <- matchNodes(tree)
-#
 #for (file in list.files(dir_in)){
 #  path = paste0(dir_in, file)
 #  log <- read_tsv(path, show_col_types = FALSE)
 #  log <- as.data.frame(log$char_hist)
 #  write_tsv(log, file=path, col_names = FALSE)
 #}
-
 
 # validate each tip expected sample state equally
 # validate each tree expected sample state == 3

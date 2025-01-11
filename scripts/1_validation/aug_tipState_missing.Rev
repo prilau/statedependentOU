@@ -14,11 +14,11 @@
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/dummy_r6.tre")[1]
+T <- readTrees("data/1_validation/dummy/dummy_r6.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/3_empirical/dummy_r6_missing_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/dummy_r6_tipState_missing_Discrete.nex")
 
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -44,7 +44,7 @@ root_age <- tree.rootAge()
 
 Q := fnJC(num_disc_states)
 
-lambda ~ dnLognormal(ln(0.01), 0.4)
+lambda ~ dnLognormal(ln(1), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
 
 # make the data-augmented CTMC model
@@ -70,7 +70,7 @@ char_hist := X.characterHistories()
 
 mymodel = model(X)
 
-monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_tipMissingDiscrete/run_" + RUN_INDEX + ".trees", printgen=1 ) )
+monitors.append( mnFile( char_hist, filename="output/1_validation/aug_tipState_missing/run_" + RUN_INDEX + ".trees", printgen=10 ) )
 
 
 ################
