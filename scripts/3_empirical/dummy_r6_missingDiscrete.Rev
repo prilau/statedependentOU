@@ -64,13 +64,14 @@ avmvn_move.addVariable(lambda)
 
 # If type="Standard", clamping -> Error: Cannot get the index of an ambiguous state
 # If type="NaturalNumbers", clamped without error
-X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="NaturalNumbers", nSites=1)
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+"clamping"
 X.clamp(disc)
-
+"clamped"
 # include proposals for the discrete character history
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=10.0) )
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=10.0) )
-
+<-
 # keep track of the number of transitions
 for(i in 1:nbranches) {
     num_changes[i] := sum(X.numCharacterChanges(i))
@@ -107,7 +108,7 @@ for (i in 2:num_disc_states){
   moves.append(mvSlide(dtheta[i], weight = 1.0) )
   avmvn_move.addVariable(dtheta[i])
   theta[i] := theta[i-1] + abs(dtheta[i])
-  
+
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
   moves.append(mvScale(halflife[i], weight = 1.0) )
   avmvn_move.addVariable(halflife[i])
