@@ -19,7 +19,7 @@ T <- readTrees("data/1_validation/dummy/dummy_r6.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/1_validation/dummy_r6_tipState_hidden_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/dummy/dummy_r6_tipState_hidden_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 
 num_hidden_states <- 2
@@ -27,7 +27,7 @@ disc_exp <- disc.expandCharacters( num_hidden_states )
 disc_exp.excludeAll()
 disc_exp.includeCharacter(characterDisc)
 
-cont <- readContinuousCharacterData("data/1_validation/dummy_r6_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/dummy/dummy_r6_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
