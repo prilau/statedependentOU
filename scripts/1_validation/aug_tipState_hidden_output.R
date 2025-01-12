@@ -3,7 +3,7 @@ library(phytools)
 library(ggplot2)
 library(tidyverse)
 
-dir_in = "output/3_empirical/aug_tipHiddenState/"
+dir_in = "output/1_validation/aug_tipState_hidden/"
 
 # Uncomment the block below if outputs are freshly from RevBayes
 
@@ -17,7 +17,7 @@ dir_in = "output/3_empirical/aug_tipHiddenState/"
 # validate each tip expected sample state equally
 # validate each tree expected sample state == 3
 path <- paste0(dir_in, list.files(dir_in))
-simmaps <- read.simmap(path[5], format="phylip")
+simmaps <- read.simmap(path, format="phylip")
 
 # obtain indices of tip branches
 tip_edges <- c(which.edge(simmaps[[1]], "t1"),
@@ -25,20 +25,10 @@ tip_edges <- c(which.edge(simmaps[[1]], "t1"),
                which.edge(simmaps[[1]], "t3"),
                which.edge(simmaps[[1]], "t4"),
                which.edge(simmaps[[1]], "t5"),
-               which.edge(simmaps[[1]], "t6")
-             , which.edge(simmaps[[1]], "t7")
-             , which.edge(simmaps[[1]], "t8")
-             , which.edge(simmaps[[1]], "t9")
-             , which.edge(simmaps[[1]], "t10")
-               )
+               which.edge(simmaps[[1]], "t6"))
 
 # initiate number of state 1 sampled per tip
-state_count_per_tip <- tibble(t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0, t6 = 0
-                              , t7 = 0
-                              , t8 = 0
-                              , t9 = 0
-                              , t10 = 0
-                              )
+state_count_per_tip <- tibble(t1 = 0, t2 = 0, t3 = 0, t4 = 0, t5 = 0, t6 = 0)
 
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:length(simmaps)){
@@ -151,5 +141,5 @@ tree_small <- keep.tip(tree, sample(tree$tip.label, n))
 tree_small$tip.label <- paste0("t", 1:n)
 max(node.depth.edgelength(tree_small))
 plot(tree_small)
-write.tree(tree_small, paste0("data/1_validation/dummy/dummy_r7_", m, ".tre"))
+write.tree(tree_small, paste0("data/1_validation/dummy/dummy_r", n, "_", m, ".tre"))
 
