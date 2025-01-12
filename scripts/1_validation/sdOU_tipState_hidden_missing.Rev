@@ -156,9 +156,9 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-monitors.append( mnModel(filename="output/1_validation/sdOU_tipState_hidden/run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/1_validation/sdOU_tipState_hidden_missing/run_" + RUN_INDEX + ".log", printgen=10) )
 #monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/1_validation/sdOU_tipState_hidden/run_" + RUN_INDEX + ".trees", printgen=10 ) )
+monitors.append( mnFile( char_hist, filename="output/1_validation/sdOU_tipState_hidden_missing/run_" + RUN_INDEX + ".trees", printgen=10 ) )
 
 
 
