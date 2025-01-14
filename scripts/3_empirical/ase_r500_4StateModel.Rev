@@ -16,11 +16,11 @@
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/mammal_perMY_n2955.tre")[1]
+T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet_triState_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet4_r500_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -45,17 +45,16 @@ root_age <- tree.rootAge()
 # make the Q matrix
 rate_pr := tree.treeLength() / 10
 
-for (i in 1:3) {
-  for (j in 1:3) {
-    rates[i][j] ~ dnExp(rate_pr)
-    moves.append( mvScale( rates[i][j], weight=1.0 ) )
-    avmvn_move.addVariable(rates[i][j])
-  }
+for ( i in 1:num_disc_states ) {
+    rate[i] ~ dnExp(rate_pr)
+    moves.append( mvScale( rate[i], weight=1.0 ) )
+    avmvn_move.addVariable(rate[i])
+
 }
 
-Q := fnFreeK(rates, rescaled=FALSE)
+Q := fnFreeK(rate, rescaled=FALSE)
 
-rf_prior <- rep(1,3)
+rf_prior <- rep(1,num_disc_states)
 rf ~ dnDirichlet( rf_prior )
 moves.append( mvBetaSimplex( rf, weight=2 ) )
 moves.append( mvDirichletSimplex( rf, weight=2 ) )
@@ -72,18 +71,18 @@ X.clamp(disc)
 
 mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/ase_triState/trace.log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/ase_4State/trace.log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
 monitors.append( mnJointConditionalAncestralState(tree=tree,
                                                   ctmc=X,
-                                                  filename="output/3_empirical/ase_triState/states.log",
+                                                  filename="output/3_empirical/ase_4State/states.log",
                                                   type="Standard",
                                                   printgen=10,
                                                   withTips=true,
                                                   withStartStates=false) )
 
 monitors.append( mnStochasticCharacterMap(ctmc=X,
-                                          filename="output/3_empirical/ase_triState/simmap.log",
+                                          filename="output/3_empirical/ase_4State/simmap.log",
                                           printgen=10,
                                           include_simmap=true) )
 
@@ -99,16 +98,16 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=500, tuningInterval=100)
-mymcmc.run(generations= 5000, tuningInterval=200)
+mymcmc.burnin(generations=1000, tuningInterval=100)
+mymcmc.run(generations= 10000, tuningInterval=200)
 
-anc_states = readAncestralStateTrace("output/3_empirical/ase_triState/states.log")
-anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_triState/anc_states.tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=3)
-anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_triState/simmap.log")
+anc_states = readAncestralStateTrace("output/3_empirical/ase_4State/states.log")
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_4State/anc_states.tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=3)
+anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_4State/simmap.log")
 char_map_tree = characterMapTree(tree=tree,
                  ancestral_state_trace_vector=anc_states_stoch_map,
-                 character_file="output/3_empirical/ase_triState/marginal_character.tree",
-                 posterior_file="output/3_empirical/ase_triState/marginal_posterior.tree",
+                 character_file="output/3_empirical/ase_4State/marginal_character.tree",
+                 posterior_file="output/3_empirical/ase_4State/marginal_posterior.tree",
                  burnin=0.0,
                  num_time_slices=500)
 

@@ -1,0 +1,162 @@
+################################################################################
+#
+# RevBayes Example: Bayesian inference of rates of evolution under a
+#                   state-dependent Brownian-motion model
+#
+#
+# authors: Sebastian Hoehna
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+characterDisc <- 1
+
+### Read in the tree
+T <- readTrees("data/3_empirical/mammal_perMY_n2955.tre")[1]
+ntips <- T.ntips()
+nbranches <- 2 * ntips - 2
+
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet3_r500_Discrete.nex")
+num_disc_states <- disc.getStateDescriptions().size()
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+
+num_hidden_states <- 2
+disc_exp <- disc.expandCharacters( num_hidden_states )
+disc_exp.excludeAll()
+disc_exp.includeCharacter(characterDisc)
+
+total_num_states <- num_disc_states * num_hidden_states
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+
+##########################
+# Specify the tree model #
+##########################
+
+tree <- T
+root_age <- tree.rootAge()
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+rate_pr := tree.treeLength() / 10
+
+for (i in 1:total_num_states) {
+  for (j in 1:total_num_states) {
+    rates[i][j] <- 0.0
+  }
+}
+
+rates[1][2] ~ dnExp(rate_pr)
+rates[1][5] ~ dnExp(rate_pr)
+rates[2][1] ~ dnExp(rate_pr)
+rates[2][3] ~ dnExp(rate_pr)
+rates[2][5] ~ dnExp(rate_pr)
+rates[3][2] ~ dnExp(rate_pr)
+rates[3][5] ~ dnExp(rate_pr)
+rates[4][1] ~ dnExp(0.1 * rate_pr)
+rates[5][1] ~ dnExp(rate_pr)
+rates[5][2] ~ dnExp(rate_pr)
+rates[5][3] ~ dnExp(rate_pr)
+rates[6][3] ~ dnExp(0.1 * rate_pr)
+
+
+moves.append( mvScale( rates[1][2], weight=1.0 ) )
+moves.append( mvScale( rates[1][5], weight=1.0 ) )
+moves.append( mvScale( rates[2][1], weight=1.0 ) )
+moves.append( mvScale( rates[2][3], weight=1.0 ) )
+moves.append( mvScale( rates[2][5], weight=1.0 ) )
+moves.append( mvScale( rates[3][2], weight=1.0 ) )
+moves.append( mvScale( rates[3][5], weight=1.0 ) )
+moves.append( mvScale( rates[4][1], weight=1.0 ) )
+moves.append( mvScale( rates[5][1], weight=1.0 ) )
+moves.append( mvScale( rates[5][2], weight=1.0 ) )
+moves.append( mvScale( rates[5][3], weight=1.0 ) )
+moves.append( mvScale( rates[6][3], weight=1.0 ) )
+
+avmvn_move.addVariable( rates[1][2] )
+avmvn_move.addVariable( rates[1][5] )
+avmvn_move.addVariable( rates[2][1] )
+avmvn_move.addVariable( rates[2][3] )
+avmvn_move.addVariable( rates[2][5] )
+avmvn_move.addVariable( rates[3][2] )
+avmvn_move.addVariable( rates[3][5] )
+avmvn_move.addVariable( rates[4][1] )
+avmvn_move.addVariable( rates[5][1] )
+avmvn_move.addVariable( rates[5][2] )
+avmvn_move.addVariable( rates[5][3] )
+avmvn_move.addVariable( rates[6][3] )
+
+
+Q := fnFreeK(rates, rescaled=FALSE)
+
+rf_prior <- rep(1,total_num_states)
+rf ~ dnDirichlet( rf_prior )
+moves.append( mvBetaSimplex( rf, weight=2 ) )
+moves.append( mvDirichletSimplex( rf, weight=2 ) )
+
+# make the CTCM model
+X ~ dnPhyloCTMC(tree=tree, Q=Q, rootFrequencies=rf, type="Standard")
+X.clamp(disc)
+
+
+
+#############
+# The Model #
+#############
+
+mymodel = model(X)
+
+monitors.append( mnModel(filename="output/3_empirical/ase_hiddenState/trace.log", printgen=10) )
+monitors.append( mnScreen(printgen=1000) )
+monitors.append( mnJointConditionalAncestralState(tree=tree,
+                                                  ctmc=X,
+                                                  filename="output/3_empirical/ase_hiddenState/states.log",
+                                                  type="Standard",
+                                                  printgen=10,
+                                                  withTips=true,
+                                                  withStartStates=false) )
+
+monitors.append( mnStochasticCharacterMap(ctmc=X,
+                                          filename="output/3_empirical/ase_hiddenState/simmap.log",
+                                          printgen=10,
+                                          include_simmap=true) )
+
+
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
+
+
+### run the MCMC ###
+mymcmc.burnin(generations=500, tuningInterval=100)
+mymcmc.run(generations= 5000, tuningInterval=200)
+
+anc_states = readAncestralStateTrace("output/3_empirical/ase_hiddenState/states.log")
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_hiddenState/anc_states.tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=2)
+anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_hiddenState/simmap.log")
+char_map_tree = characterMapTree(tree=tree,
+                 ancestral_state_trace_vector=anc_states_stoch_map,
+                 character_file="output/3_empirical/ase_hiddenState/marginal_character.tree",
+                 posterior_file="output/3_empirical/ase_hiddenState/marginal_posterior.tree",
+                 burnin=0.0,
+                 num_time_slices=500)
+
+
+## quit ##
+q()

@@ -17,7 +17,7 @@ dir_in = "output/1_validation/aug_tipState_hidden/"
 # validate each tip expected sample state equally
 # validate each tree expected sample state == 3
 path <- paste0(dir_in, list.files(dir_in))
-simmaps <- read.simmap(path, format="phylip")
+simmaps <- read.simmap(path[1], format="phylip")
 
 # obtain indices of tip branches
 tip_edges <- c(which.edge(simmaps[[1]], "t1"),

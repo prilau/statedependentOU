@@ -1,8 +1,6 @@
 ################################################################################
 #
-# RevBayes Example: Bayesian inference of rates of evolution under a
-#                   state-dependent Brownian-motion model
-#
+# RevBayes Example: Testing hidden rates for state-dependent OU model
 #
 # authors: Priscilla Lau
 #
@@ -13,29 +11,28 @@
 #######################
 
 ### Select the character to analyze
-characterCont <- 1
 characterDisc <- 1
+characterCont <- 1
 
 ### Read in the tree
 T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-### Read in the continuous-character data
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet4_r500_Discrete.nex")
+
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+num_disc_states <- disc.getStateDescriptions().size()
+
 cont <- readContinuousCharacterData("data/3_empirical/mammal_log_kg_r500_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_herbivory_r500_Discrete.nex")
-num_disc_states <- disc.getStateDescriptions().size()
-disc.excludeAll()
-disc.includeCharacter(characterDisc)
-
-
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
-avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
 monitors = VectorMonitors()
+avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -49,32 +46,47 @@ root_age <- tree.rootAge()
 ########################################
 
 # make the Q matrix
+
 rate_12 ~ dnLognormal(0,1)
 rate_21 ~ dnLognormal(0,1)
+rate_13 ~ dnLognormal(0,1)
+rate_31 ~ dnLognormal(0,1)
+rate_14 ~ dnLognormal(0,1)
+rate_41 ~ dnLognormal(0,1)
+rate_23 ~ dnLognormal(0,1)
+rate_32 ~ dnLognormal(0,1)
+rate_24 ~ dnLognormal(0,1)
+rate_42 ~ dnLognormal(0,1)
+rate_34 ~ dnLognormal(0,1)
+rate_43 ~ dnLognormal(0,1)
 
 moves.append( mvScale(rate_12, weight=1.0) )
 moves.append( mvScale(rate_21, weight=1.0) )
+moves.append( mvScale(rate_13, weight=1.0) )
+moves.append( mvScale(rate_31, weight=1.0) )
+moves.append( mvScale(rate_14, weight=1.0) )
+moves.append( mvScale(rate_41, weight=1.0) )
+moves.append( mvScale(rate_23, weight=1.0) )
+moves.append( mvScale(rate_32, weight=1.0) )
+moves.append( mvScale(rate_24, weight=1.0) )
+moves.append( mvScale(rate_42, weight=1.0) )
+moves.append( mvScale(rate_34, weight=1.0) )
+moves.append( mvScale(rate_43, weight=1.0) )
 
-rates := [rate_12, rate_21]
-
+rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 Q := fnFreeK(rates, rescaled=TRUE)
 
-
-
-# make the transition rate parameter
-lambda ~ dnLognormal(ln(0.01), 0.4)
+lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
 moves.append( mvScale(lambda, weight=1.0) )
 avmvn_move.addVariable(lambda)
 
-# make the data-augmented CTCM model
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=50.0) )
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
-
-
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -84,11 +96,10 @@ total_num_changes := sum(num_changes)
 
 char_hist := X.characterHistories()
 
-
-##########################
-# Specify the rate model #
-##########################
-theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 0.25, 0.975)
+##############################
+# continuous character model #
+##############################
+theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_move.addVariable(theta[1])
 
@@ -97,25 +108,43 @@ moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_move.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
-stv[1] ~ dnLognormal(ln(12.39783716), 0.587405)
+stv[1] ~ dnLognormal(ln(13), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_move.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
-
 
 for (i in 2:num_disc_states){
   theta[i] ~ dnNormal(theta[i-1], 4)
   moves.append(mvSlide(theta[i], weight = 1.0) )
   avmvn_move.addVariable(theta[i])
+  
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
   moves.append(mvScale(halflife[i], weight = 1.0) )
   avmvn_move.addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
+
   stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
   moves.append(mvScale(stv[i], weight = 1.0) )
   avmvn_move.addVariable(stv[i])
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
+
+for (i in 1:num_disc_states){
+  for (j in 1:num_disc_states){
+    compare_theta[i][j] <- 0.0
+    compare_halflife[i][j] <- 0.0
+    compare_stv[i][j] <- 0.0
+  }
+}
+
+for (i in 1:num_disc_states){
+  for (j in i:num_disc_states){
+    compare_theta[i][j] := ifelse(theta[i] > theta[j], 1, 0)
+    compare_halflife[i][j] := ifelse(halflife[i] > halflife[j], 1, 0)
+    compare_stv[i][j] := ifelse(stv[i] > stv[j], 1, 0)
+  }
+}
+
 
 
 
@@ -132,10 +161,10 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-### set up the monitors that will output parameter values to file and screen
-monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_herbivory/sdOU_run_" + RUN_INDEX + ".log", printgen=10) )
-monitors.append( mnScreen(printgen=100, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_herbivory/sdOU_run_" + RUN_INDEX + "_augch.trees", printgen=100 ) )
+monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, theta) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".trees", printgen=10 ) )
+
 
 ################
 # The Analysis #
@@ -146,9 +175,10 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_herbivory/sdOU_run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=55000, tuningInterval=200, checkpointInterval=100, checkpointFile="output/3_empirical/sdOU_r500_herbivory/sdOU_run_" + RUN_INDEX + ".state")
+mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state")
 
 ## quit ##
 q()

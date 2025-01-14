@@ -1,5 +1,5 @@
 #NEXUS
-[Data written by write.nexus.data.R, Fri Jan  3 17:18:03 2025]
+[Data written by write.nexus.data.R, Tue Jan 14 09:53:13 2025]
 BEGIN DATA;
   DIMENSIONS NTAX=3500 NCHAR=1;
   FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123456789";
@@ -11,26 +11,26 @@ BEGIN DATA;
     abrothrix_andinus                      1
     abrothrix_jelskii                      1
     abrothrix_lanosus                      1
-    abrothrix_longipilis                   1
-    abrothrix_olivaceus                    1
+    abrothrix_longipilis                   2
+    abrothrix_olivaceus                    2
     acerodon_celebensis                    0
     acerodon_jubatus                       0
-    acinonyx_jubatus                       2
+    acinonyx_jubatus                       3
     acomys_cahirinus                       1
     acomys_cilicicus                       1
     acomys_dimidiatus                      1
     acomys_ignitus                         1
-    acomys_johannis                        2
+    acomys_johannis                        3
     acomys_minous                          1
     acomys_nesiotes                        1
     acomys_percivali                       1
-    acomys_russatus                        1
+    acomys_russatus                        2
     acomys_spinosissimus                   1
     acomys_wilsoni                         1
     aconaemys_fuscus                       0
     aconaemys_porteri                      0
     aconaemys_sagei                        0
-    acrobates_pygmaeus                     1
+    acrobates_pygmaeus                     2
     addax_nasomaculatus                    0
     aegialomys_galapagoensis               1
     aegialomys_xanthaeolus                 1
@@ -46,39 +46,39 @@ BEGIN DATA;
     ailuropoda_melanoleuca                 1
     ailurops_ursinus                       0
     ailurus_fulgens                        1
-    akodon_aerosus                         1
-    akodon_affinis                         1
-    akodon_albiventer                      1
-    akodon_azarae                          1
-    akodon_boliviensis                     1
-    akodon_budini                          1
-    akodon_cursor                          1
-    akodon_dayi                            1
-    akodon_dolores                         1
-    akodon_fumeus                          1
-    akodon_iniscatus                       1
-    akodon_juninensis                      1
-    akodon_kofordi                         1
-    akodon_lindberghi                      1
-    akodon_lutescens                       1
-    akodon_mimus                           1
-    akodon_molinae                         1
-    akodon_mollis                          1
-    akodon_montensis                       1
-    akodon_mystax                          1
-    akodon_orophilus                       1
-    akodon_paranaensis                     1
-    akodon_philipmyersi                    1
-    akodon_reigi                           1
-    akodon_serrensis                       1
-    akodon_siberiae                        1
-    akodon_simulator                       1
-    akodon_spegazzinii                     1
-    akodon_subfuscus                       1
-    akodon_sylvanus                        1
-    akodon_toba                            1
-    akodon_torques                         1
-    akodon_varius                          1
+    akodon_aerosus                         2
+    akodon_affinis                         2
+    akodon_albiventer                      2
+    akodon_azarae                          2
+    akodon_boliviensis                     2
+    akodon_budini                          2
+    akodon_cursor                          2
+    akodon_dayi                            2
+    akodon_dolores                         2
+    akodon_fumeus                          2
+    akodon_iniscatus                       2
+    akodon_juninensis                      2
+    akodon_kofordi                         2
+    akodon_lindberghi                      2
+    akodon_lutescens                       2
+    akodon_mimus                           2
+    akodon_molinae                         2
+    akodon_mollis                          2
+    akodon_montensis                       2
+    akodon_mystax                          2
+    akodon_orophilus                       2
+    akodon_paranaensis                     2
+    akodon_philipmyersi                    2
+    akodon_reigi                           2
+    akodon_serrensis                       2
+    akodon_siberiae                        2
+    akodon_simulator                       2
+    akodon_spegazzinii                     2
+    akodon_subfuscus                       2
+    akodon_sylvanus                        2
+    akodon_toba                            2
+    akodon_torques                         2
+    akodon_varius                          2
     alcelaphus_buselaphus                  0
     alces_alces                            0
     alionycteris_paucidentata              0
@@ -89,10 +89,10 @@ BEGIN DATA;
     allactaga_firouzi                      1
     allactaga_hotsoni                      1
     allactaga_major                        1
-    allactaga_sibirica                     1
+    allactaga_sibirica                     2
     allactaga_williamsi                    0
     allactodipus_bobrinskii                1
-    allenopithecus_nigroviridis            1
+    allenopithecus_nigroviridis            2
     allocebus_trichotis                    0
     allocricetulus_eversmanni              1
     alouatta_belzebul                      0
@@ -113,18 +113,18 @@ BEGIN DATA;
     alticola_semicanus                     0
     alticola_strelzowi                     0
     alticola_tuvinicus                     0
-    amblysomus_corriae                     2
-    amblysomus_hottentotus                 2
-    amblysomus_marleyi                     2
-    amblysomus_robustus                    2
-    amblysomus_septentrionalis             2
+    amblysomus_corriae                     3
+    amblysomus_hottentotus                 3
+    amblysomus_marleyi                     3
+    amblysomus_robustus                    3
+    amblysomus_septentrionalis             3
     ametrida_centurio                      0
     ammospermophilus_harrisii              1
     ammospermophilus_interpres             1
     ammospermophilus_leucurus              1
     ammotragus_lervia                      0
     amphinectomys_savamis                  1
-    anathana_ellioti                       1
+    anathana_ellioti                       2
     andalgalomys_pearsoni                  1
     andinomys_edax                         0
     anisomys_imitator                      0
@@ -132,23 +132,23 @@ BEGIN DATA;
     anoura_cultrata                        1
     anoura_geoffroyi                       1
     anoura_latidens                        1
-    anourosorex_squamipes                  2
-    anourosorex_yamashinai                 1
-    antechinomys_laniger                   2
-    antechinus_agilis                      1
-    antechinus_bellus                      2
-    antechinus_flavipes                    2
-    antechinus_godmani                     2
-    antechinus_leo                         2
-    antechinus_minimus                     2
-    antechinus_stuartii                    2
-    antechinus_swainsonii                  2
-    anthops_ornatus                        2
+    anourosorex_squamipes                  3
+    anourosorex_yamashinai                 2
+    antechinomys_laniger                   3
+    antechinus_agilis                      2
+    antechinus_bellus                      3
+    antechinus_flavipes                    3
+    antechinus_godmani                     3
+    antechinus_leo                         3
+    antechinus_minimus                     3
+    antechinus_stuartii                    3
+    antechinus_swainsonii                  3
+    anthops_ornatus                        3
     antidorcas_marsupialis                 0
     antilocapra_americana                  0
     antilope_cervicapra                    0
-    antrozous_pallidus                     2
-    aonyx_capensis                         2
+    antrozous_pallidus                     3
+    aonyx_capensis                         3
     aotus_brumbacki                        1
     aotus_griseimembra                     1
     aotus_lemurinus                        1
@@ -183,21 +183,21 @@ BEGIN DATA;
     apomys_sacobianus                      1
     aproteles_bulmerae                     0
     arabitragus_jayakari                   0
-    archboldomys_luzonensis                2
-    arctictis_binturong                    1
-    arctocebus_aureus                      1
-    arctocebus_calabarensis                1
-    arctocephalus_australis                2
-    arctocephalus_forsteri                 2
-    arctocephalus_gazella                  2
-    arctocephalus_pusillus                 2
-    arctocephalus_townsendi                2
-    arctocephalus_tropicalis               2
-    arctogalidia_trivirgata                1
-    arctonyx_collaris                      1
+    archboldomys_luzonensis                3
+    arctictis_binturong                    2
+    arctocebus_aureus                      2
+    arctocebus_calabarensis                2
+    arctocephalus_australis                3
+    arctocephalus_forsteri                 3
+    arctocephalus_gazella                  3
+    arctocephalus_pusillus                 3
+    arctocephalus_townsendi                3
+    arctocephalus_tropicalis               3
+    arctogalidia_trivirgata                2
+    arctonyx_collaris                      2
     ardops_nichollsi                       0
-    arielulus_aureocollaris                2
-    arielulus_cuprosus                     2
+    arielulus_aureocollaris                3
+    arielulus_cuprosus                     3
     ariteus_flavescens                     1
     artibeus_amplus                        1
     artibeus_concolor                      1
@@ -215,25 +215,25 @@ BEGIN DATA;
     arvicola_amphibius                     0
     arvicola_sapidus                       0
     arvicola_scherman                      0
-    asellia_tridens                        2
-    aselliscus_stoliczkanus                2
-    aselliscus_tricuspidatus               2
-    atelerix_albiventris                   1
-    atelerix_algirus                       1
-    atelerix_frontalis                     1
+    asellia_tridens                        3
+    aselliscus_stoliczkanus                3
+    aselliscus_tricuspidatus               3
+    atelerix_albiventris                   2
+    atelerix_algirus                       2
+    atelerix_frontalis                     2
     ateles_belzebuth                       1
     ateles_fusciceps                       1
     ateles_geoffroyi                       1
     ateles_hybridus                        1
     ateles_paniscus                        1
-    atelocynus_microtis                    1
+    atelocynus_microtis                    2
     atherurus_africanus                    0
     atherurus_macrourus                    0
-    atilax_paludinosus                     2
+    atilax_paludinosus                     3
     atlantoxerus_getulus                   0
-    auliscomys_boliviensis                 1
-    auliscomys_pictus                      1
-    auliscomys_sublimis                    1
+    auliscomys_boliviensis                 2
+    auliscomys_pictus                      2
+    auliscomys_sublimis                    2
     avahi_cleesei                          0
     avahi_laniger                          0
     avahi_occidentalis                     0
@@ -245,23 +245,23 @@ BEGIN DATA;
     babyrousa_celebensis                   1
     baiomys_musculus                       1
     baiomys_taylori                        1
-    balaena_mysticetus                     2
-    balaenoptera_acutorostrata             2
-    balaenoptera_bonaerensis               2
-    balaenoptera_borealis                  2
-    balaenoptera_edeni                     2
-    balaenoptera_musculus                  2
-    balaenoptera_omurai                    2
-    balaenoptera_physalus                  2
-    balantiopteryx_infusca                 2
-    balantiopteryx_io                      2
-    balantiopteryx_plicata                 2
+    balaena_mysticetus                     3
+    balaenoptera_acutorostrata             3
+    balaenoptera_bonaerensis               3
+    balaenoptera_borealis                  3
+    balaenoptera_edeni                     3
+    balaenoptera_musculus                  3
+    balaenoptera_omurai                    3
+    balaenoptera_physalus                  3
+    balantiopteryx_infusca                 3
+    balantiopteryx_io                      3
+    balantiopteryx_plicata                 3
     balionycteris_maculata                 0
     bandicota_bengalensis                  1
     bandicota_indica                       1
     bandicota_savilei                      1
-    barbastella_barbastellus               2
-    barbastella_leucomelas                 2
+    barbastella_barbastellus               3
+    barbastella_leucomelas                 3
     bassaricyon_alleni                     1
     bassaricyon_gabbii                     1
     bassariscus_astutus                    1
@@ -270,12 +270,12 @@ BEGIN DATA;
     bathyergus_suillus                     0
     batomys_granti                         0
     batomys_salomonseni                    0
-    bdeogale_crassicauda                   2
-    bdeogale_nigripes                      2
+    bdeogale_crassicauda                   3
+    bdeogale_nigripes                      3
     beamys_hindei                          0
     beatragus_hunteri                      0
     belomys_pearsonii                      0
-    berardius_bairdii                      2
+    berardius_bairdii                      3
     berylmys_berdmorei                     1
     berylmys_bowersi                       1
     bettongia_gaimardi                     0
@@ -284,13 +284,13 @@ BEGIN DATA;
     bettongia_tropica                      1
     blanfordimys_afghanus                  0
     blanfordimys_bucharensis               0
-    blarina_brevicauda                     1
-    blarina_carolinensis                   1
-    blarina_hylophaga                      1
-    blarinella_griselda                    1
-    blarinella_quadraticauda               1
-    blarinella_wardi                       1
-    blarinomys_breviceps                   2
+    blarina_brevicauda                     2
+    blarina_carolinensis                   2
+    blarina_hylophaga                      2
+    blarinella_griselda                    2
+    blarinella_quadraticauda               2
+    blarinella_wardi                       2
+    blarinomys_breviceps                   3
     blastocerus_dichotomus                 0
     bos_gaurus                             0
     bos_javanicus                          0
@@ -311,7 +311,7 @@ BEGIN DATA;
     bradypus_torquatus                     0
     bradypus_tridactylus                   0
     bradypus_variegatus                    0
-    brucepattersonius_iheringi             1
+    brucepattersonius_iheringi             2
     bubalus_depressicornis                 0
     bubalus_mindorensis                    0
     bubalus_quarlesi                       0
@@ -320,29 +320,29 @@ BEGIN DATA;
     bullimus_gamay                         1
     bullimus_luzonicus                     1
     bunolagus_monticularis                 0
-    bunomys_andrewsi                       1
-    bunomys_chrysocomus                    1
-    bunomys_penitus                        1
+    bunomys_andrewsi                       2
+    bunomys_chrysocomus                    2
+    bunomys_penitus                        2
     burramys_parvus                        1
-    cabassous_centralis                    2
-    cabassous_chacoensis                   2
-    cabassous_tatouay                      2
-    cabassous_unicinctus                   2
+    cabassous_centralis                    3
+    cabassous_chacoensis                   3
+    cabassous_tatouay                      3
+    cabassous_unicinctus                   3
     cacajao_calvus                         1
     cacajao_hosomi                         1
-    caenolestes_caniventer                 1
-    caenolestes_fuliginosus                1
-    caenolestes_sangay                     1
-    calcochloris_obtusirostris             2
+    caenolestes_caniventer                 2
+    caenolestes_fuliginosus                2
+    caenolestes_sangay                     2
+    calcochloris_obtusirostris             3
     callicebus_personatus                  1
-    callimico_goeldii                      1
+    callimico_goeldii                      2
     callistomys_pictus                     0
     callithrix_aurita                      1
     callithrix_geoffroyi                   1
     callithrix_jacchus                     1
     callithrix_kuhlii                      1
     callithrix_penicillata                 1
-    callorhinus_ursinus                    2
+    callorhinus_ursinus                    3
     callosciurus_caniceps                  1
     callosciurus_erythraeus                1
     callosciurus_finlaysonii               1
@@ -371,16 +371,16 @@ BEGIN DATA;
     caluromys_lanatus                      1
     caluromys_philander                    1
     caluromysiops_irrupta                  1
-    calyptophractus_retusus                2
+    calyptophractus_retusus                3
     camelus_dromedarius                    0
     camelus_ferus                          0
-    canis_aureus                           1
-    canis_latrans                          1
-    canis_lupus                            2
-    canis_rufus                            2
-    canis_simensis                         2
+    canis_aureus                           2
+    canis_latrans                          2
+    canis_lupus                            3
+    canis_rufus                            3
+    canis_simensis                         3
     cannomys_badius                        0
-    caperea_marginata                      2
+    caperea_marginata                      3
     capra_aegagrus                         0
     capra_caucasica                        0
     capra_cylindricornis                   0
@@ -395,25 +395,25 @@ BEGIN DATA;
     capricornis_sumatraensis               0
     capricornis_swinhoei                   0
     caprolagus_hispidus                    0
-    capromys_pilorides                     1
-    caracal_caracal                        2
+    capromys_pilorides                     2
+    caracal_caracal                        3
     cardiocranius_paradoxus                0
-    cardioderma_cor                        2
+    cardioderma_cor                        3
     carollia_brevicauda                    0
     carollia_castanea                      0
     carollia_manu                          0
     carollia_perspicillata                 0
     carollia_sowelli                       1
     carollia_subrufa                       0
-    carpitalpa_arendsi                     2
+    carpitalpa_arendsi                     3
     carpomys_phaeurus                      1
     carterodon_sulcidens                   0
     casinycteris_argynnis                  0
     castor_canadensis                      0
     castor_fiber                           0
     catagonus_wagneri                      0
-    catopuma_badia                         2
-    catopuma_temminckii                    2
+    catopuma_badia                         3
+    catopuma_temminckii                    3
     cavia_aperea                           0
     cavia_fulgida                          0
     cavia_magna                            0
@@ -421,8 +421,8 @@ BEGIN DATA;
     cebus_albifrons                        1
     cebus_capucinus                        1
     cebus_kaapori                          1
-    centronycteris_centralis               2
-    centronycteris_maximiliani             2
+    centronycteris_centralis               3
+    centronycteris_maximiliani             3
     centurio_senex                         0
     cephalophus_adersi                     1
     cephalophus_callipygus                 1
@@ -439,9 +439,9 @@ BEGIN DATA;
     cephalophus_spadix                     1
     cephalophus_weynsi                     1
     cephalophus_zebra                      1
-    cephalorhynchus_commersonii            2
-    cephalorhynchus_eutropia               2
-    cephalorhynchus_heavisidii             2
+    cephalorhynchus_commersonii            3
+    cephalorhynchus_eutropia               3
+    cephalorhynchus_heavisidii             3
     ceratotherium_simum                    0
     cercartetus_caudatus                   1
     cercartetus_concinnus                  1
@@ -462,15 +462,15 @@ BEGIN DATA;
     cercopithecus_mona                     1
     cercopithecus_neglectus                1
     cercopithecus_roloway                  1
-    cerdocyon_thous                        2
+    cerdocyon_thous                        3
     cerradomys_scotti                      1
     cerradomys_subflavus                   1
     cervus_albirostris                     0
     cervus_elaphus                         0
     cervus_nippon                          0
-    chaerephon_jobimena                    2
-    chaerephon_plicatus                    2
-    chaerephon_pumilus                     2
+    chaerephon_jobimena                    3
+    chaerephon_plicatus                    3
+    chaerephon_pumilus                     3
     chaetodipus_arenarius                  1
     chaetodipus_artus                      1
     chaetodipus_baileyi                    1
@@ -487,12 +487,12 @@ BEGIN DATA;
     chaetodipus_rudinoris                  0
     chaetodipus_spinatus                   1
     chaetomys_subspinosus                  0
-    chaetophractus_vellerosus              1
-    chaetophractus_villosus                1
-    chalinolobus_gouldii                   2
-    chalinolobus_morio                     2
-    chalinolobus_nigrogriseus              2
-    chalinolobus_tuberculatus              2
+    chaetophractus_vellerosus              2
+    chaetophractus_villosus                2
+    chalinolobus_gouldii                   3
+    chalinolobus_morio                     3
+    chalinolobus_nigrogriseus              3
+    chalinolobus_tuberculatus              3
     cheirogaleus_crossleyi                 1
     cheirogaleus_major                     1
     cheirogaleus_medius                    1
@@ -500,11 +500,11 @@ BEGIN DATA;
     chelemys_macronyx                      1
     chelemys_megalonyx                     1
     chilomys_instans                       0
-    chilonatalus_micropus                  2
-    chilonatalus_tumidifrons               2
-    chimarrogale_himalayica                2
-    chimarrogale_phaeura                   2
-    chimarrogale_styani                    2
+    chilonatalus_micropus                  3
+    chilonatalus_tumidifrons               3
+    chimarrogale_himalayica                3
+    chimarrogale_phaeura                   3
+    chimarrogale_styani                    3
     chinchilla_lanigera                    0
     chinchillula_sahamae                   0
     chionomys_gud                          0
@@ -517,47 +517,47 @@ BEGIN DATA;
     chiroderma_villosum                    0
     chiromyscus_chiropus                   1
     chironax_melanocephalus                0
-    chironectes_minimus                    1
+    chironectes_minimus                    2
     chiropodomys_gliroides                 0
     chiropotes_albinasus                   1
     chiropotes_chiropotes                  1
     chiropotes_satanas                     1
     chiropotes_utahickae                   0
     chiruromys_vates                       0
-    chlamyphorus_truncatus                 2
+    chlamyphorus_truncatus                 3
     chlorocebus_aethiops                   1
     chlorocebus_cynosuros                  1
     chlorocebus_djamdjamensis              1
     chlorocebus_pygerythrus                1
     chlorocebus_sabaeus                    1
     chlorocebus_tantalus                   1
-    chlorotalpa_duthieae                   2
-    chlorotalpa_sclateri                   2
-    chodsigoa_caovansunga                  2
-    chodsigoa_hypsibia                     2
-    chodsigoa_parca                        2
-    chodsigoa_sodalis                      2
+    chlorotalpa_duthieae                   3
+    chlorotalpa_sclateri                   3
+    chodsigoa_caovansunga                  3
+    chodsigoa_hypsibia                     3
+    chodsigoa_parca                        3
+    chodsigoa_sodalis                      3
     choeronycteris_mexicana                1
     choloepus_didactylus                   0
     choloepus_hoffmanni                    0
-    chrotogale_owstoni                     1
+    chrotogale_owstoni                     2
     chrotomys_gonzalesi                    1
     chrotomys_mindorensis                  1
     chrotomys_sibuyanensis                 1
-    chrotomys_silaceus                     2
+    chrotomys_silaceus                     3
     chrotomys_whiteheadi                   1
-    chrotopterus_auritus                   1
-    chrysochloris_asiatica                 2
-    chrysochloris_stuhlmanni               2
-    chrysocyon_brachyurus                  1
-    chrysospalax_trevelyani                2
-    chrysospalax_villosus                  2
-    cistugo_lesueuri                       2
-    cistugo_seabrae                        2
-    civettictis_civetta                    1
-    cloeotis_percivali                     2
+    chrotopterus_auritus                   2
+    chrysochloris_asiatica                 3
+    chrysochloris_stuhlmanni               3
+    chrysocyon_brachyurus                  2
+    chrysospalax_trevelyani                3
+    chrysospalax_villosus                  3
+    cistugo_lesueuri                       3
+    cistugo_seabrae                        3
+    civettictis_civetta                    2
+    cloeotis_percivali                     3
     clyomys_laticeps                       0
-    coelops_frithii                        2
+    coelops_frithii                        3
     coendou_bicolor                        0
     coendou_ichillus                       0
     coendou_insidiosus                     0
@@ -567,23 +567,23 @@ BEGIN DATA;
     coendou_quichua                        0
     coendou_rufescens                      1
     coendou_spinosus                       0
-    coleura_afra                           2
-    coleura_seychellensis                  2
+    coleura_afra                           3
+    coleura_seychellensis                  3
     colobus_angolensis                     0
     colobus_guereza                        0
     colobus_polykomos                      0
     colobus_vellerosus                     0
-    colomys_goslingi                       1
-    condylura_cristata                     2
-    congosorex_phillipsorum                2
+    colomys_goslingi                       2
+    condylura_cristata                     3
+    congosorex_phillipsorum                3
     conilurus_penicillatus                 1
     connochaetes_gnou                      0
     connochaetes_taurinus                  0
-    cormura_brevirostris                   2
-    corynorhinus_mexicanus                 2
-    corynorhinus_rafinesquii               2
-    corynorhinus_townsendii                2
-    craseonycteris_thonglongyai            2
+    cormura_brevirostris                   3
+    corynorhinus_mexicanus                 3
+    corynorhinus_rafinesquii               3
+    corynorhinus_townsendii                3
+    craseonycteris_thonglongyai            3
     crateromys_heaneyi                     0
     cratogeomys_castanops                  0
     cratogeomys_fulvescens                 0
@@ -600,115 +600,115 @@ BEGIN DATA;
     cricetulus_migratorius                 0
     cricetulus_sokolovi                    0
     cricetus_cricetus                      1
-    crocidura_aleksandrisi                 2
-    crocidura_attenuata                    2
-    crocidura_baileyi                      2
-    crocidura_batesi                       2
-    crocidura_beatus                       2
-    crocidura_beccarii                     2
-    crocidura_brunnea                      2
-    crocidura_buettikoferi                 2
-    crocidura_canariensis                  2
-    crocidura_caspica                      2
-    crocidura_crenata                      2
-    crocidura_crossei                      2
-    crocidura_cyanea                       2
-    crocidura_douceti                      2
-    crocidura_dsinezumi                    2
-    crocidura_flavescens                   2
-    crocidura_foetida                      2
-    crocidura_fuliginosa                   2
-    crocidura_fulvastra                    2
-    crocidura_fumosa                       2
-    crocidura_fuscomurina                  2
-    crocidura_glassi                       2
-    crocidura_goliath                      2
-    crocidura_grandiceps                   2
-    crocidura_grassei                      2
-    crocidura_grayi                        2
-    crocidura_hikmiya                      2
-    crocidura_hildegardeae                 2
-    crocidura_hirta                        2
-    crocidura_horsfieldii                  2
-    crocidura_indochinensis                2
-    crocidura_jouvenetae                   2
-    crocidura_lamottei                     2
-    crocidura_lasiura                      2
-    crocidura_lepidura                     2
-    crocidura_leucodon                     2
-    crocidura_levicula                     2
-    crocidura_luna                         2
-    crocidura_lusitania                    2
-    crocidura_macmillani                   2
-    crocidura_malayana                     2
-    crocidura_mariquensis                  2
-    crocidura_maxi                         2
-    crocidura_mindorus                     2
-    crocidura_miya                         2
-    crocidura_monax                        2
-    crocidura_monticola                    2
-    crocidura_muricauda                    2
-    crocidura_musseri                      2
-    crocidura_nanilla                      2
-    crocidura_negligens                    2
-    crocidura_negrina                      2
-    crocidura_nigripes                     2
-    crocidura_nimbae                       2
-    crocidura_obscurior                    2
-    crocidura_olivieri                     2
-    crocidura_orientalis                   2
-    crocidura_orii                         2
-    crocidura_palawanensis                 2
-    crocidura_paradoxura                   2
-    crocidura_parvipes                     2
-    crocidura_phanluongi                   2
-    crocidura_phuquocensis                 2
-    crocidura_poensis                      2
-    crocidura_rhoditis                     2
-    crocidura_roosevelti                   2
-    crocidura_russula                      2
-    crocidura_shantungensis                2
-    crocidura_sibirica                     2
-    crocidura_sicula                       2
-    crocidura_silacea                      2
-    crocidura_sokolovi                     2
-    crocidura_somalica                     2
-    crocidura_suaveolens                   2
-    crocidura_tanakae                      2
-    crocidura_tansaniana                   2
-    crocidura_tarfayensis                  2
-    crocidura_theresae                     2
-    crocidura_usambarae                    2
-    crocidura_viaria                       2
-    crocidura_watasei                      2
-    crocidura_wimmeri                      2
-    crocidura_wuchihensis                  2
-    crocidura_zaitsevi                     2
-    crocidura_zarudnyi                     2
-    crocidura_zimmermanni                  2
-    crocuta_crocuta                        2
-    crossarchus_alexandri                  1
-    crossarchus_obscurus                   1
-    crossarchus_platycephalus              2
-    crossomys_moncktoni                    2
-    crunomys_celebensis                    2
-    crunomys_melanius                      1
-    crunomys_suncoides                     2
-    cryptochloris_wintoni                  2
+    crocidura_aleksandrisi                 3
+    crocidura_attenuata                    3
+    crocidura_baileyi                      3
+    crocidura_batesi                       3
+    crocidura_beatus                       3
+    crocidura_beccarii                     3
+    crocidura_brunnea                      3
+    crocidura_buettikoferi                 3
+    crocidura_canariensis                  3
+    crocidura_caspica                      3
+    crocidura_crenata                      3
+    crocidura_crossei                      3
+    crocidura_cyanea                       3
+    crocidura_douceti                      3
+    crocidura_dsinezumi                    3
+    crocidura_flavescens                   3
+    crocidura_foetida                      3
+    crocidura_fuliginosa                   3
+    crocidura_fulvastra                    3
+    crocidura_fumosa                       3
+    crocidura_fuscomurina                  3
+    crocidura_glassi                       3
+    crocidura_goliath                      3
+    crocidura_grandiceps                   3
+    crocidura_grassei                      3
+    crocidura_grayi                        3
+    crocidura_hikmiya                      3
+    crocidura_hildegardeae                 3
+    crocidura_hirta                        3
+    crocidura_horsfieldii                  3
+    crocidura_indochinensis                3
+    crocidura_jouvenetae                   3
+    crocidura_lamottei                     3
+    crocidura_lasiura                      3
+    crocidura_lepidura                     3
+    crocidura_leucodon                     3
+    crocidura_levicula                     3
+    crocidura_luna                         3
+    crocidura_lusitania                    3
+    crocidura_macmillani                   3
+    crocidura_malayana                     3
+    crocidura_mariquensis                  3
+    crocidura_maxi                         3
+    crocidura_mindorus                     3
+    crocidura_miya                         3
+    crocidura_monax                        3
+    crocidura_monticola                    3
+    crocidura_muricauda                    3
+    crocidura_musseri                      3
+    crocidura_nanilla                      3
+    crocidura_negligens                    3
+    crocidura_negrina                      3
+    crocidura_nigripes                     3
+    crocidura_nimbae                       3
+    crocidura_obscurior                    3
+    crocidura_olivieri                     3
+    crocidura_orientalis                   3
+    crocidura_orii                         3
+    crocidura_palawanensis                 3
+    crocidura_paradoxura                   3
+    crocidura_parvipes                     3
+    crocidura_phanluongi                   3
+    crocidura_phuquocensis                 3
+    crocidura_poensis                      3
+    crocidura_rhoditis                     3
+    crocidura_roosevelti                   3
+    crocidura_russula                      3
+    crocidura_shantungensis                3
+    crocidura_sibirica                     3
+    crocidura_sicula                       3
+    crocidura_silacea                      3
+    crocidura_sokolovi                     3
+    crocidura_somalica                     3
+    crocidura_suaveolens                   3
+    crocidura_tanakae                      3
+    crocidura_tansaniana                   3
+    crocidura_tarfayensis                  3
+    crocidura_theresae                     3
+    crocidura_usambarae                    3
+    crocidura_viaria                       3
+    crocidura_watasei                      3
+    crocidura_wimmeri                      3
+    crocidura_wuchihensis                  3
+    crocidura_zaitsevi                     3
+    crocidura_zarudnyi                     3
+    crocidura_zimmermanni                  3
+    crocuta_crocuta                        3
+    crossarchus_alexandri                  2
+    crossarchus_obscurus                   2
+    crossarchus_platycephalus              3
+    crossomys_moncktoni                    3
+    crunomys_celebensis                    3
+    crunomys_melanius                      2
+    crunomys_suncoides                     3
+    cryptochloris_wintoni                  3
     cryptonanus_agricolai                  1
     cryptonanus_chacoensis                 1
     cryptonanus_unduaviensis               1
-    cryptoprocta_ferox                     2
-    cryptotis_alticola                     2
-    cryptotis_goldmani                     2
-    cryptotis_magna                        2
-    cryptotis_mayensis                     2
-    cryptotis_mexicana                     2
-    cryptotis_nelsoni                      2
-    cryptotis_obscura                      2
-    cryptotis_parva                        1
-    cryptotis_peregrina                    2
-    cryptotis_phillipsii                   2
+    cryptoprocta_ferox                     3
+    cryptotis_alticola                     3
+    cryptotis_goldmani                     3
+    cryptotis_magna                        3
+    cryptotis_mayensis                     3
+    cryptotis_mexicana                     3
+    cryptotis_nelsoni                      3
+    cryptotis_obscura                      3
+    cryptotis_parva                        2
+    cryptotis_peregrina                    3
+    cryptotis_phillipsii                   3
     ctenodactylus_gundi                    0
     ctenodactylus_vali                     0
     ctenomys_argentinus                    0
@@ -751,12 +751,12 @@ BEGIN DATA;
     ctenomys_tucumanus                     0
     cuniculus_paca                         0
     cuniculus_taczanowskii                 0
-    cuon_alpinus                           2
+    cuon_alpinus                           3
     cuscomys_ashaninka                     0
-    cyclopes_didactylus                    2
-    cynictis_penicillata                   2
+    cyclopes_didactylus                    3
+    cynictis_penicillata                   3
     cynocephalus_volans                    0
-    cynogale_bennettii                     1
+    cynogale_bennettii                     2
     cynomys_gunnisoni                      0
     cynomys_leucurus                       0
     cynomys_ludovicianus                   0
@@ -765,82 +765,82 @@ BEGIN DATA;
     cynopterus_brachyotis                  0
     cynopterus_horsfieldii                 0
     cynopterus_sphinx                      0
-    cystophora_cristata                    2
-    cyttarops_alecto                       2
+    cystophora_cristata                    3
+    cyttarops_alecto                       3
     dacnomys_millardi                      1
     dactylomys_boliviensis                 0
     dactylomys_dactylinus                  0
-    dactylopsila_trivirgata                1
+    dactylopsila_trivirgata                2
     dama_dama                              0
     dama_mesopotamica                      0
     damaliscus_lunatus                     0
     damaliscus_pygargus                    0
-    dasycercus_cristicauda                 2
-    dasykaluta_rosamondae                  2
+    dasycercus_cristicauda                 3
+    dasykaluta_rosamondae                  3
     dasymys_incomtus                       0
     dasymys_rufulus                        0
     dasyprocta_fuliginosa                  1
     dasyprocta_leporina                    1
     dasyprocta_punctata                    1
-    dasypus_hybridus                       2
-    dasypus_kappleri                       2
-    dasypus_novemcinctus                   2
-    dasypus_pilosus                        2
-    dasypus_sabanicola                     2
-    dasypus_septemcinctus                  2
-    dasypus_yepesi                         2
-    dasyuroides_byrnei                     2
-    dasyurus_albopunctatus                 2
-    dasyurus_geoffroii                     2
-    dasyurus_hallucatus                    1
-    dasyurus_maculatus                     2
-    dasyurus_spartacus                     2
-    dasyurus_viverrinus                    2
+    dasypus_hybridus                       3
+    dasypus_kappleri                       3
+    dasypus_novemcinctus                   3
+    dasypus_pilosus                        3
+    dasypus_sabanicola                     3
+    dasypus_septemcinctus                  3
+    dasypus_yepesi                         3
+    dasyuroides_byrnei                     3
+    dasyurus_albopunctatus                 3
+    dasyurus_geoffroii                     3
+    dasyurus_hallucatus                    2
+    dasyurus_maculatus                     3
+    dasyurus_spartacus                     3
+    dasyurus_viverrinus                    3
     daubentonia_madagascariensis           1
     delanymys_brooksi                      0
     delomys_collinus                       1
     delomys_dorsalis                       1
     delomys_sublineatus                    1
-    delphinapterus_leucas                  2
-    delphinus_capensis                     2
-    delphinus_delphis                      2
+    delphinapterus_leucas                  3
+    delphinus_capensis                     3
+    delphinus_delphis                      3
     deltamys_kempi                         1
-    dendrogale_melanura                    2
-    dendrogale_murina                      2
+    dendrogale_melanura                    3
+    dendrogale_murina                      3
     dendrohyrax_dorsalis                   0
     dendrolagus_dorianus                   0
     dendrolagus_goodfellowi                0
     dendrolagus_lumholtzi                  0
     dendrolagus_matschiei                  0
-    dendromus_insignis                     1
-    dendromus_melanotis                    1
-    dendromus_mesomelas                    1
-    dendromus_mystacalis                   1
-    dendromus_nyikae                       1
-    deomys_ferrugineus                     1
+    dendromus_insignis                     2
+    dendromus_melanotis                    2
+    dendromus_mesomelas                    2
+    dendromus_mystacalis                   2
+    dendromus_nyikae                       2
+    deomys_ferrugineus                     2
     dephomys_defua                         1
-    desmana_moschata                       2
+    desmana_moschata                       3
     desmodilliscus_braueri                 0
     desmodillus_auricularis                1
-    desmodus_rotundus                      2
+    desmodus_rotundus                      3
     desmomys_harringtoni                   1
-    diaemus_youngi                         2
+    diaemus_youngi                         3
     dicerorhinus_sumatrensis               0
     diceros_bicornis                       0
-    diclidurus_albus                       2
-    diclidurus_ingens                      2
-    diclidurus_scutatus                    2
+    diclidurus_albus                       3
+    diclidurus_ingens                      3
+    diclidurus_scutatus                    3
     dicrostonyx_groenlandicus              0
     dicrostonyx_hudsonius                  0
     dicrostonyx_richardsoni                0
     dicrostonyx_torquatus                  0
-    didelphis_albiventris                  1
-    didelphis_marsupialis                  1
-    didelphis_virginiana                   1
+    didelphis_albiventris                  2
+    didelphis_marsupialis                  2
+    didelphis_virginiana                   2
     dinaromys_bogdanovi                    0
     dinomys_branickii                      0
-    diphylla_ecaudata                      2
-    diplomesodon_pulchellum                2
+    diphylla_ecaudata                      3
+    diplomesodon_pulchellum                3
     diplomys_labilis                       0
     diplothrix_legata                      1
     dipodomys_agilis                       1
@@ -880,33 +880,33 @@ BEGIN DATA;
     dremomys_pernyi                        1
     dremomys_pyrrhomerus                   1
     dremomys_rufigenis                     1
-    dromiciops_gliroides                   2
+    dromiciops_gliroides                   3
     dryomys_laniger                        1
     dryomys_nitedula                       1
     dugong_dugon                           0
-    dusicyon_australis                     2
-    dusicyon_avus                          1
+    dusicyon_australis                     3
+    dusicyon_avus                          2
     dyacopterus_spadiceus                  1
-    dymecodon_pilirostris                  2
+    dymecodon_pilirostris                  3
     echimys_chrysurus                      0
-    echinops_telfairi                      1
-    echinosorex_gymnura                    2
-    echiothrix_centrosa                    1
-    echymipera_clara                       1
-    echymipera_kalubu                      1
-    echymipera_rufescens                   1
+    echinops_telfairi                      2
+    echinosorex_gymnura                    3
+    echiothrix_centrosa                    2
+    echymipera_clara                       2
+    echymipera_kalubu                      2
+    echymipera_rufescens                   2
     ectophylla_alba                        0
     eidolon_dupreanum                      0
     eidolon_helvum                         0
-    eira_barbara                           1
+    eira_barbara                           2
     elaphodus_cephalophus                  0
     elaphurus_davidianus                   0
-    elephantulus_brachyrhynchus            2
-    elephantulus_edwardii                  2
-    elephantulus_intufi                    2
-    elephantulus_myurus                    2
-    elephantulus_rufescens                 2
-    elephantulus_rupestris                 2
+    elephantulus_brachyrhynchus            3
+    elephantulus_edwardii                  3
+    elephantulus_intufi                    3
+    elephantulus_myurus                    3
+    elephantulus_rufescens                 3
+    elephantulus_rupestris                 3
     elephas_maximus                        0
     eligmodontia_moreni                    1
     eligmodontia_morgani                   1
@@ -926,14 +926,14 @@ BEGIN DATA;
     ellobius_fuscocapillus                 0
     ellobius_talpinus                      0
     ellobius_tancrei                       0
-    emballonura_alecto                     1
-    emballonura_beccarii                   1
-    emballonura_dianae                     1
-    emballonura_monticola                  1
-    emballonura_raffrayana                 1
-    emballonura_semicaudata                1
+    emballonura_alecto                     2
+    emballonura_beccarii                   2
+    emballonura_dianae                     2
+    emballonura_monticola                  2
+    emballonura_raffrayana                 2
+    emballonura_semicaudata                2
     enchisthenes_hartii                    1
-    enhydra_lutris                         2
+    enhydra_lutris                         3
     eoglaucomys_fimbriatus                 1
     eolagurus_luteus                       0
     eonycteris_robusta                     0
@@ -950,45 +950,45 @@ BEGIN DATA;
     eothenomys_proditor                    0
     eothenomys_wardi                       0
     eozapus_setchuanus                     0
-    episoriculus_caudatus                  2
-    episoriculus_fumidus                   2
-    episoriculus_leucops                   2
-    episoriculus_macrurus                  2
+    episoriculus_caudatus                  3
+    episoriculus_fumidus                   3
+    episoriculus_leucops                   3
+    episoriculus_macrurus                  3
     epomophorus_gambianus                  0
     epomophorus_wahlbergi                  0
     epomops_franqueti                      0
-    eptesicus_bobrinskoi                   2
-    eptesicus_bottae                       2
-    eptesicus_brasiliensis                 2
-    eptesicus_diminutus                    2
-    eptesicus_furinalis                    2
-    eptesicus_fuscus                       2
-    eptesicus_gobiensis                    2
-    eptesicus_hottentotus                  2
-    eptesicus_nilssonii                    2
+    eptesicus_bobrinskoi                   3
+    eptesicus_bottae                       3
+    eptesicus_brasiliensis                 3
+    eptesicus_diminutus                    3
+    eptesicus_furinalis                    3
+    eptesicus_fuscus                       3
+    eptesicus_gobiensis                    3
+    eptesicus_hottentotus                  3
+    eptesicus_nilssonii                    3
     equus_grevyi                           0
     equus_hemionus                         0
     equus_kiang                            0
     equus_zebra                            0
-    eremitalpa_granti                      2
+    eremitalpa_granti                      3
     eremodipus_lichtensteini               0
     eremoryzomys_polius                    1
     erethizon_dorsatum                     0
-    erignathus_barbatus                    2
-    erinaceus_amurensis                    2
-    erinaceus_concolor                     2
-    erinaceus_europaeus                    2
-    erinaceus_roumanicus                   2
+    erignathus_barbatus                    3
+    erinaceus_amurensis                    3
+    erinaceus_concolor                     3
+    erinaceus_europaeus                    3
+    erinaceus_roumanicus                   3
     erophylla_bombifrons                   1
     erophylla_sezekorni                    1
     erythrocebus_patas                     0
-    eschrichtius_robustus                  2
-    eubalaena_australis                    2
-    eubalaena_glacialis                    2
-    eubalaena_japonica                     2
-    euchoreutes_naso                       2
-    euderma_maculatum                      2
-    eudiscopus_denticulus                  2
+    eschrichtius_robustus                  3
+    eubalaena_australis                    3
+    eubalaena_glacialis                    3
+    eubalaena_japonica                     3
+    euchoreutes_naso                       3
+    euderma_maculatum                      3
+    eudiscopus_denticulus                  3
     eudorcas_rufifrons                     0
     eudorcas_thomsonii                     0
     eulemur_albifrons                      1
@@ -1001,28 +1001,28 @@ BEGIN DATA;
     eulemur_rufifrons                      0
     eulemur_rufus                          0
     eulemur_sanfordi                       0
-    eumetopias_jubatus                     2
-    eumops_auripendulus                    2
-    eumops_bonariensis                     2
-    eumops_dabbenei                        2
-    eumops_floridanus                      2
-    eumops_glaucinus                       2
-    eumops_hansae                          2
-    eumops_maurus                          2
-    eumops_patagonicus                     2
-    eumops_perotis                         2
-    eumops_underwoodi                      2
-    eumops_wilsoni                         2
+    eumetopias_jubatus                     3
+    eumops_auripendulus                    3
+    eumops_bonariensis                     3
+    eumops_dabbenei                        3
+    eumops_floridanus                      3
+    eumops_glaucinus                       3
+    eumops_hansae                          3
+    eumops_maurus                          3
+    eumops_patagonicus                     3
+    eumops_perotis                         3
+    eumops_underwoodi                      3
+    eumops_wilsoni                         3
     euneomys_chinchilloides                0
     euoticus_elegantulus                   1
     eupetaurus_cinereus                    0
-    euphractus_sexcinctus                  1
-    eupleres_goudotii                      2
-    euroscaptor_klossi                     2
-    euroscaptor_longirostris               2
-    euroscaptor_mizura                     2
-    euroscaptor_parvidens                  2
-    euroscaptor_subanura                   2
+    euphractus_sexcinctus                  2
+    eupleres_goudotii                      3
+    euroscaptor_klossi                     3
+    euroscaptor_longirostris               3
+    euroscaptor_mizura                     3
+    euroscaptor_parvidens                  3
+    euroscaptor_subanura                   3
     euryoryzomys_lamia                     1
     euryoryzomys_macconnelli               1
     euryoryzomys_nitidus                   1
@@ -1030,14 +1030,14 @@ BEGIN DATA;
     euryzygomatomys_spinosus               0
     exilisciurus_concinnus                 1
     exilisciurus_exilis                    1
-    falsistrellus_petersi                  2
-    felis_chaus                            2
-    felis_margarita                        2
-    felis_nigripes                         2
-    felis_silvestris                       2
-    feresa_attenuata                       2
-    feroculus_feroculus                    2
-    fossa_fossana                          1
+    falsistrellus_petersi                  3
+    felis_chaus                            3
+    felis_margarita                        3
+    felis_nigripes                         3
+    felis_silvestris                       3
+    feresa_attenuata                       3
+    feroculus_feroculus                    3
+    fossa_fossana                          2
     fukomys_anselli                        1
     fukomys_bocagei                        0
     fukomys_damarensis                     0
@@ -1049,25 +1049,25 @@ BEGIN DATA;
     funambulus_palmarum                    1
     funambulus_pennantii                   1
     funambulus_sublineatus                 1
-    furipterus_horrens                     2
+    furipterus_horrens                     3
     galago_matschiei                       1
     galago_moholi                          1
     galago_senegalensis                    1
-    galagoides_cocos                       1
-    galagoides_demidoff                    1
-    galagoides_granti                      1
+    galagoides_cocos                       2
+    galagoides_demidoff                    2
+    galagoides_granti                      2
     galagoides_orinus                      1
-    galagoides_rondoensis                  1
-    galagoides_thomasi                     1
+    galagoides_rondoensis                  2
+    galagoides_thomasi                     2
     galea_musteloides                      0
     galea_spixii                           0
-    galemys_pyrenaicus                     2
+    galemys_pyrenaicus                     3
     galenomys_garleppi                     0
     galeopterus_variegatus                 0
-    galictis_cuja                          1
-    galictis_vittata                       1
-    galidia_elegans                        1
-    galidictis_fasciata                    2
+    galictis_cuja                          2
+    galictis_vittata                       2
+    galidia_elegans                        2
+    galidictis_fasciata                    3
     gazella_bennettii                      0
     gazella_cuvieri                        0
     gazella_dorcas                         0
@@ -1077,21 +1077,21 @@ BEGIN DATA;
     gazella_saudiya                        0
     gazella_spekei                         0
     gazella_subgutturosa                   0
-    genetta_angolensis                     2
-    genetta_bourloni                       2
-    genetta_cristata                       2
-    genetta_genetta                        2
-    genetta_johnstoni                      2
-    genetta_maculata                       2
-    genetta_pardina                        1
-    genetta_poensis                        1
-    genetta_servalina                      2
-    genetta_thierryi                       2
-    genetta_tigrina                        2
-    genetta_victoriae                      2
+    genetta_angolensis                     3
+    genetta_bourloni                       3
+    genetta_cristata                       3
+    genetta_genetta                        3
+    genetta_johnstoni                      3
+    genetta_maculata                       3
+    genetta_pardina                        2
+    genetta_poensis                        2
+    genetta_servalina                      3
+    genetta_thierryi                       3
+    genetta_tigrina                        3
+    genetta_victoriae                      3
     geocapromys_brownii                    0
     geocapromys_ingrahami                  0
-    geogale_aurita                         2
+    geogale_aurita                         3
     geomys_arenarius                       0
     geomys_attwateri                       0
     geomys_breviceps                       0
@@ -1101,7 +1101,7 @@ BEGIN DATA;
     geomys_texensis                        0
     geomys_tropicalis                      0
     georychus_capensis                     0
-    geoxus_valdivianus                     2
+    geoxus_valdivianus                     3
     gerbilliscus_afra                      1
     gerbilliscus_brantsii                  1
     gerbilliscus_guineae                   1
@@ -1133,53 +1133,53 @@ BEGIN DATA;
     giraffa_camelopardalis                 0
     glaucomys_sabrinus                     0
     glaucomys_volans                       0
-    glauconycteris_argentata               2
-    glauconycteris_beatrix                 2
-    glauconycteris_egeria                  2
-    glauconycteris_poensis                 2
-    glauconycteris_variegata               2
-    glironia_venusta                       1
-    glirulus_japonicus                     1
+    glauconycteris_argentata               3
+    glauconycteris_beatrix                 3
+    glauconycteris_egeria                  3
+    glauconycteris_poensis                 3
+    glauconycteris_variegata               3
+    glironia_venusta                       2
+    glirulus_japonicus                     2
     glis_glis                              0
-    glischropus_tylopus                    2
-    globicephala_macrorhynchus             2
-    globicephala_melas                     2
+    glischropus_tylopus                    3
+    globicephala_macrorhynchus             3
+    globicephala_melas                     3
     glossophaga_commissarisi               1
     glossophaga_leachii                    1
     glossophaga_longirostris               1
     glossophaga_morenoi                    1
     glossophaga_soricina                   1
-    glyphonycteris_daviesi                 1
-    glyphonycteris_sylvestris              1
+    glyphonycteris_daviesi                 2
+    glyphonycteris_sylvestris              2
     golunda_ellioti                        0
     gorilla_gorilla                        0
-    gracilinanus_aceramarcae               1
-    gracilinanus_agilis                    1
-    gracilinanus_emiliae                   1
-    gracilinanus_microtarsus               1
+    gracilinanus_aceramarcae               2
+    gracilinanus_agilis                    2
+    gracilinanus_emiliae                   2
+    gracilinanus_microtarsus               2
     grammomys_dolichurus                   1
     grammomys_ibeanus                      1
     grammomys_macmillani                   1
-    grampus_griseus                        2
+    grampus_griseus                        3
     graomys_centralis                      0
     graomys_domorum                        0
     graomys_griseoflavus                   0
-    graphiurus_kelleni                     1
-    graphiurus_lorraineus                  1
-    graphiurus_microtis                    1
-    graphiurus_murinus                     1
-    graphiurus_ocularis                    1
-    graphiurus_platyops                    1
-    gulo_gulo                              2
-    gymnobelideus_leadbeateri              1
+    graphiurus_kelleni                     2
+    graphiurus_lorraineus                  2
+    graphiurus_microtis                    2
+    graphiurus_murinus                     2
+    graphiurus_ocularis                    2
+    graphiurus_platyops                    2
+    gulo_gulo                              3
+    gymnobelideus_leadbeateri              2
     gymnuromys_roberti                     1
-    habromys_chinanteco                    1
+    habromys_chinanteco                    2
     habromys_delicatulus                   1
     habromys_ixtlani                       1
-    habromys_lepturus                      1
-    habromys_lophurus                      1
-    habromys_simulatus                     1
-    halichoerus_grypus                     2
+    habromys_lepturus                      2
+    habromys_lophurus                      2
+    habromys_simulatus                     2
+    halichoerus_grypus                     3
     handleyomys_alfaroi                    1
     handleyomys_chapmani                   1
     handleyomys_melanotis                  1
@@ -1189,32 +1189,32 @@ BEGIN DATA;
     hapalemur_griseus                      0
     hapalomys_delacouri                    0
     haplonycteris_fischeri                 0
-    harpiocephalus_harpia                  2
-    harpiola_isodon                        2
+    harpiocephalus_harpia                  3
+    harpiola_isodon                        3
     harpyionycteris_celebensis             0
     harpyionycteris_whiteheadi             0
     heimyscus_fumosus                      1
-    helarctos_malayanus                    1
+    helarctos_malayanus                    2
     heliophobius_argenteocinereus          0
     heliosciurus_ruwenzorii                1
     heliosciurus_undulatus                 1
-    helogale_hirtula                       1
-    helogale_parvula                       1
+    helogale_hirtula                       2
+    helogale_parvula                       2
     hemibelideus_lemuroides                0
-    hemicentetes_semispinosus              2
-    hemiechinus_auritus                    1
-    hemigalus_derbyanus                    2
+    hemicentetes_semispinosus              3
+    hemiechinus_auritus                    2
+    hemigalus_derbyanus                    3
     hemitragus_jemlahicus                  0
-    herpestes_auropunctatus                1
-    herpestes_brachyurus                   1
-    herpestes_edwardsii                    1
+    herpestes_auropunctatus                2
+    herpestes_brachyurus                   2
+    herpestes_edwardsii                    2
     herpestes_fuscus                       1
-    herpestes_ichneumon                    1
-    herpestes_javanicus                    1
-    herpestes_naso                         1
-    herpestes_urva                         1
-    hesperoptenus_blanfordi                2
-    hesperoptenus_tomesi                   2
+    herpestes_ichneumon                    2
+    herpestes_javanicus                    2
+    herpestes_naso                         2
+    herpestes_urva                         2
+    hesperoptenus_blanfordi                3
+    hesperoptenus_tomesi                   3
     heterocephalus_glaber                  0
     heterohyrax_brucei                     0
     heteromys_anomalus                     0
@@ -1226,45 +1226,45 @@ BEGIN DATA;
     hippocamelus_antisensis                0
     hippocamelus_bisulcus                  0
     hippopotamus_amphibius                 0
-    hipposideros_abae                      2
-    hipposideros_armiger                   2
-    hipposideros_ater                      2
-    hipposideros_beatus                    2
-    hipposideros_bicolor                   2
-    hipposideros_caffer                    2
-    hipposideros_calcaratus                2
-    hipposideros_cervinus                  2
-    hipposideros_cineraceus                2
-    hipposideros_commersoni                2
-    hipposideros_coronatus                 2
-    hipposideros_coxi                      2
-    hipposideros_cyclops                   2
-    hipposideros_demissus                  2
-    hipposideros_diadema                   2
-    hipposideros_dinops                    2
-    hipposideros_doriae                    2
-    hipposideros_dyacorum                  2
-    hipposideros_fuliginosus               2
-    hipposideros_fulvus                    2
-    hipposideros_galeritus                 2
-    hipposideros_gigas                     2
-    hipposideros_halophyllus               2
-    hipposideros_jonesi                    2
-    hipposideros_khaokhouayensis           2
-    hipposideros_larvatus                  2
-    hipposideros_lekaguli                  2
-    hipposideros_lylei                     2
-    hipposideros_obscurus                  2
-    hipposideros_pelingensis               2
-    hipposideros_pomona                    2
-    hipposideros_pratti                    2
-    hipposideros_pygmaeus                  2
-    hipposideros_ridleyi                   2
-    hipposideros_rotalis                   2
-    hipposideros_ruber                     2
-    hipposideros_scutinares                2
-    hipposideros_speoris                   2
-    hipposideros_vittatus                  2
+    hipposideros_abae                      3
+    hipposideros_armiger                   3
+    hipposideros_ater                      3
+    hipposideros_beatus                    3
+    hipposideros_bicolor                   3
+    hipposideros_caffer                    3
+    hipposideros_calcaratus                3
+    hipposideros_cervinus                  3
+    hipposideros_cineraceus                3
+    hipposideros_commersoni                3
+    hipposideros_coronatus                 3
+    hipposideros_coxi                      3
+    hipposideros_cyclops                   3
+    hipposideros_demissus                  3
+    hipposideros_diadema                   3
+    hipposideros_dinops                    3
+    hipposideros_doriae                    3
+    hipposideros_dyacorum                  3
+    hipposideros_fuliginosus               3
+    hipposideros_fulvus                    3
+    hipposideros_galeritus                 3
+    hipposideros_gigas                     3
+    hipposideros_halophyllus               3
+    hipposideros_jonesi                    3
+    hipposideros_khaokhouayensis           3
+    hipposideros_larvatus                  3
+    hipposideros_lekaguli                  3
+    hipposideros_lylei                     3
+    hipposideros_obscurus                  3
+    hipposideros_pelingensis               3
+    hipposideros_pomona                    3
+    hipposideros_pratti                    3
+    hipposideros_pygmaeus                  3
+    hipposideros_ridleyi                   3
+    hipposideros_rotalis                   3
+    hipposideros_ruber                     3
+    hipposideros_scutinares                3
+    hipposideros_speoris                   3
+    hipposideros_vittatus                  3
     hippotragus_equinus                    0
     hippotragus_niger                      0
     hodomys_alleni                         1
@@ -1275,13 +1275,13 @@ BEGIN DATA;
     hoolock_hoolock                        1
     hoolock_leuconedys                     1
     hoplomys_gymnurus                      1
-    hyaena_hyaena                          1
+    hyaena_hyaena                          2
     hybomys_univittatus                    1
-    hydrictis_maculicollis                 2
+    hydrictis_maculicollis                 3
     hydrochoerus_hydrochaeris              0
-    hydromys_chrysogaster                  2
+    hydromys_chrysogaster                  3
     hydropotes_inermis                     0
-    hydrurga_leptonyx                      2
+    hydrurga_leptonyx                      3
     hyemoschus_aquaticus                   0
     hyladelphys_kalinowskii                1
     hylaeamys_acritus                      1
@@ -1296,9 +1296,9 @@ BEGIN DATA;
     hylobates_muelleri                     1
     hylobates_pileatus                     1
     hylochoerus_meinertzhageni             0
-    hylomys_megalotis                      1
-    hylomys_parvus                         2
-    hylomys_suillus                        2
+    hylomys_megalotis                      2
+    hylomys_parvus                         3
+    hylomys_suillus                        3
     hylomyscus_aeta                        1
     hylomyscus_alleni                      1
     hylomyscus_baeri                       1
@@ -1315,49 +1315,49 @@ BEGIN DATA;
     hylopetes_phayrei                      1
     hylopetes_spadiceus                    1
     hyomys_goliath                         0
-    hyosciurus_heinrichi                   2
-    hyperoodon_ampullatus                  2
+    hyosciurus_heinrichi                   3
+    hyperoodon_ampullatus                  3
     hypogeomys_antimena                    0
     hypsignathus_monstrosus                1
-    hypsiprymnodon_moschatus               1
-    hypsugo_savii                          2
+    hypsiprymnodon_moschatus               2
+    hypsugo_savii                          3
     hystrix_africaeaustralis               0
     hystrix_brachyura                      0
     hystrix_cristata                       0
-    ia_io                                  2
-    ichneumia_albicauda                    1
+    ia_io                                  3
+    ichneumia_albicauda                    2
     ictidomys_tridecemlineatus             1
-    ictonyx_striatus                       2
-    idionycteris_phyllotis                 2
+    ictonyx_striatus                       3
+    idionycteris_phyllotis                 3
     idiurus_macrotis                       0
-    indopacetus_pacificus                  2
+    indopacetus_pacificus                  3
     indri_indri                            0
-    inia_geoffrensis                       2
+    inia_geoffrensis                       3
     irenomys_tarsalis                      0
-    isoodon_auratus                        2
-    isoodon_macrourus                      2
-    isoodon_obesulus                       2
+    isoodon_auratus                        3
+    isoodon_macrourus                      3
+    isoodon_obesulus                       3
     isothrix_barbarabrownae                1
     isothrix_bistriata                     1
     isothrix_orinoci                       1
     isothrix_pagurus                       1
     isothrix_sinnamariensis                1
-    isthmomys_pirrensis                    1
+    isthmomys_pirrensis                    2
     jaculus_blanfordi                      0
     jaculus_jaculus                        0
     jaculus_orientalis                     0
     juliomys_pictipes                      0
     juscelinomys_huanchacae                1
     kannabateomys_amblyonyx                0
-    kerivoula_hardwickii                   2
-    kerivoula_intermedia                   2
-    kerivoula_kachinensis                  2
-    kerivoula_lenis                        2
-    kerivoula_minuta                       2
-    kerivoula_papillosa                    2
-    kerivoula_pellucida                    2
-    kerivoula_titania                      2
-    kerivoula_whiteheadi                   2
+    kerivoula_hardwickii                   3
+    kerivoula_intermedia                   3
+    kerivoula_kachinensis                  3
+    kerivoula_lenis                        3
+    kerivoula_minuta                       3
+    kerivoula_papillosa                    3
+    kerivoula_pellucida                    3
+    kerivoula_titania                      3
+    kerivoula_whiteheadi                   3
     kerodon_acrobata                       0
     kerodon_rupestris                      0
     kobus_ellipsiprymnus                   0
@@ -1365,19 +1365,19 @@ BEGIN DATA;
     kobus_leche                            0
     kobus_megaceros                        0
     kobus_vardonii                         0
-    kogia_breviceps                        2
-    kogia_sima                             2
+    kogia_breviceps                        3
+    kogia_sima                             3
     kunsia_tomentosus                      0
-    laephotis_botswanae                    2
-    laephotis_namibensis                   2
-    laephotis_wintoni                      2
-    lagenodelphis_hosei                    2
-    lagenorhynchus_acutus                  2
-    lagenorhynchus_albirostris             2
-    lagenorhynchus_australis               2
-    lagenorhynchus_cruciger                2
-    lagenorhynchus_obliquidens             2
-    lagenorhynchus_obscurus                2
+    laephotis_botswanae                    3
+    laephotis_namibensis                   3
+    laephotis_wintoni                      3
+    lagenodelphis_hosei                    3
+    lagenorhynchus_acutus                  3
+    lagenorhynchus_albirostris             3
+    lagenorhynchus_australis               3
+    lagenorhynchus_cruciger                3
+    lagenorhynchus_obliquidens             3
+    lagenorhynchus_obscurus                3
     lagidium_viscacia                      0
     lagorchestes_conspicillatus            0
     lagorchestes_hirsutus                  0
@@ -1392,19 +1392,19 @@ BEGIN DATA;
     lamottemys_okuensis                    1
     laonastes_aenigmamus                   0
     lariscus_insignis                      0
-    lasionycteris_noctivagans              2
+    lasionycteris_noctivagans              3
     lasiopodomys_brandtii                  0
     lasiopodomys_mandarinus                0
     lasiorhinus_krefftii                   0
     lasiorhinus_latifrons                  0
-    lasiurus_atratus                       2
-    lasiurus_blossevillii                  2
-    lasiurus_borealis                      2
-    lasiurus_cinereus                      2
-    lasiurus_ega                           2
-    lasiurus_intermedius                   2
-    lasiurus_seminolus                     2
-    lasiurus_xanthinus                     2
+    lasiurus_atratus                       3
+    lasiurus_blossevillii                  3
+    lasiurus_borealis                      3
+    lasiurus_cinereus                      3
+    lasiurus_ega                           3
+    lasiurus_intermedius                   3
+    lasiurus_seminolus                     3
+    lasiurus_xanthinus                     3
     latidens_salimalii                     0
     leggadina_forresti                     0
     leggadina_lakedownensis                0
@@ -1418,20 +1418,20 @@ BEGIN DATA;
     lemniscomys_striatus                   1
     lemniscomys_zebra                      1
     lemur_catta                            0
-    lenoxus_apicalis                       1
-    leontopithecus_chrysomelas             1
-    leontopithecus_rosalia                 1
-    leopardus_colocolo                     2
-    leopardus_geoffroyi                    2
-    leopardus_guigna                       2
-    leopardus_jacobita                     2
-    leopardus_pardalis                     1
-    leopardus_tigrinus                     2
-    leopardus_wiedii                       2
-    leopoldamys_edwardsi                   1
+    lenoxus_apicalis                       2
+    leontopithecus_chrysomelas             2
+    leontopithecus_rosalia                 2
+    leopardus_colocolo                     3
+    leopardus_geoffroyi                    3
+    leopardus_guigna                       3
+    leopardus_jacobita                     3
+    leopardus_pardalis                     2
+    leopardus_tigrinus                     3
+    leopardus_wiedii                       3
+    leopoldamys_edwardsi                   2
     leopoldamys_milleti                    1
-    leopoldamys_neilli                     1
-    leopoldamys_sabanus                    1
+    leopoldamys_neilli                     2
+    leopoldamys_sabanus                    2
     lepilemur_aeeclis                      0
     lepilemur_ankaranensis                 0
     lepilemur_dorsalis                     0
@@ -1449,9 +1449,9 @@ BEGIN DATA;
     lepilemur_seali                        0
     lepilemur_septentrionalis              0
     leporillus_conditor                    0
-    leptailurus_serval                     2
-    leptomys_elegans                       2
-    leptonychotes_weddellii                2
+    leptailurus_serval                     3
+    leptomys_elegans                       3
+    leptonychotes_weddellii                3
     leptonycteris_curasoae                 1
     leptonycteris_nivalis                  1
     leptonycteris_yerbabuenae              1
@@ -1481,19 +1481,19 @@ BEGIN DATA;
     lepus_tolai                            0
     lepus_townsendii                       0
     lepus_yarkandensis                     0
-    lestodelphys_halli                     2
-    lestoros_inca                          1
-    liberiictis_kuhni                      2
+    lestodelphys_halli                     3
+    lestoros_inca                          2
+    liberiictis_kuhni                      3
     lichonycteris_obscura                  0
-    limnogale_mergulus                     2
+    limnogale_mergulus                     3
     limnomys_bryophilus                    1
     limnomys_sibuanus                      1
     lionycteris_spurrelli                  0
-    lipotes_vexillifer                     2
-    lissodelphis_borealis                  2
-    lissodelphis_peronii                   2
+    lipotes_vexillifer                     3
+    lissodelphis_borealis                  3
+    lissodelphis_peronii                   3
     litocranius_walleri                    0
-    lobodon_carcinophaga                   2
+    lobodon_carcinophaga                   3
     lonchophylla_chocoana                  1
     lonchophylla_concava                   1
     lonchophylla_dekeyseri                 1
@@ -1501,49 +1501,49 @@ BEGIN DATA;
     lonchophylla_hesperia                  1
     lonchophylla_mordax                    1
     lonchophylla_robusta                   1
-    lonchorhina_aurita                     2
-    lonchorhina_inusitata                  2
-    lonchorhina_orinocensis                2
+    lonchorhina_aurita                     3
+    lonchorhina_inusitata                  3
+    lonchorhina_orinocensis                3
     lonchothrix_emiliae                    1
-    lontra_canadensis                      2
-    lontra_felina                          2
-    lontra_longicaudis                     2
-    lontra_provocax                        2
+    lontra_canadensis                      3
+    lontra_felina                          3
+    lontra_longicaudis                     3
+    lontra_provocax                        3
     lophiomys_imhausi                      0
     lophocebus_aterrimus                   0
-    lophostoma_brasiliense                 1
-    lophostoma_carrikeri                   1
-    lophostoma_evotis                      1
-    lophostoma_occidentalis                1
-    lophostoma_schulzi                     1
-    lophostoma_silvicolum                  1
-    lophuromys_flavopunctatus              1
-    lophuromys_sikapusi                    1
+    lophostoma_brasiliense                 2
+    lophostoma_carrikeri                   2
+    lophostoma_evotis                      2
+    lophostoma_occidentalis                2
+    lophostoma_schulzi                     2
+    lophostoma_silvicolum                  2
+    lophuromys_flavopunctatus              2
+    lophuromys_sikapusi                    2
     lorentzimys_nouhuysi                   1
-    loris_lydekkerianus                    2
-    loris_tardigradus                      1
+    loris_lydekkerianus                    3
+    loris_tardigradus                      2
     loxodonta_africana                     0
     lundomys_molitor                       0
-    lutra_lutra                            2
-    lutra_sumatrana                        2
-    lutreolina_crassicaudata               1
-    lutrogale_perspicillata                2
-    lycalopex_culpaeus                     1
-    lycalopex_fulvipes                     1
-    lycalopex_griseus                      1
-    lycalopex_gymnocercus                  1
-    lycalopex_sechurae                     1
-    lycalopex_vetulus                      1
-    lycaon_pictus                          2
-    lyncodon_patagonicus                   2
-    lynx_canadensis                        2
-    lynx_lynx                              2
-    lynx_pardinus                          2
-    lynx_rufus                             2
+    lutra_lutra                            3
+    lutra_sumatrana                        3
+    lutreolina_crassicaudata               2
+    lutrogale_perspicillata                3
+    lycalopex_culpaeus                     2
+    lycalopex_fulvipes                     2
+    lycalopex_griseus                      2
+    lycalopex_gymnocercus                  2
+    lycalopex_sechurae                     2
+    lycalopex_vetulus                      2
+    lycaon_pictus                          3
+    lyncodon_patagonicus                   3
+    lynx_canadensis                        3
+    lynx_lynx                              3
+    lynx_pardinus                          3
+    lynx_rufus                             3
     macaca_arctoides                       1
     macaca_assamensis                      1
     macaca_cyclopis                        1
-    macaca_fascicularis                    1
+    macaca_fascicularis                    2
     macaca_fuscata                         1
     macaca_hecki                           0
     macaca_leonina                         1
@@ -1561,11 +1561,11 @@ BEGIN DATA;
     macaca_sylvanus                        1
     macaca_thibetana                       1
     macaca_tonkeana                        1
-    macroderma_gigas                       2
-    macrogalidia_musschenbroekii           1
+    macroderma_gigas                       3
+    macrogalidia_musschenbroekii           2
     macroglossus_minimus                   0
     macroglossus_sobrinus                  0
-    macrophyllum_macrophyllum              2
+    macrophyllum_macrophyllum              3
     macropus_agilis                        0
     macropus_antilopinus                   0
     macropus_dorsalis                      0
@@ -1578,41 +1578,41 @@ BEGIN DATA;
     macropus_robustus                      0
     macropus_rufogriseus                   0
     macropus_rufus                         0
-    macroscelides_flavicaudatus            1
-    macroscelides_micus                    1
-    macroscelides_proboscideus             1
-    macrotis_lagotis                       1
-    macrotus_californicus                  1
-    macrotus_waterhousii                   1
+    macroscelides_flavicaudatus            2
+    macroscelides_micus                    2
+    macroscelides_proboscideus             2
+    macrotis_lagotis                       2
+    macrotus_californicus                  2
+    macrotus_waterhousii                   2
     macruromys_major                       0
     madoqua_guentheri                      0
     madoqua_kirkii                         0
     madoqua_saltiana                       0
     makalata_didelphoides                  0
     makalata_macrura                       0
-    malacomys_edwardsi                     1
-    malacomys_longipes                     1
+    malacomys_edwardsi                     2
+    malacomys_longipes                     2
     mallomys_rothschildi                   0
     mammelomys_lanosus                     0
     mandrillus_leucophaeus                 1
     mandrillus_sphinx                      1
-    manis_javanica                         2
-    manis_pentadactyla                     2
-    margaretamys_elegans                   1
-    marmosa_lepida                         1
-    marmosa_mexicana                       1
-    marmosa_murina                         1
-    marmosa_robinsoni                      1
-    marmosa_rubra                          1
-    marmosa_tyleriana                      1
-    marmosa_xerophila                      1
-    marmosops_impavidus                    1
-    marmosops_incanus                      1
-    marmosops_noctivagus                   1
+    manis_javanica                         3
+    manis_pentadactyla                     3
+    margaretamys_elegans                   2
+    marmosa_lepida                         2
+    marmosa_mexicana                       2
+    marmosa_murina                         2
+    marmosa_robinsoni                      2
+    marmosa_rubra                          2
+    marmosa_tyleriana                      2
+    marmosa_xerophila                      2
+    marmosops_impavidus                    2
+    marmosops_incanus                      2
+    marmosops_noctivagus                   2
     marmosops_pakaraimae                   1
-    marmosops_parvidens                    1
-    marmosops_paulensis                    1
-    marmosops_pinheiroi                    1
+    marmosops_parvidens                    2
+    marmosops_paulensis                    2
+    marmosops_pinheiroi                    2
     marmota_baibacina                      0
     marmota_bobak                          0
     marmota_broweri                        0
@@ -1627,12 +1627,12 @@ BEGIN DATA;
     marmota_olympus                        0
     marmota_sibirica                       0
     marmota_vancouverensis                 0
-    martes_americana                       1
-    martes_flavigula                       1
-    martes_foina                           1
-    martes_martes                          1
-    martes_melampus                        1
-    martes_zibellina                       1
+    martes_americana                       2
+    martes_flavigula                       2
+    martes_foina                           2
+    martes_martes                          2
+    martes_melampus                        2
+    martes_zibellina                       2
     massoutiera_mzabi                      0
     mastacomys_fuscus                      1
     mastomys_awashensis                    1
@@ -1640,7 +1640,7 @@ BEGIN DATA;
     mastomys_erythroleucus                 1
     mastomys_huberti                       1
     mastomys_kollmannspergeri              1
-    mastomys_natalensis                    1
+    mastomys_natalensis                    2
     mastomys_pernanus                      1
     maxomys_bartelsii                      1
     maxomys_dollmani                       1
@@ -1660,8 +1660,8 @@ BEGIN DATA;
     mazama_pandora                         0
     mazama_rufina                          0
     mazama_temama                          0
-    megaderma_lyra                         2
-    megaderma_spasma                       2
+    megaderma_lyra                         3
+    megaderma_spasma                       3
     megadontomys_cryophilus                0
     megadontomys_nelsoni                   0
     megadontomys_thomasi                   0
@@ -1671,23 +1671,23 @@ BEGIN DATA;
     megaladapis_edwardsi                   0
     megaloglossus_azagnyi                  0
     megaloglossus_woermanni                0
-    megaptera_novaeangliae                 2
-    megasorex_gigas                        1
+    megaptera_novaeangliae                 3
+    megasorex_gigas                        2
     melanomys_caliginosus                  1
-    melasmothrix_naso                      1
-    meles_anakuma                          1
-    meles_leucurus                         1
-    meles_meles                            1
-    mellivora_capensis                     1
-    melogale_moschata                      1
-    melogale_personata                     1
+    melasmothrix_naso                      2
+    meles_anakuma                          2
+    meles_leucurus                         2
+    meles_meles                            2
+    mellivora_capensis                     2
+    melogale_moschata                      2
+    melogale_personata                     2
     melomys_cervinipes                     0
     melomys_rufescens                      0
     melonycteris_fardoulisi                0
     melonycteris_melanops                  0
-    melursus_ursinus                       1
+    melursus_ursinus                       2
     menetes_berdmorei                      0
-    mephitis_mephitis                      1
+    mephitis_mephitis                      2
     meriones_chengi                        1
     meriones_crassus                       1
     meriones_libycus                       1
@@ -1697,8 +1697,8 @@ BEGIN DATA;
     meriones_tamariscinus                  1
     meriones_tristrami                     1
     meriones_unguiculatus                  1
-    mesechinus_dauuricus                   1
-    mesechinus_hughi                       1
+    mesechinus_dauuricus                   2
+    mesechinus_hughi                       2
     mesembriomys_gouldii                   1
     mesocapromys_angelcabrerai             0
     mesocapromys_auritus                   0
@@ -1706,60 +1706,60 @@ BEGIN DATA;
     mesocricetus_brandti                   1
     mesocricetus_newtoni                   1
     mesocricetus_raddei                    1
-    mesomys_hispidus                       1
+    mesomys_hispidus                       2
     mesomys_occultus                       1
     mesomys_stimulax                       1
     mesophylla_macconnelli                 1
-    mesoplodon_bidens                      2
-    mesoplodon_densirostris                2
-    mesoplodon_europaeus                   2
-    mesoplodon_ginkgodens                  2
-    mesoplodon_grayi                       2
-    mesoplodon_peruvianus                  2
-    mesoplodon_stejnegeri                  2
-    metachirus_nudicaudatus                1
-    microcebus_arnholdi                    1
+    mesoplodon_bidens                      3
+    mesoplodon_densirostris                3
+    mesoplodon_europaeus                   3
+    mesoplodon_ginkgodens                  3
+    mesoplodon_grayi                       3
+    mesoplodon_peruvianus                  3
+    mesoplodon_stejnegeri                  3
+    metachirus_nudicaudatus                2
+    microcebus_arnholdi                    2
     microcebus_berthae                     0
-    microcebus_bongolavensis               1
-    microcebus_danfossi                    1
+    microcebus_bongolavensis               2
+    microcebus_danfossi                    2
     microcebus_gerpi                       1
     microcebus_griseorufus                 1
-    microcebus_jollyae                     1
+    microcebus_jollyae                     2
     microcebus_lehilahytsara               1
     microcebus_macarthurii                 1
-    microcebus_mamiratra                   1
-    microcebus_margotmarshae               1
+    microcebus_mamiratra                   2
+    microcebus_margotmarshae               2
     microcebus_marohita                    1
-    microcebus_mittermeieri                1
+    microcebus_mittermeieri                2
     microcebus_murinus                     1
-    microcebus_myoxinus                    1
+    microcebus_myoxinus                    2
     microcebus_ravelobensis                1
     microcebus_rufus                       1
-    microcebus_sambiranensis               1
-    microcebus_simmonsi                    1
-    microcebus_tavaratra                   1
+    microcebus_sambiranensis               2
+    microcebus_simmonsi                    2
+    microcebus_tavaratra                   2
     microdipodops_megacephalus             1
     microdipodops_pallidus                 1
-    microgale_brevicaudata                 2
-    microgale_longicaudata                 2
-    microgale_majori                       2
-    microgale_principula                   2
-    microgale_pusilla                      2
-    microgale_talazaci                     2
+    microgale_brevicaudata                 3
+    microgale_longicaudata                 3
+    microgale_majori                       3
+    microgale_principula                   3
+    microgale_pusilla                      3
+    microgale_talazaci                     3
     micromys_minutus                       1
-    micronycteris_brosseti                 1
-    micronycteris_buriri                   1
-    micronycteris_giovanniae               1
-    micronycteris_hirsuta                  1
-    micronycteris_matses                   2
+    micronycteris_brosseti                 2
+    micronycteris_buriri                   2
+    micronycteris_giovanniae               2
+    micronycteris_hirsuta                  2
+    micronycteris_matses                   3
     micronycteris_megalotis                1
     micronycteris_microtis                 1
-    micronycteris_minuta                   1
-    micronycteris_schmidtorum              2
-    microperoryctes_aplini                 1
-    microperoryctes_longicauda             1
-    microperoryctes_papuensis              1
-    micropotamogale_lamottei               2
+    micronycteris_minuta                   2
+    micronycteris_schmidtorum              3
+    microperoryctes_aplini                 2
+    microperoryctes_longicauda             2
+    microperoryctes_papuensis              2
+    micropotamogale_lamottei               3
     micropteropus_pusillus                 0
     microryzomys_minutus                   0
     microsciurus_alfari                    0
@@ -1819,71 +1819,71 @@ BEGIN DATA;
     microtus_xanthognathus                 0
     millardia_kathleenae                   0
     millardia_meltada                      0
-    mimon_cozumelae                        1
-    mimon_crenulatum                       1
-    miniopterus_africanus                  2
-    miniopterus_australis                  2
-    miniopterus_fraterculus                2
-    miniopterus_fuscus                     2
-    miniopterus_gleni                      2
-    miniopterus_griveaudi                  2
-    miniopterus_inflatus                   2
-    miniopterus_magnater                   2
-    miniopterus_majori                     2
-    miniopterus_manavi                     2
-    miniopterus_minor                      2
-    miniopterus_natalensis                 2
-    miniopterus_petersoni                  2
-    miniopterus_pusillus                   2
-    miniopterus_schreibersii               2
-    miniopterus_sororculus                 2
-    miniopterus_tristis                    2
+    mimon_cozumelae                        2
+    mimon_crenulatum                       2
+    miniopterus_africanus                  3
+    miniopterus_australis                  3
+    miniopterus_fraterculus                3
+    miniopterus_fuscus                     3
+    miniopterus_gleni                      3
+    miniopterus_griveaudi                  3
+    miniopterus_inflatus                   3
+    miniopterus_magnater                   3
+    miniopterus_majori                     3
+    miniopterus_manavi                     3
+    miniopterus_minor                      3
+    miniopterus_natalensis                 3
+    miniopterus_petersoni                  3
+    miniopterus_pusillus                   3
+    miniopterus_schreibersii               3
+    miniopterus_sororculus                 3
+    miniopterus_tristis                    3
     miopithecus_ogouensis                  1
-    miopithecus_talapoin                   1
+    miopithecus_talapoin                   2
     mirimiri_acrodonta                     0
-    mirounga_angustirostris                2
-    mirounga_leonina                       2
-    mirza_coquereli                        1
-    mirza_zaza                             2
-    mogera_imaizumii                       2
-    mogera_insularis                       2
-    mogera_robusta                         2
-    mogera_tokudae                         2
-    mogera_wogura                          2
-    molossops_mattogrossensis              2
-    molossops_temminckii                   2
-    molossus_molossus                      2
-    molossus_rufus                         2
-    molossus_sinaloae                      2
-    monachus_monachus                      2
-    monodelphis_adusta                     1
-    monodelphis_americana                  1
-    monodelphis_brevicaudata               1
-    monodelphis_dimidiata                  1
-    monodelphis_domestica                  1
-    monodelphis_emiliae                    1
-    monodelphis_glirina                    1
-    monodelphis_handleyi                   1
-    monodelphis_iheringi                   1
-    monodelphis_kunsi                      1
-    monodelphis_osgoodi                    1
+    mirounga_angustirostris                3
+    mirounga_leonina                       3
+    mirza_coquereli                        2
+    mirza_zaza                             3
+    mogera_imaizumii                       3
+    mogera_insularis                       3
+    mogera_robusta                         3
+    mogera_tokudae                         3
+    mogera_wogura                          3
+    molossops_mattogrossensis              3
+    molossops_temminckii                   3
+    molossus_molossus                      3
+    molossus_rufus                         3
+    molossus_sinaloae                      3
+    monachus_monachus                      3
+    monodelphis_adusta                     2
+    monodelphis_americana                  2
+    monodelphis_brevicaudata               2
+    monodelphis_dimidiata                  2
+    monodelphis_domestica                  2
+    monodelphis_emiliae                    2
+    monodelphis_glirina                    2
+    monodelphis_handleyi                   2
+    monodelphis_iheringi                   2
+    monodelphis_kunsi                      2
+    monodelphis_osgoodi                    2
     monodelphis_palliolata                 1
-    monodelphis_peruviana                  1
+    monodelphis_peruviana                  2
     monodelphis_reigi                      1
-    monodelphis_scalops                    1
-    monodon_monoceros                      2
+    monodelphis_scalops                    2
+    monodon_monoceros                      3
     monophyllus_plethodon                  1
     monophyllus_redmani                    1
     monticolomys_koopmani                  1
-    mops_condylurus                        2
-    mops_leucostigma                       2
-    mops_midas                             2
-    mormoops_blainvillei                   2
-    mormoops_megalophylla                  2
-    mormopterus_beccarii                   2
-    mormopterus_loriae                     2
-    mormopterus_norfolkensis               2
-    mormopterus_planiceps                  2
+    mops_condylurus                        3
+    mops_leucostigma                       3
+    mops_midas                             3
+    mormoops_blainvillei                   3
+    mormoops_megalophylla                  3
+    mormopterus_beccarii                   3
+    mormopterus_loriae                     3
+    mormopterus_norfolkensis               3
+    mormopterus_planiceps                  3
     moschiola_meminna                      0
     moschus_anhuiensis                     0
     moschus_berezovskii                    0
@@ -1891,8 +1891,8 @@ BEGIN DATA;
     moschus_fuscus                         0
     moschus_leucogaster                    0
     moschus_moschiferus                    0
-    mungos_mungo                           2
-    mungotictis_decemlineata               2
+    mungos_mungo                           3
+    mungotictis_decemlineata               3
     muntiacus_crinifrons                   0
     muntiacus_feae                         0
     muntiacus_gongshanensis                0
@@ -1902,20 +1902,20 @@ BEGIN DATA;
     muntiacus_rooseveltorum                0
     muntiacus_truongsonensis               0
     muntiacus_vuquangensis                 0
-    murexia_longicaudata                   2
-    murexia_naso                           2
-    murina_aenea                           2
-    murina_aurata                          2
-    murina_cyclotis                        2
-    murina_florium                         2
-    murina_hilgendorfi                     2
-    murina_huttoni                         2
-    murina_leucogaster                     2
-    murina_puta                            2
-    murina_rozendaali                      2
-    murina_suilla                          2
-    murina_tubinaris                       2
-    murina_ussuriensis                     2
+    murexia_longicaudata                   3
+    murexia_naso                           3
+    murina_aenea                           3
+    murina_aurata                          3
+    murina_cyclotis                        3
+    murina_florium                         3
+    murina_hilgendorfi                     3
+    murina_huttoni                         3
+    murina_leucogaster                     3
+    murina_puta                            3
+    murina_rozendaali                      3
+    murina_suilla                          3
+    murina_tubinaris                       3
+    murina_ussuriensis                     3
     mus_baoulei                            1
     mus_booduga                            1
     mus_bufo                               1
@@ -1943,23 +1943,23 @@ BEGIN DATA;
     mus_spretus                            1
     mus_tenellus                           1
     mus_terricolor                         1
-    mus_triton                             1
+    mus_triton                             2
     muscardinus_avellanarius               1
     musonycteris_harrisoni                 1
-    mustela_africana                       1
-    mustela_altaica                        2
-    mustela_erminea                        2
-    mustela_felipei                        1
-    mustela_frenata                        2
-    mustela_itatsi                         1
-    mustela_kathiah                        2
-    mustela_lutreola                       2
-    mustela_nigripes                       2
-    mustela_nivalis                        2
-    mustela_nudipes                        2
-    mustela_putorius                       2
-    mustela_sibirica                       2
-    mustela_strigidorsa                    2
+    mustela_africana                       2
+    mustela_altaica                        3
+    mustela_erminea                        3
+    mustela_felipei                        2
+    mustela_frenata                        3
+    mustela_itatsi                         2
+    mustela_kathiah                        3
+    mustela_lutreola                       3
+    mustela_nigripes                       3
+    mustela_nivalis                        3
+    mustela_nudipes                        3
+    mustela_putorius                       3
+    mustela_sibirica                       3
+    mustela_strigidorsa                    3
     mylomys_dybowskii                      0
     myocastor_coypus                       0
     myodes_andersoni                       1
@@ -1972,116 +1972,116 @@ BEGIN DATA;
     myodes_rufocanus                       1
     myodes_rutilus                         1
     myodes_smithii                         1
-    myoictis_leucura                       2
-    myoictis_melas                         2
-    myoictis_wallacei                      2
-    myoictis_wavicus                       2
+    myoictis_leucura                       3
+    myoictis_melas                         3
+    myoictis_wallacei                      3
+    myoictis_wavicus                       3
     myomimus_roachi                        1
-    myomyscus_brockmani                    1
-    myomyscus_verreauxii                   1
+    myomyscus_brockmani                    2
+    myomyscus_verreauxii                   2
     myonycteris_brachycephala              0
     myonycteris_leptodon                   0
     myonycteris_relicta                    0
     myonycteris_torquata                   0
     myoprocta_acouchy                      1
     myoprocta_pratti                       0
-    myopterus_daubentonii                  2
+    myopterus_daubentonii                  3
     myosciurus_pumilio                     0
-    myosorex_cafer                         2
-    myosorex_geata                         2
-    myosorex_kihaulei                      2
-    myosorex_sclateri                      2
-    myosorex_varius                        2
-    myosorex_zinki                         2
+    myosorex_cafer                         3
+    myosorex_geata                         3
+    myosorex_kihaulei                      3
+    myosorex_sclateri                      3
+    myosorex_varius                        3
+    myosorex_zinki                         3
     myospalax_aspalax                      0
     myospalax_psilurus                     0
-    myotis_adversus                        2
-    myotis_albescens                       2
-    myotis_alcathoe                        2
-    myotis_altarium                        2
-    myotis_anjouanensis                    2
-    myotis_annamiticus                     2
-    myotis_annectans                       2
-    myotis_atacamensis                     2
-    myotis_ater                            2
-    myotis_aurascens                       2
-    myotis_auriculus                       2
-    myotis_austroriparius                  2
-    myotis_bechsteinii                     2
-    myotis_bocagii                         2
-    myotis_bombinus                        2
-    myotis_brandtii                        2
-    myotis_californicus                    2
-    myotis_capaccinii                      2
-    myotis_chiloensis                      2
-    myotis_chinensis                       2
-    myotis_ciliolabrum                     2
-    myotis_csorbai                         2
-    myotis_dasycneme                       2
-    myotis_daubentonii                     2
-    myotis_davidii                         2
-    myotis_dominicensis                    2
-    myotis_elegans                         2
-    myotis_emarginatus                     2
-    myotis_evotis                          2
-    myotis_fimbriatus                      2
-    myotis_formosus                        2
-    myotis_fortidens                       2
-    myotis_frater                          2
-    myotis_goudoti                         2
-    myotis_grisescens                      2
-    myotis_hajastanicus                    2
-    myotis_hasseltii                       2
-    myotis_horsfieldii                     2
-    myotis_ikonnikovi                      2
-    myotis_keaysi                          2
-    myotis_keenii                          2
-    myotis_laniger                         2
-    myotis_leibii                          2
-    myotis_levis                           2
-    myotis_longipes                        2
-    myotis_lucifugus                       2
-    myotis_macrodactylus                   2
-    myotis_macropus                        2
-    myotis_macrotarsus                     2
-    myotis_martiniquensis                  2
-    myotis_melanorhinus                    2
-    myotis_montivagus                      2
-    myotis_muricola                        2
-    myotis_myotis                          2
-    myotis_mystacinus                      2
-    myotis_nattereri                       2
-    myotis_nigricans                       2
-    myotis_oxyotus                         2
-    myotis_pequinius                       2
-    myotis_pruinosus                       2
-    myotis_punicus                         2
-    myotis_ridleyi                         2
-    myotis_riparius                        2
-    myotis_rosseti                         2
-    myotis_ruber                           2
-    myotis_schaubi                         2
-    myotis_scotti                          2
-    myotis_septentrionalis                 2
-    myotis_sicarius                        2
-    myotis_siligorensis                    2
-    myotis_simus                           2
-    myotis_sodalis                         2
-    myotis_thysanodes                      2
-    myotis_tricolor                        2
-    myotis_velifer                         2
-    myotis_vivesi                          2
-    myotis_volans                          2
-    myotis_welwitschii                     2
-    myotis_yanbarensis                     2
-    myotis_yumanensis                      2
-    myrmecobius_fasciatus                  2
-    myrmecophaga_tridactyla                2
+    myotis_adversus                        3
+    myotis_albescens                       3
+    myotis_alcathoe                        3
+    myotis_altarium                        3
+    myotis_anjouanensis                    3
+    myotis_annamiticus                     3
+    myotis_annectans                       3
+    myotis_atacamensis                     3
+    myotis_ater                            3
+    myotis_aurascens                       3
+    myotis_auriculus                       3
+    myotis_austroriparius                  3
+    myotis_bechsteinii                     3
+    myotis_bocagii                         3
+    myotis_bombinus                        3
+    myotis_brandtii                        3
+    myotis_californicus                    3
+    myotis_capaccinii                      3
+    myotis_chiloensis                      3
+    myotis_chinensis                       3
+    myotis_ciliolabrum                     3
+    myotis_csorbai                         3
+    myotis_dasycneme                       3
+    myotis_daubentonii                     3
+    myotis_davidii                         3
+    myotis_dominicensis                    3
+    myotis_elegans                         3
+    myotis_emarginatus                     3
+    myotis_evotis                          3
+    myotis_fimbriatus                      3
+    myotis_formosus                        3
+    myotis_fortidens                       3
+    myotis_frater                          3
+    myotis_goudoti                         3
+    myotis_grisescens                      3
+    myotis_hajastanicus                    3
+    myotis_hasseltii                       3
+    myotis_horsfieldii                     3
+    myotis_ikonnikovi                      3
+    myotis_keaysi                          3
+    myotis_keenii                          3
+    myotis_laniger                         3
+    myotis_leibii                          3
+    myotis_levis                           3
+    myotis_longipes                        3
+    myotis_lucifugus                       3
+    myotis_macrodactylus                   3
+    myotis_macropus                        3
+    myotis_macrotarsus                     3
+    myotis_martiniquensis                  3
+    myotis_melanorhinus                    3
+    myotis_montivagus                      3
+    myotis_muricola                        3
+    myotis_myotis                          3
+    myotis_mystacinus                      3
+    myotis_nattereri                       3
+    myotis_nigricans                       3
+    myotis_oxyotus                         3
+    myotis_pequinius                       3
+    myotis_pruinosus                       3
+    myotis_punicus                         3
+    myotis_ridleyi                         3
+    myotis_riparius                        3
+    myotis_rosseti                         3
+    myotis_ruber                           3
+    myotis_schaubi                         3
+    myotis_scotti                          3
+    myotis_septentrionalis                 3
+    myotis_sicarius                        3
+    myotis_siligorensis                    3
+    myotis_simus                           3
+    myotis_sodalis                         3
+    myotis_thysanodes                      3
+    myotis_tricolor                        3
+    myotis_velifer                         3
+    myotis_vivesi                          3
+    myotis_volans                          3
+    myotis_welwitschii                     3
+    myotis_yanbarensis                     3
+    myotis_yumanensis                      3
+    myrmecobius_fasciatus                  3
+    myrmecophaga_tridactyla                3
     mysateles_prehensilis                  0
-    mystacina_tuberculata                  1
+    mystacina_tuberculata                  2
     mystromys_albicaudatus                 1
-    myzopoda_aurita                        2
-    myzopoda_schliemanni                   2
+    myzopoda_aurita                        3
+    myzopoda_schliemanni                   3
     naemorhedus_baileyi                    0
     naemorhedus_caudatus                   0
     naemorhedus_goral                      0
@@ -2094,51 +2094,51 @@ BEGIN DATA;
     nanonycteris_veldkampii                0
     napaeozapus_insignis                   1
     nasalis_larvatus                       0
-    nasua_narica                           1
+    nasua_narica                           2
     nasua_nasua                            1
     nasuella_olivacea                      1
-    natalus_jamaicensis                    2
-    natalus_major                          2
-    natalus_stramineus                     2
-    natalus_tumidirostris                  2
+    natalus_jamaicensis                    3
+    natalus_major                          3
+    natalus_stramineus                     3
+    natalus_tumidirostris                  3
     neacomys_dubosti                       1
     neacomys_guianae                       1
     neacomys_minutus                       1
     neacomys_musseri                       1
     neacomys_paracou                       1
     neacomys_spinosus                      1
-    neamblysomus_gunningi                  2
-    neamblysomus_julianae                  2
-    necromys_amoenus                       1
-    necromys_lactens                       1
-    necromys_lasiurus                      1
-    necromys_temchuki                      1
+    neamblysomus_gunningi                  3
+    neamblysomus_julianae                  3
+    necromys_amoenus                       2
+    necromys_lactens                       2
+    necromys_lasiurus                      2
+    necromys_temchuki                      2
     necromys_urichi                        0
-    nectogale_elegans                      2
-    nectomys_apicalis                      1
-    nectomys_squamipes                     1
+    nectogale_elegans                      3
+    nectomys_apicalis                      2
+    nectomys_squamipes                     2
     neodon_irene                           0
     neodon_juldaschi                       0
     neodon_sikimensis                      0
-    neofelis_nebulosa                      2
+    neofelis_nebulosa                      3
     neofiber_alleni                        0
-    neohylomys_hainanensis                 2
-    neomicroxus_latebricola                1
-    neomys_anomalus                        2
-    neomys_fodiens                         2
-    neomys_teres                           2
-    neophascogale_lorentzii                2
-    neophoca_cinerea                       2
-    neophocaena_asiaeorientalis            2
-    neophocaena_phocaenoides               2
-    neoromicia_capensis                    2
-    neoromicia_guineensis                  2
-    neoromicia_malagasyensis               2
-    neoromicia_matroka                     2
-    neoromicia_rendalli                    2
-    neoromicia_tenuipinnis                 2
-    neoromicia_zuluensis                   2
-    neotetracus_sinensis                   2
+    neohylomys_hainanensis                 3
+    neomicroxus_latebricola                2
+    neomys_anomalus                        3
+    neomys_fodiens                         3
+    neomys_teres                           3
+    neophascogale_lorentzii                3
+    neophoca_cinerea                       3
+    neophocaena_asiaeorientalis            3
+    neophocaena_phocaenoides               3
+    neoromicia_capensis                    3
+    neoromicia_guineensis                  3
+    neoromicia_malagasyensis               3
+    neoromicia_matroka                     3
+    neoromicia_rendalli                    3
+    neoromicia_tenuipinnis                 3
+    neoromicia_zuluensis                   3
+    neotetracus_sinensis                   3
     neotoma_albigula                       1
     neotoma_bryanti                        1
     neotoma_cinerea                        1
@@ -2154,11 +2154,11 @@ BEGIN DATA;
     neotoma_micropus                       1
     neotoma_nelsoni                        1
     neotoma_stephensi                      1
-    neotomodon_alstoni                     1
+    neotomodon_alstoni                     2
     neotomys_ebriosus                      0
     neotragus_batesi                       0
     neotragus_pygmaeus                     0
-    neovison_vison                         2
+    neovison_vison                         3
     nephelomys_albigularis                 1
     nephelomys_keaysi                      1
     nephelomys_levipes                     1
@@ -2169,11 +2169,11 @@ BEGIN DATA;
     nesoryzomys_fernandinae                1
     nesoryzomys_narboroughi                1
     nesoryzomys_swarthi                    1
-    neurotrichus_gibbsii                   1
-    neusticomys_monticolus                 2
+    neurotrichus_gibbsii                   2
+    neusticomys_monticolus                 3
     nilgiritragus_hylocrius                0
-    ningaui_ridei                          2
-    ningaui_timealeyi                      2
+    ningaui_ridei                          3
+    ningaui_timealeyi                      3
     niviventer_andersoni                   1
     niviventer_confucianus                 1
     niviventer_coninga                     1
@@ -2186,42 +2186,42 @@ BEGIN DATA;
     niviventer_niviventer                  1
     niviventer_rapit                       1
     niviventer_tenaster                    1
-    noctilio_albiventris                   2
-    noctilio_leporinus                     2
+    noctilio_albiventris                   3
+    noctilio_leporinus                     3
     nomascus_concolor                      1
     nomascus_gabriellae                    0
     nomascus_hainanus                      0
     nomascus_leucogenys                    1
     nomascus_nasutus                       0
     nomascus_siki                          1
-    notiomys_edwardsii                     1
-    notiosorex_cockrumi                    2
-    notiosorex_crawfordi                   2
+    notiomys_edwardsii                     2
+    notiosorex_cockrumi                    3
+    notiosorex_crawfordi                   3
     notocitellus_adocetus                  1
     notocitellus_annulatus                 1
     notopteris_macdonaldi                  0
-    notoryctes_caurinus                    1
-    notoryctes_typhlops                    1
-    nyctalus_aviator                       2
-    nyctalus_lasiopterus                   2
-    nyctalus_leisleri                      2
-    nyctalus_noctula                       2
-    nyctalus_plancyi                       2
-    nyctereutes_procyonoides               1
-    nycteris_arge                          2
-    nycteris_grandis                       2
-    nycteris_hispida                       2
-    nycteris_javanica                      2
-    nycteris_thebaica                      2
-    nycteris_tragata                       2
+    notoryctes_caurinus                    2
+    notoryctes_typhlops                    2
+    nyctalus_aviator                       3
+    nyctalus_lasiopterus                   3
+    nyctalus_leisleri                      3
+    nyctalus_noctula                       3
+    nyctalus_plancyi                       3
+    nyctereutes_procyonoides               2
+    nycteris_arge                          3
+    nycteris_grandis                       3
+    nycteris_hispida                       3
+    nycteris_javanica                      3
+    nycteris_thebaica                      3
+    nycteris_tragata                       3
     nycticebus_bengalensis                 1
-    nycticebus_coucang                     1
+    nycticebus_coucang                     2
     nycticebus_javanicus                   1
     nycticebus_menagensis                  0
-    nycticebus_pygmaeus                    1
-    nycticeinops_schlieffeni               2
-    nycticeius_humeralis                   2
-    nyctiellus_lepidus                     2
+    nycticebus_pygmaeus                    2
+    nycticeinops_schlieffeni               3
+    nycticeius_humeralis                   3
+    nyctiellus_lepidus                     3
     nyctimene_aello                        0
     nyctimene_albiventer                   0
     nyctimene_cephalotes                   0
@@ -2229,12 +2229,12 @@ BEGIN DATA;
     nyctimene_major                        0
     nyctimene_robinsoni                    0
     nyctimene_vizcaccia                    0
-    nyctinomops_aurispinosus               2
-    nyctinomops_femorosaccus               2
-    nyctinomops_macrotis                   2
+    nyctinomops_aurispinosus               3
+    nyctinomops_femorosaccus               3
+    nyctinomops_macrotis                   3
     nyctomys_sumichrasti                   0
-    nyctophilus_geoffroyi                  2
-    nyctophilus_gouldi                     2
+    nyctophilus_geoffroyi                  3
+    nyctophilus_gouldi                     3
     ochotona_alpina                        0
     ochotona_collaris                      0
     ochotona_curzoniae                     0
@@ -2262,7 +2262,7 @@ BEGIN DATA;
     octodon_lunatus                        0
     octodontomys_gliroides                 0
     octomys_mimax                          0
-    odobenus_rosmarus                      2
+    odobenus_rosmarus                      3
     odocoileus_hemionus                    0
     odocoileus_virginianus                 0
     oecomys_auyantepui                     1
@@ -2292,27 +2292,27 @@ BEGIN DATA;
     oligoryzomys_rupestris                 1
     oligoryzomys_stramineus                1
     oligoryzomys_vegetus                   1
-    ommatophoca_rossii                     2
+    ommatophoca_rossii                     3
     ondatra_zibethicus                     1
     onychogalea_fraenata                   0
     onychogalea_unguifera                  0
-    onychomys_arenicola                    1
-    onychomys_leucogaster                  1
-    onychomys_torridus                     1
-    orcaella_brevirostris                  2
-    orcaella_heinsohni                     1
-    orcinus_orca                           2
+    onychomys_arenicola                    2
+    onychomys_leucogaster                  2
+    onychomys_torridus                     2
+    orcaella_brevirostris                  3
+    orcaella_heinsohni                     2
+    orcinus_orca                           3
     oreamnos_americanus                    0
     oreoryzomys_balneator                  1
     oreotragus_oreotragus                  0
-    ornithorhynchus_anatinus               2
+    ornithorhynchus_anatinus               3
     orthogeomys_cavator                    0
     orthogeomys_grandis                    0
     orthogeomys_heterodus                  0
     orthogeomys_hispidus                   0
     orthogeomys_lanius                     0
     orthogeomys_underwoodi                 0
-    orycteropus_afer                       2
+    orycteropus_afer                       3
     oryctolagus_cuniculus                  0
     oryx_beisa                             0
     oryx_dammah                            0
@@ -2321,14 +2321,14 @@ BEGIN DATA;
     oryzomys_couesi                        1
     oryzomys_palustris                     1
     osgoodomys_banderanus                  1
-    otaria_byronia                         2
-    otocolobus_manul                       2
-    otocyon_megalotis                      1
+    otaria_byronia                         3
+    otocolobus_manul                       3
+    otocyon_megalotis                      2
     otolemur_crassicaudatus                1
     otolemur_garnettii                     1
-    otomops_madagascariensis               2
-    otomops_martiensseni                   2
-    otomops_wroughtoni                     2
+    otomops_madagascariensis               3
+    otomops_martiensseni                   3
+    otomops_wroughtoni                     3
     otomys_anchietae                       0
     otomys_angoniensis                     0
     otomys_barbouri                        0
@@ -2339,7 +2339,7 @@ BEGIN DATA;
     otomys_occidentalis                    0
     otomys_tropicalis                      0
     otomys_typus                           0
-    otonycteris_hemprichii                 2
+    otonycteris_hemprichii                 3
     otonyctomys_hatti                      0
     otopteropus_cartilagonodus             0
     otospermophilus_beecheyi               1
@@ -2352,64 +2352,64 @@ BEGIN DATA;
     ovis_dalli                             0
     ovis_nivicola                          0
     ovis_orientalis                        0
-    oxymycterus_amazonicus                 1
-    oxymycterus_dasytrichus                1
-    oxymycterus_delator                    1
-    oxymycterus_hiska                      1
-    oxymycterus_nasutus                    1
-    oxymycterus_paramensis                 1
-    oxymycterus_quaestor                   1
-    oxymycterus_rufus                      1
+    oxymycterus_amazonicus                 2
+    oxymycterus_dasytrichus                2
+    oxymycterus_delator                    2
+    oxymycterus_hiska                      2
+    oxymycterus_nasutus                    2
+    oxymycterus_paramensis                 2
+    oxymycterus_quaestor                   2
+    oxymycterus_rufus                      2
     ozotoceros_bezoarticus                 0
     pachylemur_jullyi                      1
-    pachyuromys_duprasi                    2
-    paguma_larvata                         1
+    pachyuromys_duprasi                    3
+    paguma_larvata                         2
     palaeopropithecus_ingens               0
     pan_paniscus                           1
     pan_troglodytes                        1
-    panthera_leo                           2
-    panthera_onca                          2
-    panthera_pardus                        2
-    panthera_tigris                        2
-    panthera_uncia                         2
+    panthera_leo                           3
+    panthera_onca                          3
+    panthera_pardus                        3
+    panthera_tigris                        3
+    panthera_uncia                         3
     pantholops_hodgsonii                   0
-    papio_anubis                           1
+    papio_anubis                           2
     papio_cynocephalus                     1
     papio_hamadryas                        1
     papio_kindae                           1
     papio_papio                            1
     papio_ursinus                          1
     pappogeomys_bulleri                    0
-    paracynictis_selousi                   2
+    paracynictis_selousi                   3
     paradipus_ctenodactylus                0
-    paradoxurus_hermaphroditus             1
-    paradoxurus_jerdoni                    1
-    paradoxurus_zeylonensis                1
-    paraechinus_aethiopicus                1
-    paraechinus_hypomelas                  1
-    parahyaena_brunnea                     1
-    parahydromys_asper                     2
+    paradoxurus_hermaphroditus             2
+    paradoxurus_jerdoni                    2
+    paradoxurus_zeylonensis                2
+    paraechinus_aethiopicus                2
+    paraechinus_hypomelas                  2
+    parahyaena_brunnea                     2
+    parahydromys_asper                     3
     paramelomys_levipes                    0
-    parantechinus_apicalis                 1
+    parantechinus_apicalis                 2
     paranyctimene_raptor                   0
-    parascalops_breweri                    2
-    parascaptor_leucura                    2
-    paratriaenops_auritus                  2
-    paratriaenops_furculus                 2
+    parascalops_breweri                    3
+    parascaptor_leucura                    3
+    paratriaenops_auritus                  3
+    paratriaenops_furculus                 3
     paraxerus_alexandri                    0
     paraxerus_cepapi                       0
     paraxerus_ochraceus                    0
     paraxerus_vexillarius                  0
-    pardofelis_marmorata                   2
-    paremballonura_atrata                  1
-    paremballonura_tiavato                 2
+    pardofelis_marmorata                   3
+    paremballonura_atrata                  2
+    paremballonura_tiavato                 3
     parotomys_brantsii                     0
     parotomys_littledalei                  0
     paruromys_dominator                    0
     pattonomys_occasius                    0
     pattonomys_semivillosus                0
-    paucidentomys_vermidax                 1
-    pearsonomys_annectens                  2
+    paucidentomys_vermidax                 2
+    pearsonomys_annectens                  3
     pecari_tajacu                          1
     pedetes_capensis                       0
     pelea_capreolus                        0
@@ -2417,11 +2417,11 @@ BEGIN DATA;
     pelomys_fallax                         0
     pentalagus_furnessi                    0
     penthetor_lucasi                       0
-    peponocephala_electra                  2
-    perameles_bougainville                 1
-    perameles_eremiana                     1
-    perameles_gunnii                       1
-    perameles_nasuta                       1
+    peponocephala_electra                  3
+    perameles_bougainville                 2
+    perameles_eremiana                     2
+    perameles_gunnii                       2
+    perameles_nasuta                       2
     perodicticus_potto                     1
     perognathus_amplus                     1
     perognathus_fasciatus                  1
@@ -2431,59 +2431,59 @@ BEGIN DATA;
     perognathus_longimembris               1
     perognathus_merriami                   1
     perognathus_parvus                     1
-    peromyscus_attwateri                   1
-    peromyscus_aztecus                     1
-    peromyscus_beatae                      1
-    peromyscus_californicus                1
-    peromyscus_caniceps                    1
-    peromyscus_crinitus                    1
-    peromyscus_dickeyi                     1
-    peromyscus_difficilis                  1
-    peromyscus_eremicus                    1
-    peromyscus_eva                         1
+    peromyscus_attwateri                   2
+    peromyscus_aztecus                     2
+    peromyscus_beatae                      2
+    peromyscus_californicus                2
+    peromyscus_caniceps                    2
+    peromyscus_crinitus                    2
+    peromyscus_dickeyi                     2
+    peromyscus_difficilis                  2
+    peromyscus_eremicus                    2
+    peromyscus_eva                         2
     peromyscus_fraterculus                 1
-    peromyscus_furvus                      1
-    peromyscus_gossypinus                  1
-    peromyscus_grandis                     1
-    peromyscus_gratus                      1
-    peromyscus_guatemalensis               1
-    peromyscus_gymnotis                    1
-    peromyscus_hooperi                     1
+    peromyscus_furvus                      2
+    peromyscus_gossypinus                  2
+    peromyscus_grandis                     2
+    peromyscus_gratus                      2
+    peromyscus_guatemalensis               2
+    peromyscus_gymnotis                    2
+    peromyscus_hooperi                     2
     peromyscus_hylocetes                   1
-    peromyscus_interparietalis             1
-    peromyscus_keeni                       1
-    peromyscus_leucopus                    1
-    peromyscus_levipes                     1
-    peromyscus_maniculatus                 1
-    peromyscus_mayensis                    1
-    peromyscus_megalops                    1
-    peromyscus_melanocarpus                1
-    peromyscus_melanophrys                 1
-    peromyscus_melanotis                   1
-    peromyscus_merriami                    1
-    peromyscus_mexicanus                   1
-    peromyscus_nasutus                     1
-    peromyscus_ochraventer                 1
-    peromyscus_pectoralis                  1
-    peromyscus_perfulvus                   1
-    peromyscus_polionotus                  1
+    peromyscus_interparietalis             2
+    peromyscus_keeni                       2
+    peromyscus_leucopus                    2
+    peromyscus_levipes                     2
+    peromyscus_maniculatus                 2
+    peromyscus_mayensis                    2
+    peromyscus_megalops                    2
+    peromyscus_melanocarpus                2
+    peromyscus_melanophrys                 2
+    peromyscus_melanotis                   2
+    peromyscus_merriami                    2
+    peromyscus_mexicanus                   2
+    peromyscus_nasutus                     2
+    peromyscus_ochraventer                 2
+    peromyscus_pectoralis                  2
+    peromyscus_perfulvus                   2
+    peromyscus_polionotus                  2
     peromyscus_schmidlyi                   1
-    peromyscus_sejugis                     1
-    peromyscus_simulus                     1
-    peromyscus_slevini                     1
-    peromyscus_spicilegus                  1
-    peromyscus_stephani                    1
-    peromyscus_stirtoni                    1
-    peromyscus_truei                       1
-    peromyscus_winkelmanni                 1
-    peromyscus_yucatanicus                 1
-    peromyscus_zarhynchus                  1
-    peropteryx_kappleri                    2
-    peropteryx_leucoptera                  2
-    peropteryx_macrotis                    2
-    peropteryx_trinitatis                  2
-    peroryctes_broadbenti                  1
-    peroryctes_raffrayana                  1
+    peromyscus_sejugis                     2
+    peromyscus_simulus                     2
+    peromyscus_slevini                     2
+    peromyscus_spicilegus                  2
+    peromyscus_stephani                    2
+    peromyscus_stirtoni                    2
+    peromyscus_truei                       2
+    peromyscus_winkelmanni                 2
+    peromyscus_yucatanicus                 2
+    peromyscus_zarhynchus                  2
+    peropteryx_kappleri                    3
+    peropteryx_leucoptera                  3
+    peropteryx_macrotis                    3
+    peropteryx_trinitatis                  3
+    peroryctes_broadbenti                  2
+    peroryctes_raffrayana                  2
     petaurillus_kinlochii                  1
     petaurista_alborufus                   1
     petaurista_elegans                     1
@@ -2492,11 +2492,11 @@ BEGIN DATA;
     petaurista_philippensis                1
     petaurista_xanthotis                   1
     petauroides_volans                     0
-    petaurus_abidi                         1
-    petaurus_breviceps                     1
-    petaurus_norfolcensis                  1
+    petaurus_abidi                         2
+    petaurus_breviceps                     2
+    petaurus_norfolcensis                  2
     petinomys_setosus                      0
-    petrodromus_tetradactylus              2
+    petrodromus_tetradactylus              3
     petrogale_assimilis                    0
     petrogale_brachyotis                   0
     petrogale_burbidgei                    0
@@ -2521,25 +2521,25 @@ BEGIN DATA;
     phalanger_orientalis                   1
     phalanger_sericeus                     1
     phalanger_vestitus                     1
-    phascogale_calura                      2
-    phascogale_tapoatafa                   2
+    phascogale_calura                      3
+    phascogale_tapoatafa                   3
     phascolarctos_cinereus                 0
-    phascolosorex_dorsalis                 2
+    phascolosorex_dorsalis                 3
     phenacomys_intermedius                 0
     philander_frenatus                     1
     philander_mcilhennyi                   1
-    philander_opossum                      1
+    philander_opossum                      2
     philantomba_maxwellii                  1
     philantomba_monticola                  1
-    philetor_brachypterus                  2
+    philetor_brachypterus                  3
     phloeomys_cumingi                      0
-    phoca_largha                           2
-    phoca_vitulina                         2
-    phocarctos_hookeri                     1
-    phocoena_dioptrica                     2
-    phocoena_phocoena                      2
-    phocoena_sinus                         2
-    phocoenoides_dalli                     2
+    phoca_largha                           3
+    phoca_vitulina                         3
+    phocarctos_hookeri                     2
+    phocoena_dioptrica                     3
+    phocoena_phocoena                      3
+    phocoena_sinus                         3
+    phocoenoides_dalli                     3
     phodopus_campbelli                     0
     phodopus_roborovskii                   0
     phodopus_sungorus                      0
@@ -2558,9 +2558,9 @@ BEGIN DATA;
     phyllonycteris_poeyi                   1
     phyllops_falcatus                      0
     phyllostomus_discolor                  1
-    phyllostomus_elongatus                 1
-    phyllostomus_hastatus                  1
-    phyllostomus_latifolius                1
+    phyllostomus_elongatus                 2
+    phyllostomus_hastatus                  2
+    phyllostomus_latifolius                2
     phyllotis_amicus                       0
     phyllotis_andium                       0
     phyllotis_bonariensis                  0
@@ -2578,30 +2578,30 @@ BEGIN DATA;
     piliocolobus_rufomitratus              0
     piliocolobus_tephrosceles              0
     piliocolobus_tholloni                  0
-    pipistrellus_abramus                   2
-    pipistrellus_ceylonicus                2
-    pipistrellus_coromandra                2
-    pipistrellus_hanaki                    2
-    pipistrellus_hesperidus                2
-    pipistrellus_javanicus                 2
-    pipistrellus_kuhlii                    2
-    pipistrellus_maderensis                2
-    pipistrellus_nathusii                  2
-    pipistrellus_paterculus                2
-    pipistrellus_pipistrellus              2
-    pipistrellus_pygmaeus                  2
-    pipistrellus_raceyi                    2
-    pipistrellus_rueppellii                2
-    pipistrellus_tenuis                    2
+    pipistrellus_abramus                   3
+    pipistrellus_ceylonicus                3
+    pipistrellus_coromandra                3
+    pipistrellus_hanaki                    3
+    pipistrellus_hesperidus                3
+    pipistrellus_javanicus                 3
+    pipistrellus_kuhlii                    3
+    pipistrellus_maderensis                3
+    pipistrellus_nathusii                  3
+    pipistrellus_paterculus                3
+    pipistrellus_pipistrellus              3
+    pipistrellus_pygmaeus                  3
+    pipistrellus_raceyi                    3
+    pipistrellus_rueppellii                3
+    pipistrellus_tenuis                    3
     pithecia_pithecia                      1
     plagiodontia_aedium                    0
-    planigale_gilesi                       2
-    planigale_ingrami                      2
-    planigale_maculata                     2
-    planigale_novaeguineae                 2
-    planigale_tenuirostris                 2
+    planigale_gilesi                       3
+    planigale_ingrami                      3
+    planigale_maculata                     3
+    planigale_novaeguineae                 3
+    planigale_tenuirostris                 3
     platalina_genovensium                  0
-    platanista_gangetica                   2
+    platanista_gangetica                   3
     platyrrhinus_albericoi                 1
     platyrrhinus_aurarius                  1
     platyrrhinus_brachycephalus            1
@@ -2615,16 +2615,16 @@ BEGIN DATA;
     platyrrhinus_nigellus                  0
     platyrrhinus_recifinus                 1
     platyrrhinus_vittatus                  1
-    plecotus_auritus                       2
-    plecotus_austriacus                    2
-    plecotus_kolombatovici                 2
-    plecotus_macrobullaris                 2
-    plecotus_ognevi                        2
-    plecotus_sacrimontis                   2
-    plecotus_sardus                        2
-    podogymnura_truei                      2
+    plecotus_auritus                       3
+    plecotus_austriacus                    3
+    plecotus_kolombatovici                 3
+    plecotus_macrobullaris                 3
+    plecotus_ognevi                        3
+    plecotus_sacrimontis                   3
+    plecotus_sardus                        3
+    podogymnura_truei                      3
     podomys_floridanus                     1
-    poecilogale_albinucha                  2
+    poecilogale_albinucha                  3
     pogonomys_loriae                       0
     pogonomys_macrourus                    0
     pogonomys_sylvestris                   0
@@ -2632,22 +2632,22 @@ BEGIN DATA;
     poliocitellus_franklinii               1
     pongo_abelii                           1
     pongo_pygmaeus                         1
-    pontoporia_blainvillei                 2
+    pontoporia_blainvillei                 3
     porcula_salvania                       1
     potamochoerus_larvatus                 1
     potamochoerus_porcus                   1
-    potamogale_velox                       2
+    potamogale_velox                       3
     potorous_gilbertii                     1
     potorous_longipes                      1
     potorous_tridactylus                   1
     potos_flavus                           1
-    praomys_daltoni                        1
+    praomys_daltoni                        2
     praomys_degraaffi                      1
     praomys_delectorum                     1
-    praomys_derooi                         1
+    praomys_derooi                         2
     praomys_hartwigi                       1
     praomys_jacksoni                       1
-    praomys_lukolelae                      1
+    praomys_lukolelae                      2
     praomys_minor                          1
     praomys_misonnei                       1
     praomys_morio                          1
@@ -2656,25 +2656,25 @@ BEGIN DATA;
     praomys_petteri                        1
     praomys_rostratus                      1
     praomys_tullbergi                      1
-    praomys_verschureni                    1
+    praomys_verschureni                    2
     presbytis_chrysomelas                  0
     presbytis_frontata                     0
     presbytis_melalophos                   0
     presbytis_thomasi                      0
-    priodontes_maximus                     2
-    prionailurus_bengalensis               2
-    prionailurus_planiceps                 2
-    prionailurus_rubiginosus               2
-    prionailurus_viverrinus                2
-    prionodon_linsang                      2
-    prionodon_pardicolor                   2
+    priodontes_maximus                     3
+    prionailurus_bengalensis               3
+    prionailurus_planiceps                 3
+    prionailurus_rubiginosus               3
+    prionailurus_viverrinus                3
+    prionodon_linsang                      3
+    prionodon_pardicolor                   3
     procapra_gutturosa                     0
     procapra_picticaudata                  0
     procapra_przewalskii                   0
     procavia_capensis                      0
     procolobus_verus                       0
-    procyon_cancrivorus                    1
-    procyon_lotor                          1
+    procyon_cancrivorus                    2
+    procyon_lotor                          2
     proechimys_cuvieri                     0
     proechimys_guyannensis                 0
     proechimys_longicaudatus               0
@@ -2685,7 +2685,7 @@ BEGIN DATA;
     proedromys_liangshanensis              1
     prolemur_simus                         0
     prometheomys_schaposchnikowi           0
-    promops_centralis                      2
+    promops_centralis                      3
     pronolagus_crassicaudatus              0
     pronolagus_randensis                   0
     pronolagus_rupestris                   0
@@ -2702,12 +2702,12 @@ BEGIN DATA;
     protoxerus_stangeri                    0
     psammomys_obesus                       0
     psammomys_vexillaris                   0
-    pseudantechinus_bilarni                1
-    pseudantechinus_macdonnellensis        2
-    pseudantechinus_mimulus                2
-    pseudantechinus_ningbing               2
-    pseudantechinus_roryi                  2
-    pseudantechinus_woolleyae              2
+    pseudantechinus_bilarni                2
+    pseudantechinus_macdonnellensis        3
+    pseudantechinus_mimulus                3
+    pseudantechinus_ningbing               3
+    pseudantechinus_roryi                  3
+    pseudantechinus_woolleyae              3
     pseudocheirus_peregrinus               0
     pseudochirops_albertisii               0
     pseudochirops_archeri                  0
@@ -2718,9 +2718,9 @@ BEGIN DATA;
     pseudochirulus_forbesi                 0
     pseudochirulus_herbertensis            0
     pseudochirulus_mayeri                  0
-    pseudohydromys_ellermani               1
+    pseudohydromys_ellermani               2
     pseudois_nayaur                        0
-    pseudorca_crassidens                   2
+    pseudorca_crassidens                   3
     pseudoryx_nghetinhensis                0
     pseudoryzomys_simplex                  1
     ptenochirus_jagori                     0
@@ -2729,14 +2729,14 @@ BEGIN DATA;
     pteromys_momonga                       1
     pteromys_volans                        1
     pteromyscus_pulverulentus              0
-    pteronotus_davyi                       2
-    pteronotus_gymnonotus                  2
-    pteronotus_macleayii                   2
-    pteronotus_parnellii                   2
-    pteronotus_personatus                  2
-    pteronotus_quadridens                  2
-    pteronotus_rubiginosus                 1
-    pteronura_brasiliensis                 2
+    pteronotus_davyi                       3
+    pteronotus_gymnonotus                  3
+    pteronotus_macleayii                   3
+    pteronotus_parnellii                   3
+    pteronotus_personatus                  3
+    pteronotus_quadridens                  3
+    pteronotus_rubiginosus                 2
+    pteronura_brasiliensis                 3
     pteropus_admiralitatum                 0
     pteropus_aldabrensis                   0
     pteropus_alecto                        0
@@ -2774,14 +2774,14 @@ BEGIN DATA;
     pteropus_vetulus                       0
     pteropus_voeltzkowi                    0
     pteropus_woodfordi                     0
-    ptilocercus_lowii                      1
+    ptilocercus_lowii                      2
     pudu_mephistophiles                    0
     pudu_puda                              0
-    puma_concolor                          2
+    puma_concolor                          3
     punomys_kofordi                        0
-    pusa_caspica                           2
-    pusa_hispida                           2
-    pusa_sibirica                          2
+    pusa_caspica                           3
+    pusa_hispida                           3
+    pusa_sibirica                          3
     pygathrix_cinerea                      0
     pygathrix_nemaeus                      0
     pygathrix_nigripes                     0
@@ -2844,49 +2844,49 @@ BEGIN DATA;
     reithrodontomys_zacatecae              0
     rhabdomys_pumilio                      1
     rheithrosciurus_macrotis               0
-    rheomys_raptor                         2
+    rheomys_raptor                         3
     rhinoceros_sondaicus                   0
     rhinoceros_unicornis                   0
-    rhinolophus_affinis                    2
-    rhinolophus_alcyone                    2
-    rhinolophus_arcuatus                   2
-    rhinolophus_blasii                     2
-    rhinolophus_celebensis                 2
-    rhinolophus_clivosus                   2
-    rhinolophus_creaghi                    2
-    rhinolophus_darlingi                   2
-    rhinolophus_denti                      2
-    rhinolophus_eloquens                   2
-    rhinolophus_euryale                    2
-    rhinolophus_euryotis                   2
-    rhinolophus_ferrumequinum              2
-    rhinolophus_formosae                   2
-    rhinolophus_fumigatus                  2
-    rhinolophus_hipposideros               2
-    rhinolophus_landeri                    2
-    rhinolophus_luctus                     2
-    rhinolophus_macrotis                   2
-    rhinolophus_malayanus                  2
-    rhinolophus_marshalli                  2
-    rhinolophus_megaphyllus                2
-    rhinolophus_mehelyi                    2
-    rhinolophus_paradoxolophus             2
-    rhinolophus_pearsonii                  2
-    rhinolophus_philippinensis             2
-    rhinolophus_pusillus                   2
-    rhinolophus_rex                        2
-    rhinolophus_rouxii                     2
-    rhinolophus_ruwenzorii                 2
-    rhinolophus_shameli                    2
-    rhinolophus_simulator                  2
-    rhinolophus_sinicus                    2
-    rhinolophus_stheno                     2
-    rhinolophus_subrufus                   2
-    rhinolophus_swinnyi                    2
-    rhinolophus_thomasi                    2
-    rhinolophus_trifoliatus                2
-    rhinolophus_virgo                      2
-    rhinonicteris_aurantia                 2
+    rhinolophus_affinis                    3
+    rhinolophus_alcyone                    3
+    rhinolophus_arcuatus                   3
+    rhinolophus_blasii                     3
+    rhinolophus_celebensis                 3
+    rhinolophus_clivosus                   3
+    rhinolophus_creaghi                    3
+    rhinolophus_darlingi                   3
+    rhinolophus_denti                      3
+    rhinolophus_eloquens                   3
+    rhinolophus_euryale                    3
+    rhinolophus_euryotis                   3
+    rhinolophus_ferrumequinum              3
+    rhinolophus_formosae                   3
+    rhinolophus_fumigatus                  3
+    rhinolophus_hipposideros               3
+    rhinolophus_landeri                    3
+    rhinolophus_luctus                     3
+    rhinolophus_macrotis                   3
+    rhinolophus_malayanus                  3
+    rhinolophus_marshalli                  3
+    rhinolophus_megaphyllus                3
+    rhinolophus_mehelyi                    3
+    rhinolophus_paradoxolophus             3
+    rhinolophus_pearsonii                  3
+    rhinolophus_philippinensis             3
+    rhinolophus_pusillus                   3
+    rhinolophus_rex                        3
+    rhinolophus_rouxii                     3
+    rhinolophus_ruwenzorii                 3
+    rhinolophus_shameli                    3
+    rhinolophus_simulator                  3
+    rhinolophus_sinicus                    3
+    rhinolophus_stheno                     3
+    rhinolophus_subrufus                   3
+    rhinolophus_swinnyi                    3
+    rhinolophus_thomasi                    3
+    rhinolophus_trifoliatus                3
+    rhinolophus_virgo                      3
+    rhinonicteris_aurantia                 3
     rhinophylla_alethina                   1
     rhinophylla_fischerae                  1
     rhinophylla_pumilio                    1
@@ -2895,35 +2895,35 @@ BEGIN DATA;
     rhinopithecus_brelichi                 0
     rhinopithecus_roxellana                0
     rhinopithecus_strykeri                 0
-    rhinopoma_hardwickii                   2
-    rhinopoma_microphyllum                 2
-    rhinopoma_muscatellum                  2
-    rhinosciurus_laticaudatus              1
+    rhinopoma_hardwickii                   3
+    rhinopoma_microphyllum                 3
+    rhinopoma_muscatellum                  3
+    rhinosciurus_laticaudatus              2
     rhipidomys_macconnelli                 1
     rhipidomys_mastacalis                  1
     rhipidomys_nitela                      1
     rhipidomys_wetzeli                     1
     rhizomys_pruinosus                     0
     rhizomys_sinensis                      0
-    rhogeessa_aeneus                       2
-    rhogeessa_alleni                       2
-    rhogeessa_genowaysi                    2
-    rhogeessa_gracilis                     2
-    rhogeessa_io                           2
-    rhogeessa_mira                         2
-    rhogeessa_parvula                      2
-    rhogeessa_tumida                       2
+    rhogeessa_aeneus                       3
+    rhogeessa_alleni                       3
+    rhogeessa_genowaysi                    3
+    rhogeessa_gracilis                     3
+    rhogeessa_io                           3
+    rhogeessa_mira                         3
+    rhogeessa_parvula                      3
+    rhogeessa_tumida                       3
     rhombomys_opimus                       0
-    rhynchocyon_petersi                    2
-    rhynchocyon_udzungwensis               2
-    rhynchogale_melleri                    1
-    rhyncholestes_raphanurus               1
-    rhynchomeles_prattorum                 1
-    rhynchomys_banahao                     2
-    rhynchomys_isarogensis                 2
-    rhynchomys_soricoides                  2
-    rhynchomys_tapulao                     2
-    rhynchonycteris_naso                   2
+    rhynchocyon_petersi                    3
+    rhynchocyon_udzungwensis               3
+    rhynchogale_melleri                    2
+    rhyncholestes_raphanurus               2
+    rhynchomeles_prattorum                 2
+    rhynchomys_banahao                     3
+    rhynchomys_isarogensis                 3
+    rhynchomys_soricoides                  3
+    rhynchomys_tapulao                     3
+    rhynchonycteris_naso                   3
     romerolagus_diazi                      0
     rousettus_aegyptiacus                  0
     rousettus_amplexicaudatus              0
@@ -2937,10 +2937,10 @@ BEGIN DATA;
     rungwecebus_kipunji                    1
     rupicapra_pyrenaica                    0
     rupicapra_rupicapra                    0
-    saccopteryx_bilineata                  2
-    saccopteryx_canescens                  2
-    saccopteryx_gymnura                    2
-    saccopteryx_leptura                    2
+    saccopteryx_bilineata                  3
+    saccopteryx_canescens                  3
+    saccopteryx_gymnura                    3
+    saccopteryx_leptura                    3
     saccostomus_campestris                 1
     saccostomus_mearnsi                    1
     saguinus_bicolor                       1
@@ -2959,30 +2959,30 @@ BEGIN DATA;
     saimiri_boliviensis                    1
     saimiri_ustus                          1
     saimiri_vanzolinii                     1
-    salanoia_concolor                      1
+    salanoia_concolor                      2
     salinomys_delicatus                    1
-    salpingotus_kozlovi                    1
+    salpingotus_kozlovi                    2
     santamartamys_rufodorsalis             0
     sapajus_apella                         1
     sapajus_cay                            0
     sapajus_flavius                        1
     sapajus_libidinosus                    1
-    sapajus_macrocephalus                  1
+    sapajus_macrocephalus                  2
     sapajus_nigritus                       1
-    sapajus_robustus                       1
+    sapajus_robustus                       2
     sapajus_xanthosternos                  1
-    sarcophilus_harrisii                   2
-    sauromys_petrophilus                   2
-    saxatilomys_paulinae                   2
-    scalopus_aquaticus                     2
-    scapanulus_oweni                       1
-    scapanus_latimanus                     2
-    scapanus_orarius                       2
-    scapanus_townsendii                    2
-    scapteromys_aquaticus                  1
-    scapteromys_tumidus                    1
-    scaptochirus_moschatus                 2
-    scaptonyx_fusicaudus                   2
+    sarcophilus_harrisii                   3
+    sauromys_petrophilus                   3
+    saxatilomys_paulinae                   3
+    scalopus_aquaticus                     3
+    scapanulus_oweni                       2
+    scapanus_latimanus                     3
+    scapanus_orarius                       3
+    scapanus_townsendii                    3
+    scapteromys_aquaticus                  2
+    scapteromys_tumidus                    2
+    scaptochirus_moschatus                 3
+    scaptonyx_fusicaudus                   3
     sciurillus_pusillus                    0
     sciurotamias_davidianus                0
     sciurus_aberti                         0
@@ -3005,27 +3005,27 @@ BEGIN DATA;
     sciurus_stramineus                     0
     sciurus_variegatoides                  0
     sciurus_vulgaris                       0
-    scolomys_ucayalensis                   1
-    scotinomys_teguina                     2
-    scotinomys_xerampelinus                2
-    scotoecus_hirundo                      2
-    scotomanes_ornatus                     2
+    scolomys_ucayalensis                   2
+    scotinomys_teguina                     3
+    scotinomys_xerampelinus                3
+    scotoecus_hirundo                      3
+    scotomanes_ornatus                     3
     scotonycteris_ophiodon                 0
     scotonycteris_zenkeri                  0
-    scotophilus_borbonicus                 2
-    scotophilus_dinganii                   2
-    scotophilus_heathii                    2
-    scotophilus_kuhlii                     2
-    scotophilus_leucogaster                2
-    scotophilus_marovaza                   2
-    scotophilus_nigrita                    2
-    scotophilus_nux                        2
-    scotophilus_robustus                   2
-    scotophilus_tandrefana                 2
-    scotophilus_viridis                    2
+    scotophilus_borbonicus                 3
+    scotophilus_dinganii                   3
+    scotophilus_heathii                    3
+    scotophilus_kuhlii                     3
+    scotophilus_leucogaster                3
+    scotophilus_marovaza                   3
+    scotophilus_nigrita                    3
+    scotophilus_nux                        3
+    scotophilus_robustus                   3
+    scotophilus_tandrefana                 3
+    scotophilus_viridis                    3
     sekeetamys_calurus                     1
     semnopithecus_entellus                 0
-    setifer_setosus                        2
+    setifer_setosus                        3
     setonix_brachyurus                     0
     sicista_betulina                       1
     sicista_caucasica                      1
@@ -3036,102 +3036,102 @@ BEGIN DATA;
     sicista_severtzovi                     1
     sicista_strandi                        1
     sicista_tianshanica                    1
-    sigmodon_alleni                        1
-    sigmodon_alstoni                       1
-    sigmodon_arizonae                      1
-    sigmodon_fulviventer                   1
+    sigmodon_alleni                        2
+    sigmodon_alstoni                       2
+    sigmodon_arizonae                      2
+    sigmodon_fulviventer                   2
     sigmodon_hirsutus                      1
-    sigmodon_hispidus                      1
-    sigmodon_leucotis                      1
-    sigmodon_mascotensis                   1
-    sigmodon_ochrognathus                  1
-    sigmodon_peruanus                      1
+    sigmodon_hispidus                      2
+    sigmodon_leucotis                      2
+    sigmodon_mascotensis                   2
+    sigmodon_ochrognathus                  2
+    sigmodon_peruanus                      2
     sigmodon_toltecus                      0
     sigmodontomys_alfari                   0
     simias_concolor                        0
-    sminthopsis_aitkeni                    2
-    sminthopsis_archeri                    2
-    sminthopsis_bindi                      2
-    sminthopsis_butleri                    2
-    sminthopsis_crassicaudata              2
-    sminthopsis_dolichura                  2
-    sminthopsis_douglasi                   2
-    sminthopsis_gilberti                   2
-    sminthopsis_granulipes                 2
-    sminthopsis_griseoventer               2
-    sminthopsis_hirtipes                   2
-    sminthopsis_longicaudata               2
-    sminthopsis_macroura                   2
-    sminthopsis_murina                     2
-    sminthopsis_ooldea                     2
-    sminthopsis_psammophila                2
-    sminthopsis_virginiae                  2
-    sminthopsis_youngsoni                  2
-    solenodon_cubanus                      1
-    solenodon_paradoxus                    1
-    solisorex_pearsoni                     2
+    sminthopsis_aitkeni                    3
+    sminthopsis_archeri                    3
+    sminthopsis_bindi                      3
+    sminthopsis_butleri                    3
+    sminthopsis_crassicaudata              3
+    sminthopsis_dolichura                  3
+    sminthopsis_douglasi                   3
+    sminthopsis_gilberti                   3
+    sminthopsis_granulipes                 3
+    sminthopsis_griseoventer               3
+    sminthopsis_hirtipes                   3
+    sminthopsis_longicaudata               3
+    sminthopsis_macroura                   3
+    sminthopsis_murina                     3
+    sminthopsis_ooldea                     3
+    sminthopsis_psammophila                3
+    sminthopsis_virginiae                  3
+    sminthopsis_youngsoni                  3
+    solenodon_cubanus                      2
+    solenodon_paradoxus                    2
+    solisorex_pearsoni                     3
     solomys_salebrosus                     0
     sooretamys_angouya                     1
-    sorex_alpinus                          2
-    sorex_antinorii                        2
-    sorex_araneus                          2
-    sorex_arcticus                         2
-    sorex_arizonae                         2
-    sorex_asper                            2
-    sorex_bairdi                           2
-    sorex_bedfordiae                       2
-    sorex_caecutiens                       2
-    sorex_camtschatica                     2
-    sorex_cinereus                         2
-    sorex_coronatus                        2
-    sorex_cylindricauda                    2
-    sorex_daphaenodon                      2
-    sorex_excelsus                         2
-    sorex_fumeus                           2
-    sorex_gracillimus                      2
-    sorex_granarius                        2
-    sorex_haydeni                          2
-    sorex_hosonoi                          2
-    sorex_hoyi                             2
-    sorex_isodon                           2
-    sorex_jacksoni                         2
-    sorex_longirostris                     2
-    sorex_lyelli                           2
-    sorex_maritimensis                     2
-    sorex_milleri                          2
-    sorex_minutissimus                     2
-    sorex_minutus                          2
-    sorex_mirabilis                        2
-    sorex_monticolus                       2
-    sorex_ornatus                          2
-    sorex_pacificus                        2
-    sorex_palustris                        2
-    sorex_portenkoi                        2
-    sorex_preblei                          2
-    sorex_raddei                           2
-    sorex_roboratus                        2
-    sorex_rohweri                          2
-    sorex_samniticus                       2
-    sorex_satunini                         2
-    sorex_saussurei                        2
-    sorex_shinto                           2
-    sorex_tenellus                         2
-    sorex_trowbridgii                      2
-    sorex_tundrensis                       2
-    sorex_ugyunak                          2
-    sorex_unguiculatus                     2
-    sorex_vagrans                          2
-    sorex_volnuchini                       2
-    sorex_yukonicus                        2
-    soriculus_nigrescens                   2
-    sotalia_fluviatilis                    2
-    sotalia_guianensis                     2
-    sousa_chinensis                        2
+    sorex_alpinus                          3
+    sorex_antinorii                        3
+    sorex_araneus                          3
+    sorex_arcticus                         3
+    sorex_arizonae                         3
+    sorex_asper                            3
+    sorex_bairdi                           3
+    sorex_bedfordiae                       3
+    sorex_caecutiens                       3
+    sorex_camtschatica                     3
+    sorex_cinereus                         3
+    sorex_coronatus                        3
+    sorex_cylindricauda                    3
+    sorex_daphaenodon                      3
+    sorex_excelsus                         3
+    sorex_fumeus                           3
+    sorex_gracillimus                      3
+    sorex_granarius                        3
+    sorex_haydeni                          3
+    sorex_hosonoi                          3
+    sorex_hoyi                             3
+    sorex_isodon                           3
+    sorex_jacksoni                         3
+    sorex_longirostris                     3
+    sorex_lyelli                           3
+    sorex_maritimensis                     3
+    sorex_milleri                          3
+    sorex_minutissimus                     3
+    sorex_minutus                          3
+    sorex_mirabilis                        3
+    sorex_monticolus                       3
+    sorex_ornatus                          3
+    sorex_pacificus                        3
+    sorex_palustris                        3
+    sorex_portenkoi                        3
+    sorex_preblei                          3
+    sorex_raddei                           3
+    sorex_roboratus                        3
+    sorex_rohweri                          3
+    sorex_samniticus                       3
+    sorex_satunini                         3
+    sorex_saussurei                        3
+    sorex_shinto                           3
+    sorex_tenellus                         3
+    sorex_trowbridgii                      3
+    sorex_tundrensis                       3
+    sorex_ugyunak                          3
+    sorex_unguiculatus                     3
+    sorex_vagrans                          3
+    sorex_volnuchini                       3
+    sorex_yukonicus                        3
+    soriculus_nigrescens                   3
+    sotalia_fluviatilis                    3
+    sotalia_guianensis                     3
+    sousa_chinensis                        3
     spalacopus_cyanus                      0
     spalax_arenarius                       0
     spalax_microphthalmus                  0
     spalax_zemni                           0
-    speothos_venaticus                     2
+    speothos_venaticus                     3
     spermophilopsis_leptodactylus          1
     spermophilus_alashanicus               1
     spermophilus_citellus                  1
@@ -3152,15 +3152,15 @@ BEGIN DATA;
     srilankamys_ohiensis                   1
     steatomys_krebsii                      1
     steatomys_parvus                       1
-    stenella_attenuata                     2
-    stenella_clymene                       2
-    stenella_coeruleoalba                  2
-    stenella_frontalis                     2
-    stenella_longirostris                  2
-    steno_bredanensis                      2
-    stenocephalemys_albipes                1
-    stenocephalemys_albocaudata            1
-    stenocephalemys_griseicauda            1
+    stenella_attenuata                     3
+    stenella_clymene                       3
+    stenella_coeruleoalba                  3
+    stenella_frontalis                     3
+    stenella_longirostris                  3
+    steno_bredanensis                      3
+    stenocephalemys_albipes                2
+    stenocephalemys_albocaudata            2
+    stenocephalemys_griseicauda            2
     stenoderma_rufum                       0
     stochomys_longicaudatus                1
     strigocuscus_celebensis                0
@@ -3181,20 +3181,20 @@ BEGIN DATA;
     stylodipus_andrewsi                    0
     stylodipus_sungorus                    0
     stylodipus_telum                       0
-    suncus_dayi                            2
-    suncus_etruscus                        2
-    suncus_fellowesgordoni                 2
-    suncus_hututsi                         2
-    suncus_infinitesimus                   2
-    suncus_lixus                           2
-    suncus_madagascariensis                2
-    suncus_malayanus                       2
-    suncus_megalura                        2
-    suncus_montanus                        2
-    suncus_murinus                         2
-    suncus_remyi                           2
-    suncus_stoliczkanus                    2
-    suncus_varilla                         2
+    suncus_dayi                            3
+    suncus_etruscus                        3
+    suncus_fellowesgordoni                 3
+    suncus_hututsi                         3
+    suncus_infinitesimus                   3
+    suncus_lixus                           3
+    suncus_madagascariensis                3
+    suncus_malayanus                       3
+    suncus_megalura                        3
+    suncus_montanus                        3
+    suncus_murinus                         3
+    suncus_remyi                           3
+    suncus_stoliczkanus                    3
+    suncus_varilla                         3
     sundamys_muelleri                      1
     sundasciurus_brookei                   1
     sundasciurus_fraterculus               1
@@ -3210,7 +3210,7 @@ BEGIN DATA;
     sundasciurus_samarensis                1
     sundasciurus_steerii                   1
     sundasciurus_tenuis                    1
-    suricata_suricatta                     1
+    suricata_suricatta                     2
     sus_barbatus                           1
     sus_cebifrons                          1
     sus_celebensis                         1
@@ -3227,36 +3227,36 @@ BEGIN DATA;
     sylvilagus_obscurus                    0
     sylvilagus_palustris                   0
     sylvilagus_transitionalis              0
-    sylvisorex_granti                      2
-    sylvisorex_howelli                     2
-    sylvisorex_johnstoni                   2
-    sylvisorex_lunaris                     2
-    sylvisorex_ollula                      2
-    sylvisorex_vulcanorum                  2
+    sylvisorex_granti                      3
+    sylvisorex_howelli                     3
+    sylvisorex_johnstoni                   3
+    sylvisorex_lunaris                     3
+    sylvisorex_ollula                      3
+    sylvisorex_vulcanorum                  3
     symphalangus_syndactylus               1
     synaptomys_borealis                    1
     synaptomys_cooperi                     1
     syncerus_caffer                        0
     syntheosciurus_brochus                 0
-    tachyglossus_aculeatus                 2
+    tachyglossus_aculeatus                 3
     tachyoryctes_splendens                 0
-    tadarida_aegyptiaca                    2
-    tadarida_brasiliensis                  2
-    tadarida_fulminans                     2
-    tadarida_insignis                      2
-    tadarida_teniotis                      2
+    tadarida_aegyptiaca                    3
+    tadarida_brasiliensis                  3
+    tadarida_fulminans                     3
+    tadarida_insignis                      3
+    tadarida_teniotis                      3
     taeromys_celebensis                    1
-    talpa_altaica                          2
-    talpa_caeca                            2
-    talpa_caucasica                        2
-    talpa_davidiana                        2
-    talpa_europaea                         2
-    talpa_levantis                         2
-    talpa_occidentalis                     2
-    talpa_romana                           2
-    talpa_stankovici                       2
-    tamandua_mexicana                      2
-    tamandua_tetradactyla                  2
+    talpa_altaica                          3
+    talpa_caeca                            3
+    talpa_caucasica                        3
+    talpa_davidiana                        3
+    talpa_europaea                         3
+    talpa_levantis                         3
+    talpa_occidentalis                     3
+    talpa_romana                           3
+    talpa_stankovici                       3
+    tamandua_mexicana                      3
+    tamandua_tetradactyla                  3
     tamias_striatus                        1
     tamiasciurus_douglasii                 1
     tamiasciurus_hudsonicus                1
@@ -3264,41 +3264,41 @@ BEGIN DATA;
     tamiops_rodolphii                      1
     tamiops_swinhoei                       1
     tapecomys_primus                       1
-    taphozous_australis                    2
-    taphozous_georgianus                   2
-    taphozous_hilli                        2
-    taphozous_longimanus                   2
-    taphozous_mauritianus                  2
-    taphozous_melanopogon                  2
-    taphozous_nudiventris                  2
+    taphozous_australis                    3
+    taphozous_georgianus                   3
+    taphozous_hilli                        3
+    taphozous_longimanus                   3
+    taphozous_mauritianus                  3
+    taphozous_melanopogon                  3
+    taphozous_nudiventris                  3
     tapirus_bairdii                        0
     tapirus_indicus                        0
     tapirus_pinchaque                      0
     tapirus_terrestris                     0
     tarsipes_rostratus                     0
-    tarsius_bancanus                       2
-    tarsius_dentatus                       2
-    tarsius_lariang                        2
-    tarsius_sangirensis                    2
-    tarsius_syrichta                       2
-    tarsius_tarsier                        2
-    tarsius_wallacei                       1
-    tarsomys_apoensis                      2
-    tasmacetus_shepherdi                   2
+    tarsius_bancanus                       3
+    tarsius_dentatus                       3
+    tarsius_lariang                        3
+    tarsius_sangirensis                    3
+    tarsius_syrichta                       3
+    tarsius_tarsier                        3
+    tarsius_wallacei                       2
+    tarsomys_apoensis                      3
+    tasmacetus_shepherdi                   3
     tatera_indica                          1
-    taterillus_arenarius                   1
-    taterillus_gracilis                    1
-    taterillus_pygargus                    1
-    taxidea_taxus                          1
+    taterillus_arenarius                   2
+    taterillus_gracilis                    2
+    taterillus_pygargus                    2
+    taxidea_taxus                          2
     tayassu_pecari                         0
-    tenrec_ecaudatus                       1
+    tenrec_ecaudatus                       2
     tetracerus_quadricornis                0
     thallomys_loringi                      0
     thallomys_nigricauda                   0
     thallomys_paedulcus                    0
-    thalpomys_cerradensis                  1
-    thalpomys_lasiotis                     1
-    thaptomys_nigrita                      2
+    thalpomys_cerradensis                  2
+    thalpomys_lasiotis                     2
+    thaptomys_nigrita                      3
     theropithecus_gelada                   0
     thomasomys_aureus                      0
     thomasomys_baeops                      1
@@ -3325,35 +3325,35 @@ BEGIN DATA;
     thrichomys_inermis                     1
     thrichomys_pachyurus                   0
     thryonomys_swinderianus                0
-    thylamys_elegans                       1
-    thylamys_karimii                       2
-    thylamys_pallidior                     1
-    thylamys_pulchellus                    1
-    thylamys_pusillus                      1
-    thylamys_tatei                         2
-    thylamys_velutinus                     1
-    thylamys_venustus                      2
+    thylamys_elegans                       2
+    thylamys_karimii                       3
+    thylamys_pallidior                     2
+    thylamys_pulchellus                    2
+    thylamys_pusillus                      2
+    thylamys_tatei                         3
+    thylamys_velutinus                     2
+    thylamys_venustus                      3
     thylogale_billardierii                 0
     thylogale_browni                       0
     thylogale_brunii                       0
     thylogale_calabyi                      0
     thylogale_stigmatica                   0
     thylogale_thetis                       0
-    thyroptera_discifera                   2
-    thyroptera_lavali                      2
-    thyroptera_tricolor                    2
-    tlacuatzin_canescens                   1
+    thyroptera_discifera                   3
+    thyroptera_lavali                      3
+    thyroptera_tricolor                    3
+    tlacuatzin_canescens                   2
     tokudaia_muenninki                     1
     tokudaia_osimensis                     1
     tokudaia_tokunoshimensis               1
-    tolypeutes_matacus                     1
-    tolypeutes_tricinctus                  1
-    tonatia_bidens                         1
-    tonatia_saurophila                     1
-    tonkinomys_daovantieni                 2
+    tolypeutes_matacus                     2
+    tolypeutes_tricinctus                  2
+    tonatia_bidens                         2
+    tonatia_saurophila                     2
+    tonkinomys_daovantieni                 3
     toromys_grandis                        0
     toromys_rhipidurus                     0
-    trachops_cirrhosus                     1
+    trachops_cirrhosus                     2
     trachypithecus_auratus                 0
     trachypithecus_cristatus               0
     trachypithecus_delacouri               0
@@ -3383,7 +3383,7 @@ BEGIN DATA;
     transandinomys_bolivaris               1
     transandinomys_talamancae              1
     tremarctos_ornatus                     1
-    triaenops_persicus                     2
+    triaenops_persicus                     3
     trichechus_manatus                     0
     trichosurus_caninus                    0
     trichosurus_vulpecula                  0
@@ -3396,34 +3396,34 @@ BEGIN DATA;
     trinomys_moojeni                       1
     trinomys_paratus                       1
     trinomys_yonenagae                     0
-    trinycteris_nicefori                   1
+    trinycteris_nicefori                   2
     trogopterus_xanthipes                  0
     tscherskia_triton                      0
-    tupaia_belangeri                       1
-    tupaia_chrysogaster                    1
-    tupaia_dorsalis                        1
-    tupaia_glis                            1
-    tupaia_gracilis                        1
-    tupaia_javanica                        1
-    tupaia_longipes                        1
-    tupaia_minor                           1
-    tupaia_moellendorffi                   1
-    tupaia_montana                         1
-    tupaia_nicobarica                      1
-    tupaia_palawanensis                    1
-    tupaia_picta                           1
-    tupaia_splendidula                     1
-    tupaia_tana                            1
-    tursiops_aduncus                       2
-    tursiops_truncatus                     2
+    tupaia_belangeri                       2
+    tupaia_chrysogaster                    2
+    tupaia_dorsalis                        2
+    tupaia_glis                            2
+    tupaia_gracilis                        2
+    tupaia_javanica                        2
+    tupaia_longipes                        2
+    tupaia_minor                           2
+    tupaia_moellendorffi                   2
+    tupaia_montana                         2
+    tupaia_nicobarica                      2
+    tupaia_palawanensis                    2
+    tupaia_picta                           2
+    tupaia_splendidula                     2
+    tupaia_tana                            2
+    tursiops_aduncus                       3
+    tursiops_truncatus                     3
     tylomys_nudicaudus                     0
     tylomys_watsoni                        0
-    tylonycteris_pachypus                  2
-    tylonycteris_robustula                 2
+    tylonycteris_pachypus                  3
+    tylonycteris_robustula                 3
     tympanoctomys_barrerae                 0
     tympanoctomys_loschalchalerosorum      0
     typhlomys_cinereus                     0
-    uranomys_ruddi                         2
+    uranomys_ruddi                         3
     urocitellus_armatus                    1
     urocitellus_columbianus                1
     urocitellus_mollis                     1
@@ -3434,16 +3434,16 @@ BEGIN DATA;
     urocyon_cinereoargenteus               1
     uroderma_bilobatum                     1
     uroderma_magnirostrum                  1
-    urogale_everetti                       1
+    urogale_everetti                       2
     uromys_caudimaculatus                  0
-    uropsilus_andersoni                    2
-    uropsilus_gracilis                     2
-    uropsilus_investigator                 2
-    uropsilus_soricipes                    2
-    urotrichus_talpoides                   2
+    uropsilus_andersoni                    3
+    uropsilus_gracilis                     3
+    uropsilus_investigator                 3
+    uropsilus_soricipes                    3
+    urotrichus_talpoides                   3
     ursus_americanus                       1
     ursus_arctos                           1
-    ursus_maritimus                        2
+    ursus_maritimus                        3
     ursus_thibetanus                       1
     vampyressa_melissa                     0
     vampyressa_pusilla                     0
@@ -3453,39 +3453,39 @@ BEGIN DATA;
     vampyriscus_nymphaea                   0
     vampyrodes_caraccioli                  0
     vampyrodes_major                       1
-    vampyrum_spectrum                      1
+    vampyrum_spectrum                      2
     varecia_rubra                          0
-    vespadelus_darlingtoni                 2
-    vespadelus_regulus                     2
-    vespadelus_vulturnus                   2
-    vespertilio_murinus                    2
-    vespertilio_sinensis                   2
+    vespadelus_darlingtoni                 3
+    vespadelus_regulus                     3
+    vespadelus_vulturnus                   3
+    vespertilio_murinus                    3
+    vespertilio_sinensis                   3
     vicugna_vicugna                        0
-    viverra_megaspila                      1
-    viverra_tangalunga                     1
-    viverra_zibetha                        1
-    viverricula_indica                     1
+    viverra_megaspila                      2
+    viverra_tangalunga                     2
+    viverra_zibetha                        2
+    viverricula_indica                     2
     voalavo_gymnocaudus                    1
     volemys_millicens                      0
     volemys_musseri                        0
     vombatus_ursinus                       0
-    vormela_peregusna                      2
+    vormela_peregusna                      3
     vulpes_cana                            1
-    vulpes_chama                           2
-    vulpes_corsac                          1
-    vulpes_ferrilata                       2
-    vulpes_lagopus                         2
-    vulpes_macrotis                        2
-    vulpes_rueppellii                      1
-    vulpes_velox                           2
-    vulpes_vulpes                          1
-    vulpes_zerda                           1
+    vulpes_chama                           3
+    vulpes_corsac                          2
+    vulpes_ferrilata                       3
+    vulpes_lagopus                         3
+    vulpes_macrotis                        3
+    vulpes_rueppellii                      2
+    vulpes_velox                           3
+    vulpes_vulpes                          2
+    vulpes_zerda                           2
     wallabia_bicolor                       0
     wiedomys_cerradensis                   1
-    wiedomys_pyrrhorhinos                  1
+    wiedomys_pyrrhorhinos                  2
     wyulda_squamicaudata                   1
     xenomys_nelsoni                        0
-    xeromys_myoides                        1
+    xeromys_myoides                        2
     xeronycteris_vieirai                   0
     xerospermophilus_mohavensis            1
     xerospermophilus_perotensis            1
@@ -3494,13 +3494,13 @@ BEGIN DATA;
     xerus_inauris                          1
     xerus_princeps                         1
     xerus_rutilus                          1
-    zaedyus_pichiy                         2
-    zalophus_californianus                 2
+    zaedyus_pichiy                         3
+    zalophus_californianus                 3
     zapus_hudsonius                        1
     zapus_princeps                         1
     zapus_trinotatus                       1
-    zelotomys_hildegardeae                 2
-    ziphius_cavirostris                    2
+    zelotomys_hildegardeae                 3
+    ziphius_cavirostris                    3
     zygodontomys_brevicauda                0
     zygogeomys_trichopus                   0
     zyzomys_argurus                        1

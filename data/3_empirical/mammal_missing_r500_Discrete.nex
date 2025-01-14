@@ -2,7 +2,7 @@
 [Data written by write.nexus.data.R, Fri Jan  3 17:32:40 2025]
 BEGIN DATA;
   DIMENSIONS NTAX=500 NCHAR=1;
-  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123";
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="missingStates";
   MATRIX
     abrocoma_cinerea                   ?
     acinonyx_jubatus                   ?
@@ -506,4 +506,5 @@ BEGIN DATA;
     vulpes_vulpes                      ?
   ;
 END;
+
 

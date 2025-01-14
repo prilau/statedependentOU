@@ -19,12 +19,15 @@ trait <- trait %>%
          !is.na(Diet.Vertebrate),
          !is.na(Diet.Invertebrate)) %>% 
   mutate(Binomial.1.2 = tolower(Binomial.1.2),
-    herbivore = ifelse(Diet.Plant == 100, 1, 0),
-    carnivore = ifelse(Diet.Vertebrate + Diet.Invertebrate == 100, 1, 0),
-    omnivore = ifelse(herbivore == 1 | carnivore == 1, 0, 1),
-    diet = herbivore + omnivore * 2 + carnivore * 3 - 1,
+    herbivore   = ifelse(Diet.Plant >= 100, 1, 0),
+    carnivore   = ifelse(Diet.Plant <= 0, 1, 0),
+    omnivore    = ifelse(herbivore == 1 | carnivore == 1, 0, 1),
+    p_omnivore  = ifelse(Diet.Plant < 100 & Diet.Plant > 50, 1, 0),
+    np_omnivore = ifelse(Diet.Plant <= 50 & Diet.Plant > 0, 1, 0),
+    diet3 = herbivore + omnivore * 2 + carnivore * 3 - 1,
+    diet4 = herbivore + p_omnivore * 2 + np_omnivore * 3 + carnivore * 4 - 1,
     log_mass_kg = log(Mass.g / 1000)) %>% 
-  select(Binomial.1.2, log_mass_kg, diet, carnivore)
+  select(Binomial.1.2, log_mass_kg, diet3, diet4)
 
 # species names found in both trait data and tree
 tips_keep <- intersect(tree$tip.label, trait$Binomial.1.2)
@@ -39,14 +42,17 @@ write.csv(trait, "data/3_empirical/mammal_traits.csv")
 write.tree(tree, file="data/3_empirical/mammal_perMY_n3500.tre")
 
 # save traits as nexus files
-mammal_disc <- list()
+mammal_disc3 <- list()
+mammal_disc4 <- list()
 mammal_cont <- list()
 for (i in 1:nrow(trait)){
   sp <- trait$Binomial.1.2[i]
-  mammal_disc[[sp]] <- trait$diet[i]
+  mammal_disc3[[sp]] <- trait$diet3[i]
+  mammal_disc4[[sp]] <- trait$diet4[i]
   mammal_cont[[sp]] <- trait$log_mass_kg[i]
 }
-write.nexus.data(mammal_disc, "data/3_empirical/mammal_diet_n3500_Discrete.nex", format = "standard")
+write.nexus.data(mammal_disc3, "data/3_empirical/mammal_diet3_n3500_Discrete.nex", format = "standard")
+write.nexus.data(mammal_disc4, "data/3_empirical/mammal_diet4_n3500_Discrete.nex", format = "standard")
 write.nexus.data(mammal_cont, "data/3_empirical/mammal_log_kg_n3500_Continuous.nex", format = "continuous")
 
 # Subset the data because it's painful to wait for the mcmc to be done.
@@ -65,15 +71,9 @@ write.nexus.data(mammal_cont, "data/3_empirical/mammal_log_kg_n3500_Continuous.n
 # now, I wanna subset a tree that works for both manuscript and thesis
 # and the thesis uses a different trait dataset as source
 # let's search for taxa that intersect with that dataset as well
-trait_picky <- read.csv("data/3_empirical/raw/COMBINE_imputed_Soria_2021.csv") %>%
-  mutate(Binomial.1.2 = tolower(gsub(" ", "_", phylacine_binomial))) %>% 
-  filter(!duplicated(phylacine_binomial),
-         !is.na(det_fruit),
-         Binomial.1.2 %in% tips_keep) %>% 
-  mutate(picky = ifelse(det_fruit >=90 | det_inv >=90 | det_vend>=90 | det_vect>=90 | det_vfish >=90 | det_vunk >=90 | det_scav >=90 | det_nect >=90 | det_seed >=90 | det_plantother >=90, 1, 0)) %>% 
-  select(Binomial.1.2, picky)
 
-set.seed(1234)
+set.seed(1234) # I did not set seed when I first made this tree
+#tree_r500 <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
 tree_r6 <- keep.tip(tree, sample(trait$Binomial.1.2, 6)) 
 tips_r500 <- sample(trait_picky$Binomial.1.2, 500)
 tree_r500 <- keep.tip(tree, tips_r500)
@@ -84,27 +84,18 @@ while (max(node.depth.edgelength(tree)) < 202){
   tree_r500 <- keep.tip(tree, tips_r500)
 }
 trait_r500 <- trait %>% filter(Binomial.1.2 %in% tips_r500)
-trait_picky_r500 <- trait_picky %>% filter(Binomial.1.2 %in% tips_r500)
-trait_combined_r500 <- merge(trait_r500, trait_picky_r500, by="Binomial.1.2") %>% 
-  mutate(picky_carn = carnivore + picky * 2,
-         picky_herb = herbivore + picky * 2,
-         picky_diet)
 
 # save traits as nexus files
-mammal_diet_r500 <- mammal_carn_r500 <- mammal_pick_r500 <- mammal_pica_r500 <- list()
+mammal_diet3_r500 <- mammal_diet4_r500 <- list()
 mammal_cont_r500 <- list()
 for (i in 1:nrow(trait_r500)){
   sp <- trait_r500$Binomial.1.2[i]
-  mammal_diet_r500[[sp]] <- trait_combined_r500$diet[i]
-  mammal_carn_r500[[sp]] <- trait_combined_r500$carnivore[i]
-  mammal_pick_r500[[sp]] <- trait_combined_r500$picky[i]
-  mammal_cont_r500[[sp]] <- trait_combined_r500$log_mass_kg[i]
-  mammal_pica_r500[[sp]] <- trait_combined_r500$picky_carn[i]
+  mammal_diet3_r500[[sp]] <- trait_r500$diet3[i]
+  mammal_diet4_r500[[sp]] <- trait_r500$diet4[i]
+  mammal_cont_r500[[sp]]  <- trait_r500$log_mass_kg[i]
 }
-write.nexus.data(mammal_diet_r500, "data/3_empirical/mammal_diet_r500_Discrete.nex", format = "standard")
-write.nexus.data(mammal_carn_r500, "data/3_empirical/mammal_carnivory_r500_Discrete.nex", format = "standard")
-write.nexus.data(mammal_pick_r500, "data/3_empirical/mammal_picky_r500_Discrete.nex", format = "standard")
-write.nexus.data(mammal_pica_r500, "data/3_empirical/mammal_picky_carnivore_r500_Discrete.nex", format = "standard")
+write.nexus.data(mammal_diet3_r500, "data/3_empirical/mammal_diet3_r500_Discrete.nex", format = "standard")
+write.nexus.data(mammal_diet4_r500, "data/3_empirical/mammal_diet4_r500_Discrete.nex", format = "standard")
 write.nexus.data(mammal_cont_r500, "data/3_empirical/mammal_log_kg_r500_Continuous.nex", format = "continuous")
 
 # save tree
