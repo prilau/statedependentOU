@@ -2,7 +2,7 @@
 [Data written by write.nexus.data.R, Tue Jan 14 09:59:52 2025]
 BEGIN DATA;
   DIMENSIONS NTAX=500 NCHAR=1;
-  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123456789";
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123";
   MATRIX
     abrocoma_cinerea                   0
     acinonyx_jubatus                   3
