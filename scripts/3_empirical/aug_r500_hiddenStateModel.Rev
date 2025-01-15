@@ -12,7 +12,6 @@
 
 ### Select the character to analyze
 characterDisc <- 1
-characterCont <- 1
 
 ### Read in the tree
 T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
@@ -69,7 +68,7 @@ rates[4][1] ~ dnExp( root_age / 10 )
 rates[5][1] ~ dnExp( root_age / 10 )
 rates[5][2] ~ dnExp( root_age / 10 )
 rates[5][3] ~ dnExp( root_age / 10 )
-rates[6][3] ~ dnExp( root_age / 10 1)
+rates[6][3] ~ dnExp( root_age / 10 )
 
 moves.append( mvScale( rates[1][2], weight=1.0 ) )
 moves.append( mvScale( rates[1][4], weight=1.0 ) )
@@ -144,7 +143,7 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
+#mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 #mymcmc.initializeFromCheckpoint("output/3_empirical/aug_r500_hiddenStateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
 mymcmc.run(generations=5000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/aug_r500_hiddenStateModel/run_" + RUN_INDEX + ".state")
 

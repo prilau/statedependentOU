@@ -12,7 +12,6 @@
 
 ### Select the character to analyze
 characterDisc <- 1
-characterCont <- 1
 
 ### Read in the tree
 T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
