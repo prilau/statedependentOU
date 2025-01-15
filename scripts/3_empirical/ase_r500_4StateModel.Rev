@@ -71,18 +71,18 @@ X.clamp(disc)
 
 mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/ase_4State/trace.log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/ase_4State/trace" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
 monitors.append( mnJointConditionalAncestralState(tree=tree,
                                                   ctmc=X,
-                                                  filename="output/3_empirical/ase_4State/states.log",
+                                                  filename="output/3_empirical/ase_4State/states" + RUN_INDEX + ".log",
                                                   type="Standard",
                                                   printgen=10,
                                                   withTips=true,
                                                   withStartStates=false) )
 
 monitors.append( mnStochasticCharacterMap(ctmc=X,
-                                          filename="output/3_empirical/ase_4State/simmap.log",
+                                          filename="output/3_empirical/ase_4State/simmap" + RUN_INDEX + ".log",
                                           printgen=10,
                                           include_simmap=true) )
 
@@ -101,13 +101,13 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 mymcmc.burnin(generations=1000, tuningInterval=100)
 mymcmc.run(generations= 10000, tuningInterval=200)
 
-anc_states = readAncestralStateTrace("output/3_empirical/ase_4State/states.log")
-anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_4State/anc_states.tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=3)
-anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_4State/simmap.log")
+anc_states = readAncestralStateTrace("output/3_empirical/ase_4State/states" + RUN_INDEX + ".log")
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_4State/anc_states" + RUN_INDEX + ".tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=3)
+anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_4State/simmap" + RUN_INDEX + ".log")
 char_map_tree = characterMapTree(tree=tree,
                  ancestral_state_trace_vector=anc_states_stoch_map,
-                 character_file="output/3_empirical/ase_4State/marginal_character.tree",
-                 posterior_file="output/3_empirical/ase_4State/marginal_posterior.tree",
+                 character_file="output/3_empirical/ase_4State/marginal_character" + RUN_INDEX + ".tree",
+                 posterior_file="output/3_empirical/ase_4State/marginal_posterior" + RUN_INDEX + ".tree",
                  burnin=0.0,
                  num_time_slices=500)
 

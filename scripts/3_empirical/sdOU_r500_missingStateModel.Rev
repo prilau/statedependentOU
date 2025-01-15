@@ -137,8 +137,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
-#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state")
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state")
 
 
 ## quit ##
