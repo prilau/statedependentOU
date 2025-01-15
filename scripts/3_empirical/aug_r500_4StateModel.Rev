@@ -100,7 +100,7 @@ char_hist := X.characterHistories()
 mymodel = model(X)
 
 monitors.append( mnModel(filename="output/3_empirical/aug_r500_4StateModel/run_" + RUN_INDEX + ".log", printgen=10) )
-monitors.append( mnScreen(printgen=1000, theta) )
+monitors.append( mnScreen(printgen=1000) )
 monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_r500_4StateModel/run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
