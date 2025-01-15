@@ -65,11 +65,11 @@ rates[2][3] ~ dnExp( rate_pr )
 rates[2][5] ~ dnExp( rate_pr )
 rates[3][2] ~ dnExp( rate_pr )
 rates[3][5] ~ dnExp( rate_pr )
-#rates[4][1] := rates[2][1] * 1000
+rates[4][1] := rates[2][1] * 1000
 rates[5][1] ~ dnExp( rate_pr )
 rates[5][2] ~ dnExp( rate_pr )
 rates[5][3] ~ dnExp( rate_pr )
-#rates[6][3] := rates[2][1] * 1000
+rates[6][3] := rates[2][1] * 1000
 
 moves.append( mvScale( rates[1][2], weight=1.0 ) )
 moves.append( mvScale( rates[1][5], weight=1.0 ) )
@@ -106,11 +106,9 @@ rates53 := rates[5][3]
 rates56 := rates[5][6]
 
 rf_prior <- rep(1,4)
-rf_4s ~ dnDirichlet( rf_prior )
-moves.append( mvBetaSimplex( rf_4s, weight=2 ) )
-moves.append( mvDirichletSimplex( rf_4s, weight=2 ) )
-
-rf := [rf_4s[1], rf_4s[1], rf_4s[1], 0, rf_4s[1], 0]
+rf ~ dnDirichlet( rf_prior )
+moves.append( mvBetaSimplex( rf, weight=2 ) )
+moves.append( mvDirichletSimplex( rf, weight=2 ) )
 
 # make the CTCM model
 X ~ dnPhyloCTMC(tree=tree, Q=Q, rootFrequencies=rf, type="Standard")
