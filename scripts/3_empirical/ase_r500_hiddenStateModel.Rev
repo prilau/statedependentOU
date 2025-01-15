@@ -103,8 +103,22 @@ avmvn_move.addVariable( rates[5][6] )
 avmvn_move.addVariable( rates[6][3] )
 avmvn_move.addVariable( rates[6][5] )
 
-
 Q := fnFreeK(rates, rescaled=FALSE)
+
+rates12 := rates[1][2]
+rates14 := rates[1][4]
+rates21 := rates[2][1]
+rates23 := rates[2][3]
+rates25 := rates[2][5]
+rates32 := rates[3][2]
+rates36 := rates[3][6]
+rates41 := rates[4][1]
+rates45 := rates[4][5]
+rates52 := rates[5][2]
+rates54 := rates[5][4]
+rates56 := rates[5][6]
+rates63 := rates[6][3]
+rates65 := rates[6][5]
 
 rf_prior <- rep(1,total_num_states)
 rf ~ dnDirichlet( rf_prior )

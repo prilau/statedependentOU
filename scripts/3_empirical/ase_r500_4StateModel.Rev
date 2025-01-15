@@ -51,7 +51,6 @@ for ( i in 1:num_disc_states ) {
     }
 }
 
-
 rates[1][2] ~ dnExp(rate_pr)
 rates[2][1] ~ dnExp(rate_pr)
 rates[2][3] ~ dnExp(rate_pr)
@@ -73,6 +72,13 @@ avmvn_move.addVariable(rates[3][4])
 avmvn_move.addVariable(rates[4][3])
 
 Q := fnFreeK(rates, rescaled=FALSE)
+
+rates12 := rates[1][2]
+rates21 := rates[2][1]
+rates23 := rates[2][3]
+rates32 := rates[3][2]
+rates34 := rates[3][4]
+rates43 := rates[4][3]
 
 rf_prior <- rep(1,num_disc_states)
 rf ~ dnDirichlet( rf_prior )
