@@ -16,7 +16,7 @@
 characterDisc <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/mammal_perMY_n2955.tre")[1]
+T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
@@ -57,45 +57,51 @@ for (i in 1:total_num_states) {
   }
 }
 
+
 rates[1][2] ~ dnExp(rate_pr)
-rates[1][5] ~ dnExp(rate_pr)
+rates[1][4] ~ dnExp(rate_pr)
 rates[2][1] ~ dnExp(rate_pr)
 rates[2][3] ~ dnExp(rate_pr)
 rates[2][5] ~ dnExp(rate_pr)
 rates[3][2] ~ dnExp(rate_pr)
-rates[3][5] ~ dnExp(rate_pr)
-rates[4][1] ~ dnExp(0.1 * rate_pr)
-rates[5][1] ~ dnExp(rate_pr)
+rates[3][6] ~ dnExp(rate_pr)
+rates[4][1] ~ dnExp(rate_pr)
+rates[4][5] ~ dnExp(rate_pr)
 rates[5][2] ~ dnExp(rate_pr)
-rates[5][3] ~ dnExp(rate_pr)
-rates[6][3] ~ dnExp(0.1 * rate_pr)
-
+rates[5][4] ~ dnExp(rate_pr)
+rates[5][6] ~ dnExp(rate_pr)
+rates[6][3] ~ dnExp(rate_pr)
+rates[6][5] ~ dnExp(rate_pr)
 
 moves.append( mvScale( rates[1][2], weight=1.0 ) )
-moves.append( mvScale( rates[1][5], weight=1.0 ) )
+moves.append( mvScale( rates[1][4], weight=1.0 ) )
 moves.append( mvScale( rates[2][1], weight=1.0 ) )
 moves.append( mvScale( rates[2][3], weight=1.0 ) )
 moves.append( mvScale( rates[2][5], weight=1.0 ) )
 moves.append( mvScale( rates[3][2], weight=1.0 ) )
-moves.append( mvScale( rates[3][5], weight=1.0 ) )
+moves.append( mvScale( rates[3][6], weight=1.0 ) )
 moves.append( mvScale( rates[4][1], weight=1.0 ) )
-moves.append( mvScale( rates[5][1], weight=1.0 ) )
+moves.append( mvScale( rates[4][5], weight=1.0 ) )
 moves.append( mvScale( rates[5][2], weight=1.0 ) )
-moves.append( mvScale( rates[5][3], weight=1.0 ) )
+moves.append( mvScale( rates[5][4], weight=1.0 ) )
+moves.append( mvScale( rates[5][6], weight=1.0 ) )
 moves.append( mvScale( rates[6][3], weight=1.0 ) )
+moves.append( mvScale( rates[6][5], weight=1.0 ) )
 
 avmvn_move.addVariable( rates[1][2] )
-avmvn_move.addVariable( rates[1][5] )
+avmvn_move.addVariable( rates[1][4] )
 avmvn_move.addVariable( rates[2][1] )
 avmvn_move.addVariable( rates[2][3] )
 avmvn_move.addVariable( rates[2][5] )
 avmvn_move.addVariable( rates[3][2] )
-avmvn_move.addVariable( rates[3][5] )
+avmvn_move.addVariable( rates[3][6] )
 avmvn_move.addVariable( rates[4][1] )
-avmvn_move.addVariable( rates[5][1] )
+avmvn_move.addVariable( rates[4][5] )
 avmvn_move.addVariable( rates[5][2] )
-avmvn_move.addVariable( rates[5][3] )
+avmvn_move.addVariable( rates[5][4] )
+avmvn_move.addVariable( rates[5][6] )
 avmvn_move.addVariable( rates[6][3] )
+avmvn_move.addVariable( rates[6][5] )
 
 
 Q := fnFreeK(rates, rescaled=FALSE)
@@ -117,18 +123,18 @@ X.clamp(disc)
 
 mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/ase_hiddenState/trace" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/ase_r500_hiddenState/trace_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
 monitors.append( mnJointConditionalAncestralState(tree=tree,
                                                   ctmc=X,
-                                                  filename="output/3_empirical/ase_hiddenState/states" + RUN_INDEX + ".log",
+                                                  filename="output/3_empirical/ase_r500_hiddenState/states_run_" + RUN_INDEX + ".log",
                                                   type="Standard",
                                                   printgen=10,
                                                   withTips=true,
                                                   withStartStates=false) )
 
 monitors.append( mnStochasticCharacterMap(ctmc=X,
-                                          filename="output/3_empirical/ase_hiddenState/simmap" + RUN_INDEX + ".log",
+                                          filename="output/3_empirical/ase_r500_hiddenState/simmap_run_" + RUN_INDEX + ".log",
                                           printgen=10,
                                           include_simmap=true) )
 
@@ -147,13 +153,13 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 mymcmc.burnin(generations=500, tuningInterval=100)
 mymcmc.run(generations= 5000, tuningInterval=200)
 
-anc_states = readAncestralStateTrace("output/3_empirical/ase_hiddenState/states" + RUN_INDEX + ".log")
-anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_hiddenState/anc_states" + RUN_INDEX + ".tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=2)
-anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_hiddenState/simmap" + RUN_INDEX + ".log")
+anc_states = readAncestralStateTrace("output/3_empirical/ase_r500_hiddenState/states_run_" + RUN_INDEX + ".log")
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_r500_hiddenState/anc_states_run_" + RUN_INDEX + ".tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=6)
+anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_r500_hiddenState/simmap_run_" + RUN_INDEX + ".log")
 char_map_tree = characterMapTree(tree=tree,
                  ancestral_state_trace_vector=anc_states_stoch_map,
-                 character_file="output/3_empirical/ase_hiddenState/marginal_character" + RUN_INDEX + ".tree",
-                 posterior_file="output/3_empirical/ase_hiddenState/marginal_posterior" + RUN_INDEX + ".tree",
+                 character_file="output/3_empirical/ase_r500_hiddenState/marginal_character_run_" + RUN_INDEX + ".tree",
+                 posterior_file="output/3_empirical/ase_r500_hiddenState/marginal_posterior_run_" + RUN_INDEX + ".tree",
                  burnin=0.0,
                  num_time_slices=500)
 
