@@ -1,6 +1,6 @@
 ################################################################################
 #
-# RevBayes Example: Testing hidden rates for state-dependent OU model
+# RevBayes Example: Testing missing for state-dependent OU model
 #
 # authors: Priscilla Lau
 #
@@ -19,7 +19,7 @@ T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_missing_r500_" + NUM_MISSING_STATE + "state_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_missing_r500_Discrete.nex")
 
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -119,9 +119,9 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-#monitors.append( mnModel(filename="output/3_empirical/sdOU_tipState_missing/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".log", printgen=10) )
-#monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_tipState_missing/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".trees", printgen=10 ) )
+monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_missingStateModel/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnScreen(printgen=1000, theta) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_missingStateModel/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".trees", printgen=10 ) )
 
 
 
@@ -135,8 +135,11 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=1000, tuningInterval=100)
-mymcmc.run(generations=10000, tuningInterval=200)
+mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
+
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state")
+
 
 ## quit ##
 q()
