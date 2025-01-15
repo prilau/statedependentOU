@@ -46,10 +46,11 @@ root_age <- tree.rootAge()
 rate_pr := tree.treeLength() / 10
 
 for ( i in 1:num_disc_states ) {
-    rate[i] ~ dnExp(rate_pr)
-    moves.append( mvScale( rate[i], weight=1.0 ) )
-    avmvn_move.addVariable(rate[i])
-
+    for ( j in 1:num_disc_states){
+        rate[i][j] ~ dnExp(rate_pr)
+        moves.append( mvScale( rate[i][j], weight=1.0 ) )
+        avmvn_move.addVariable(rate[i][j])
+    }
 }
 
 Q := fnFreeK(rate, rescaled=FALSE)
