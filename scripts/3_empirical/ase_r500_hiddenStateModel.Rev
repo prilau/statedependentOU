@@ -150,8 +150,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=500, tuningInterval=100)
-mymcmc.run(generations= 5000, tuningInterval=200)
+mymcmc.burnin(generations=5000, tuningInterval=100)
+mymcmc.run(generations= 50000, tuningInterval=200)
 
 anc_states = readAncestralStateTrace("output/3_empirical/ase_r500_hiddenState/states_run_" + RUN_INDEX + ".log")
 anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_r500_hiddenState/anc_states_run_" + RUN_INDEX + ".tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=6)

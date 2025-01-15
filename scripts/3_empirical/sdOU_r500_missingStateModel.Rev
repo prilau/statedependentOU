@@ -19,7 +19,7 @@ T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_missing_r500_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_missing_r500_Discrete_tmp.nex")
 
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
