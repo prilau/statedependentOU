@@ -32,10 +32,6 @@ disc_exp.includeCharacter(characterDisc)
 
 total_num_states <- num_disc_states * num_hidden_states
 
-cont <- readContinuousCharacterData("data/3_empirical/mammal_log_kg_r500_Continuous.nex")
-cont.excludeAll()
-cont.includeCharacter(characterCont)
-
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
@@ -127,115 +123,16 @@ total_num_changes := sum(num_changes)
 
 char_hist := X.characterHistories()
 
-##############################
-# continuous character model #
-##############################
-
-# herbivores
-theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
-moves.append(mvSlide(theta[1], weight = 1.0) )
-avmvn_move.addVariable(theta[1])
-
-dtheta[1] := abs(ln(1))
-
-halflife[1] ~ dnLognormal(4.3613845, 1.044495)
-moves.append(mvScale(halflife[1], weight = 1.0) )
-avmvn_move.addVariable(halflife[1])
-alpha[1] := abs(ln(2)/halflife[1])
-
-stv[1] ~ dnLognormal(ln(13), 0.587405)
-moves.append(mvScale(stv[1], weight = 1.0) )
-avmvn_move.addVariable(stv[1])
-sigma2[1] := stv[1] * 2 * alpha[1]
-
-# herbivores (dummy state)
-theta[4]    := theta[1]   
-halflife[4] := halflife[1]
-stv[4]      := stv[1]     
-
-# omnivores (hidden state 0)
-theta[2] ~ dnNormal(theta[1], 4)
-moves.append(mvSlide(theta[2], weight = 1.0) )
-avmvn_move.addVariable(theta[2])
-
-halflife[2] ~ dnLognormal(halflife[1], 1.044495)
-moves.append(mvScale(halflife[2], weight = 1.0) )
-avmvn_move.addVariable(halflife[2])
-alpha[2] := abs(ln(2)/halflife[2])
-
-stv[2] ~ dnLognormal(stv[1], 0.587405)
-moves.append(mvScale(stv[2], weight = 1.0) )
-avmvn_move.addVariable(stv[2])
-sigma2[2] := stv[2] * 2 * alpha[2]
-
-# omnivores (hidden state 1)
-dtheta ~ dnLogormal(1, 0.5)
-moves.append(mvSlide(dtheta, weight = 1.0) )
-avmvn_move.addVariable(dtheta)
-theta[5] := theta[2] - dtheta
-
-halflife[5] := halflife[2]
-alpha[5] := abs(ln(2)/halflife[5])
-
-stv[5] := stv[2]
-sigma2[5] := stv[5] * 2 * alpha[5]
-
-
-# carnivores
-theta[3] ~ dnNormal(theta[2], 4)
-moves.append(mvSlide(theta[3], weight = 1.0) )
-avmvn_move.addVariable(theta[3])
-
-halflife[3] ~ dnLognormal(halflife[2], 1.044495)
-moves.append(mvScale(halflife[3], weight = 1.0) )
-avmvn_move.addVariable(halflife[3])
-alpha[3] := abs(ln(2)/halflife[3])
-
-stv[3] ~ dnLognormal(stv[2], 0.587405)
-moves.append(mvScale(stv[3], weight = 1.0) )
-avmvn_move.addVariable(stv[3])
-sigma2[3] := stv[3] * 2 * alpha[3]
-
-# carnivores (dummy state)
-theta[6]    := theta[3]   
-halflife[6] := halflife[3]
-stv[6]      := stv[3]
-
-for (i in 1:total_num_states){
-  for (j in 1:total_num_states){
-    compare_theta[i][j] <- 0.0    
-    compare_halflife[i][j] <- 0.0
-    compare_stv[i][j] <- 0.0
-  }
-}
-
-for (i in 1:total_num_states){
-  for (j in i:total_num_states){
-    compare_theta[i][j] := ifelse(theta[i] > theta[j], 1, 0)
-    compare_halflife[i][j] := ifelse(halflife[i] > halflife[j], 1, 0)
-    compare_stv[i][j] := ifelse(stv[i] > stv[j], 1, 0)
-  }
-}
-
-
-
-
-##########################
-# Specify the OU process #
-##########################
-
-Y ~ dnPhyloOUSD(char_hist, theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
-Y.clamp(cont)
 
 #############
 # The Model #
 #############
 
-mymodel = model(Y)
+mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_hiddenStateModel/run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/aug_r500_hiddenStateModel/run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_hiddenStateModel/run_" + RUN_INDEX + ".trees", printgen=10 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_r500_hiddenStateModel/run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 ################
@@ -248,9 +145,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
-
-#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_hiddenStateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/sdOU_r500_hiddenStateModel/run_" + RUN_INDEX + ".state")
+#mymcmc.initializeFromCheckpoint("output/3_empirical/aug_r500_hiddenStateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=5000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/aug_r500_hiddenStateModel/run_" + RUN_INDEX + ".state")
 
 ## quit ##
 q()
