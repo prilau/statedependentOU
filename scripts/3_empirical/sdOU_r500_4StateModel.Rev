@@ -73,7 +73,7 @@ moves.append( mvScale(rate_42, weight=1.0) )
 moves.append( mvScale(rate_34, weight=1.0) )
 moves.append( mvScale(rate_43, weight=1.0) )
 
-rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
+rates := [rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43]
 Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
@@ -163,7 +163,7 @@ mymodel = model(Y)
 
 monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".trees", printgen=10 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 ################
