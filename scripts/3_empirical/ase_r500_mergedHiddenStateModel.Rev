@@ -111,8 +111,8 @@ moves.append( mvBetaSimplex( rf, weight=2 ) )
 moves.append( mvDirichletSimplex( rf, weight=2 ) )
 
 # make the CTCM model
-X ~ dnPhyloCTMC(tree=tree, Q=Q, rootFrequencies=rf, type="Standard")
-X.clamp(disc)
+X ~ dnPhyloCTMC(tree=tree, Q=Q, rootFrequencies=rf, type="NaturalNumbers")
+X.clamp(disc_exp)
 
 
 
