@@ -76,8 +76,8 @@ X.clamp(disc)
 
 # include proposals for the discrete character history
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=50.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -110,8 +110,9 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 ### run the MCMC ###
 #mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
-#mymcmc.initializeFromCheckpoint("output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.initializeFromCheckpoint("output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
 mymcmc.run(generations=5000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".state")
+mymcmc.operatorSummary()
 
 ## quit ##
 q()
