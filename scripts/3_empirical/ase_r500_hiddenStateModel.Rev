@@ -57,6 +57,8 @@ for (i in 1:total_num_states) {
   }
 }
 
+123
+456
 
 rates[1][2] ~ dnExp(rate_pr)
 rates[1][4] ~ dnExp(rate_pr)
