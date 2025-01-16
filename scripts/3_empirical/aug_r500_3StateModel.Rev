@@ -27,7 +27,7 @@ num_disc_states <- disc.getStateDescriptions().size()
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_move = mvAVMVN(weight=50, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -76,8 +76,8 @@ X.clamp(disc)
 
 # include proposals for the discrete character history
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=50.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=150.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=150.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {

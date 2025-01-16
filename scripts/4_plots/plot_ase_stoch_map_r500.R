@@ -1,6 +1,7 @@
 library(phytools)
 library(RevGadgets)
 library(ggplot2)
+library(tidyverse)
 source("scripts/4_plots/revgadgets_StochMap.R")
 
 
@@ -8,8 +9,8 @@ source("scripts/4_plots/revgadgets_StochMap.R")
 #index_to_rev <- matchNodes(tree)
 #
 #dir_in = "output/3_empirical/aug_tipMissingDiscrete/"
-#
-#for (file in list.files(dir_in)){
+#files <- list.files(dir_in)[grepl(".trees", list.files(dir_in))]
+#for (file in files){
 #  path = paste0(dir_in, file)
 #  log <- read_tsv(path)
 #  log <- as.data.frame(log$char_hist)
@@ -65,7 +66,6 @@ source("scripts/4_plots/revgadgets_StochMap.R")
 #Plotting
 tree <- readTrees("data/3_empirical/mammal_perMY_r500.tre")
 t <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
-
 
 #################
 # 3-state model #
@@ -209,76 +209,7 @@ p6 <- plotStochMaps(tree, maps=stoc_map,
 #p6
 ggsave(paste0("figures/3_empirical/ase_r500_4State/stoch_map.pdf"), p6, width = 8, height = 6)
 
-######################
-# hidden-state model #
-######################
-ase <- processAncStates("output/3_empirical/ase_r500_hiddenState/anc_states_run_2.tre",
-                        state_labels=c("0"="Herbivore_0", "1"="Omnivore_0",
-                                       "2"="Carnivore_0", "3"="Herbivore_1",
-                                       "4"="Omnivore_1", "5"="Carnivore_1"))
-# produce the plot object, showing MAP states at nodes.
-p7 <- plotAncStatesMAP(t = ase,
-                       #tip_labels_offset = 0.5,
-                       tip_labels = FALSE,
-                       node_color_as = "state",
-                       node_color = c("Herbivore_0"="#44AA99", "Omnivore_0"="#DDCC77", "Carnivore_0"="#CC6677",
-                                      "Herbivore_1"="#009988", "Omnivore_1"="#997700", "Carnivore_1"="#994455"),
-                       node_size = c(0.5, 2),
-                       tip_states = TRUE,
-                       #tip_states_size = c(0.01, 0.01),
-                       #tip_states_shape = 1,
-                       state_transparency = 0.7,
-                       tree_layout = "circular",
-                       #tip_labels_size = 0.5
-                       tree_color = "#bbbbbb",
-                       tree_linewidth = 0.25) +
-  # modify legend location using ggplot2
-  theme(legend.position.inside = c(0.6,0.81))
-p7
-ggsave(paste0("figures/3_empirical/ase_r500_hiddenState/ase_map.pdf"), p, width = 8, height = 6)
 
-
-p8 <- plotAncStatesPie(t = ase,
-                       pie_colors = c("Herbivore_0"="#44AA99", "Omnivore_0"="#DDCC77", "Carnivore_0"="#CC6677",
-                                      "Herbivore_1"="#009988", "Omnivore_1"="#997700", "Carnivore_1"="#994455"),
-                       #tip_labels_size = 1,
-                       tip_pies = TRUE,
-                       #tip_labels_offset = 0.5,
-                       node_pie_size = 2,
-                       tip_pie_size = 1,
-                       tree_layout = "circular",
-                       tip_labels = FALSE,
-                       state_transparency = 0.7,
-                       tree_color = "#bbbbbb",
-                       tree_linewidth = 0.25) +
-  # modify legend location using ggplot2
-  theme(legend.position.inside = c(0.6,0.81))
-p8
-ggsave(paste0("figures/3_empirical/ase_r500_hiddenState/ase_pie.pdf"), p8, width = 8, height = 6)
-
-
-simmaps <- list()
-simmaps[[1]] <- read.simmap("output/3_empirical/ase_r500_hiddenState/marginal_character.tree", format="phylip")
-stoc_map <- processStochMaps(tree,
-                             simmap = simmaps,
-                             states=c("0", "1", "2"))
-
-colnames(stoc_map)[6] = "Herbivore"
-colnames(stoc_map)[7] = "Omnivore"
-colnames(stoc_map)[8] = "Carnivore"
-
-p9 <- plotStochMaps(tree, maps=stoc_map,
-                    tip_labels = FALSE,
-                    tree_layout = "circular",
-                    line_width=0.25,
-                    color_by = "MAP",
-                    colors = c("Herbivore"="#44AA99",
-                               "Omnivore"="#999933",
-                               "Non-plant-dominant omnivore"="#CC6677",
-                               "Carnivore"="#882255")) +
-  theme(legend.position.inside = c(0.6,0.81))
-p9
-ggsave(paste0("figures/3_empirical/ase_r500_hiddenState/stoch_map.pdf"), p, width = 8, height = 6)
 
 #p_all <- arrangeGrob(p1, p2, p4, p3, nrow = 2)
 #ggsave("figures/3_empirical/ase_triState/ase_all.pdf", p_all, width = 16, height = 16)
