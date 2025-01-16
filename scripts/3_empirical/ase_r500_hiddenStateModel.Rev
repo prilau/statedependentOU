@@ -35,7 +35,7 @@ total_num_states <- num_disc_states * num_hidden_states
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+#avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -87,20 +87,20 @@ moves.append( mvScale( rates[5][6], weight=1.0 ) )
 moves.append( mvScale( rates[6][3], weight=1.0 ) )
 moves.append( mvScale( rates[6][5], weight=1.0 ) )
 
-avmvn_move.addVariable( rates[1][2] )
-avmvn_move.addVariable( rates[1][4] )
-avmvn_move.addVariable( rates[2][1] )
-avmvn_move.addVariable( rates[2][3] )
-avmvn_move.addVariable( rates[2][5] )
-avmvn_move.addVariable( rates[3][2] )
-avmvn_move.addVariable( rates[3][6] )
-avmvn_move.addVariable( rates[4][1] )
-avmvn_move.addVariable( rates[4][5] )
-avmvn_move.addVariable( rates[5][2] )
-avmvn_move.addVariable( rates[5][4] )
-avmvn_move.addVariable( rates[5][6] )
-avmvn_move.addVariable( rates[6][3] )
-avmvn_move.addVariable( rates[6][5] )
+#avmvn_move.addVariable( rates[1][2] )
+#avmvn_move.addVariable( rates[1][4] )
+#avmvn_move.addVariable( rates[2][1] )
+#avmvn_move.addVariable( rates[2][3] )
+#avmvn_move.addVariable( rates[2][5] )
+#avmvn_move.addVariable( rates[3][2] )
+#avmvn_move.addVariable( rates[3][6] )
+#avmvn_move.addVariable( rates[4][1] )
+#avmvn_move.addVariable( rates[4][5] )
+#avmvn_move.addVariable( rates[5][2] )
+#avmvn_move.addVariable( rates[5][4] )
+#avmvn_move.addVariable( rates[5][6] )
+#avmvn_move.addVariable( rates[6][3] )
+#avmvn_move.addVariable( rates[6][5] )
 
 Q := fnFreeK(rates, rescaled=FALSE)
 
@@ -164,7 +164,7 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100)
-mymcmc.run(generations= 50000, tuningInterval=200)
+mymcmc.run(generations=50000, tuningInterval=200)
 
 anc_states = readAncestralStateTrace("output/3_empirical/ase_r500_hiddenState/states_run_" + RUN_INDEX + ".log")
 anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_r500_hiddenState/anc_states_run_" + RUN_INDEX + ".tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=6)

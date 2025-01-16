@@ -212,7 +212,7 @@ ggsave(paste0("figures/3_empirical/ase_r500_4State/stoch_map.pdf"), p6, width = 
 ######################
 # hidden-state model #
 ######################
-ase <- processAncStates("output/3_empirical/ase_r500_hiddenState/anc_states_run_2.tre",
+ase <- processAncStates("output/3_empirical/ase_r500_hiddenState/anc_states_run_1.tre",
                         state_labels=c("0"="Herbivore_0", "1"="Omnivore_0",
                                        "2"="Carnivore_0", "3"="Herbivore_1",
                                        "4"="Omnivore_1", "5"="Carnivore_1"))
