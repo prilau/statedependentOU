@@ -27,7 +27,6 @@ num_disc_states <- disc.getStateDescriptions().size()
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_move = mvAVMVN(weight=50, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -56,19 +55,35 @@ moves.append( mvScale(rate_31, weight=1.0) )
 moves.append( mvScale(rate_23, weight=1.0) )
 moves.append( mvScale(rate_32, weight=1.0) )
 
-avmvn_move.addVariable(rate_12)
-avmvn_move.addVariable(rate_21)
-avmvn_move.addVariable(rate_13)
-avmvn_move.addVariable(rate_31)
-avmvn_move.addVariable(rate_23)
-avmvn_move.addVariable(rate_32)
+avmvn_rate_12 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_21 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_13 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_31 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_23 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_32 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+
+avmvn_rate_12.addVariable(rate_12)
+avmvn_rate_21.addVariable(rate_21)
+avmvn_rate_13.addVariable(rate_13)
+avmvn_rate_31.addVariable(rate_31)
+avmvn_rate_23.addVariable(rate_23)
+avmvn_rate_32.addVariable(rate_32)
+
+moves.append( avmvn_rate_12 )
+moves.append( avmvn_rate_21 )
+moves.append( avmvn_rate_13 )
+moves.append( avmvn_rate_31 )
+moves.append( avmvn_rate_23 )
+moves.append( avmvn_rate_32 )
 
 rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
 moves.append( mvScale(lambda, weight=1.0) )
-avmvn_move.addVariable(lambda)
+avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_move.addVariable( avmvn_lambda )
+moves.append( avmvn_lambda )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
@@ -76,8 +91,8 @@ X.clamp(disc)
 
 # include proposals for the discrete character history
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=50.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=150.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=150.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=180.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=180.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -112,7 +127,7 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=5000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=5000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 ## quit ##

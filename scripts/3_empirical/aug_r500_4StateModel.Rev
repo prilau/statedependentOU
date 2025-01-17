@@ -68,13 +68,54 @@ moves.append( mvScale(rate_42, weight=1.0) )
 moves.append( mvScale(rate_34, weight=1.0) )
 moves.append( mvScale(rate_43, weight=1.0) )
 
+avmvn_rate_12 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_21 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_13 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_31 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_14 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_41 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_23 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_32 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_24 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_42 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_34 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_43 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+
+avmvn_rate_12.addVariable(rate_12)
+avmvn_rate_21.addVariable(rate_21)
+avmvn_rate_13.addVariable(rate_13)
+avmvn_rate_31.addVariable(rate_31)
+avmvn_rate_14.addVariable(rate_14)
+avmvn_rate_41.addVariable(rate_41)
+avmvn_rate_23.addVariable(rate_23)
+avmvn_rate_32.addVariable(rate_32)
+avmvn_rate_24.addVariable(rate_24)
+avmvn_rate_42.addVariable(rate_42)
+avmvn_rate_34.addVariable(rate_34)
+avmvn_rate_43.addVariable(rate_43)
+
+moves.append( avmvn_rate_12 )
+moves.append( avmvn_rate_21 )
+moves.append( avmvn_rate_13 )
+moves.append( avmvn_rate_31 )
+moves.append( avmvn_rate_14 )
+moves.append( avmvn_rate_41 )
+moves.append( avmvn_rate_23 )
+moves.append( avmvn_rate_32 )
+moves.append( avmvn_rate_24 )
+moves.append( avmvn_rate_42 )
+moves.append( avmvn_rate_34 )
+moves.append( avmvn_rate_43 )
+
+
 rates := [rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43]
 Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
 moves.append( mvScale(lambda, weight=1.0) )
-avmvn_move.addVariable(lambda)
-
+avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_move.addVariable( avmvn_lambda )
+moves.append( avmvn_lambda )
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
@@ -112,10 +153,11 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-#mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
+mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/aug_r500_4StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=5000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/aug_r500_4StateModel/run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=15000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/aug_r500_4StateModel/run_" + RUN_INDEX + ".state")
+mymcmc.operatorSummary()
 
 ## quit ##
 q()
