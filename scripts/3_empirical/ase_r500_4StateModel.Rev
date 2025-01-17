@@ -110,7 +110,7 @@ moves.append( avmvn_rate_42 )
 moves.append( avmvn_rate_34 )
 moves.append( avmvn_rate_43 )
 
-Q := fnFreeK([rates_12, rates_13, rates_14, rates_21, rates_23, rates_24, rates_31, rates_32, rates_34, rates_41, rates_42, rates_43], rescaled=FALSE)
+Q := fnFreeK([rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43], rescaled=FALSE)
 
 rf_prior <- rep(1,num_disc_states)
 rf ~ dnDirichlet( rf_prior )
