@@ -118,40 +118,55 @@ char_hist := X.characterHistories()
 ##############################
 theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
 moves.append(mvSlide(theta[1], weight = 1.0) )
-avmvn_theta[1] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta[1].addVariable(theta[1])
+
 
 halflife[1] ~ dnLognormal(4.3613845, 1.044495)
 moves.append(mvScale(halflife[1], weight = 1.0) )
-avmvn_halflife[1] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife[1].addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
 stv[1] ~ dnLognormal(ln(13), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
-avmvn_stv[1] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv[1].addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
 for (i in 2:num_disc_states){
   theta[i] ~ dnNormal(theta[i-1], 4)
   moves.append(mvSlide(theta[i], weight = 1.0) )
-  avmvn_theta[i] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-  avmvn_theta.addVariable(theta[i])
-  
+
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
   moves.append(mvScale(halflife[i], weight = 1.0) )
-  avmvn_halflife[i] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-  avmvn_halflife[i].addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
 
   stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
   moves.append(mvScale(stv[i], weight = 1.0) )
-  avmvn_stv[i] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-  avmvn_stv[i].addVariable(stv[i])
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
 
+avmvn_theta1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_theta1.addVariable(theta[1])
+avmvn_theta2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_theta2.addVariable(theta[2])
+avmvn_theta3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_theta3.addVariable(theta[3])
+avmvn_theta4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_theta4.addVariable(theta[4])
+
+avmvn_halflife1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_halflife1.addVariable(halflife[1])
+avmvn_halflife2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_halflife2.addVariable(halflife[2])
+avmvn_halflife3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_halflife3.addVariable(halflife[3])
+avmvn_halflife4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_halflife4.addVariable(halflife[4])
+
+avmvn_stv1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_stv1.addVariable(stv[1])
+avmvn_stv2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_stv2.addVariable(stv[2])
+avmvn_stv3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_stv3.addVariable(stv[3])
+avmvn_stv4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_stv4.addVariable(stv[4])
 
 ##########################
 # Specify the OU process #
