@@ -82,7 +82,7 @@ Q := fnFreeK(rates, rescaled=TRUE)
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
 moves.append( mvScale(lambda, weight=1.0) )
 avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_move.addVariable( avmvn_lambda )
+avmvn_lambda.addVariable( lambda )
 moves.append( avmvn_lambda )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
