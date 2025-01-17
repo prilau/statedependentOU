@@ -71,13 +71,13 @@ t <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
 # 3-state model #
 #################
 ase <- processAncStates("output/3_empirical/ase_r500_3State/anc_states_run_1.tre",
-                        state_labels=c("0"="Herbivore", "1"="Omnivore", "2"="Carnivore"))
+                        state_labels=c("0"="Herbivorous", "1"="Omnivorous", "2"="Carnivorous"))
 # produce the plot object, showing MAP states at nodes.
 p1 <- plotAncStatesMAP(t = ase,
                        #tip_labels_offset = 0.5,
                        tip_labels = FALSE,
                        node_color_as = "state",
-                       node_color = c("Herbivore"="#44AA99", "Omnivore"="#ddcc77", "Carnivore"="#882255"),
+                       node_color = c("Herbivorous"="#44AA99", "Omnivorous"="#ddcc77", "Carnivorous"="#882255"),
                        node_size = c(0.5, 2),
                        tip_states = TRUE,
                        #tip_states_size = c(0.01, 0.01),
@@ -89,12 +89,12 @@ p1 <- plotAncStatesMAP(t = ase,
                        tree_linewidth = 0.25) +
   # modify legend location using ggplot2
   theme(legend.position.inside = c(0.6,0.81))
-p1
+#p1
 ggsave(paste0("figures/3_empirical/ase_r500_3State/ase_map.pdf"), p1, width = 8, height = 6)
 
 
 p2 <- plotAncStatesPie(t = ase,
-                       pie_colors = c("Herbivore"="#44AA99", "Omnivore"="#ddcc77", "Carnivore"="#882255"),
+                       pie_colors = c("Herbivorous"="#44AA99", "Omnivorous"="#ddcc77", "Carnivorous"="#882255"),
                        #tip_labels_size = 1,
                        tip_pies = TRUE,
                        #tip_labels_offset = 0.5,
@@ -107,7 +107,7 @@ p2 <- plotAncStatesPie(t = ase,
                        tree_linewidth = 0.25) +
   # modify legend location using ggplot2
   theme(legend.position.inside = c(0.6,0.81))
-p2
+#p2
 ggsave(paste0("figures/3_empirical/ase_r500_3State/ase_pie.pdf"), p2, width = 8, height = 6)
 
 
@@ -118,37 +118,37 @@ stoc_map <- processStochMaps(tree,
                              simmap = simmaps,
                              states=c("0", "1", "2"))
 
-colnames(stoc_map)[6] = "Herbivore"
-colnames(stoc_map)[7] = "Omnivore"
-colnames(stoc_map)[8] = "Carnivore"
+colnames(stoc_map)[6] = "Herbivorous"
+colnames(stoc_map)[7] = "Omnivorous"
+colnames(stoc_map)[8] = "Carnivorous"
 
 p3 <- plotStochMaps(tree, maps=stoc_map,
                     tip_labels = FALSE,
                     tree_layout = "circular",
                     line_width=0.25,
                     color_by = "MAP",
-                    colors = c("Herbivore"="#44AA99",
-                               "Omnivore"="#ddcc77",
-                               "Carnivore"="#882255")) +
+                    colors = c("Herbivorous"="#44AA99",
+                               "Omnivorous"="#ddcc77",
+                               "Carnivorous"="#882255")) +
   theme(legend.position.inside = c(0.6,0.81))
-p3
+#p3
 ggsave(paste0("figures/3_empirical/ase_r500_3State/stoch_map.pdf"), p3, width = 8, height = 6)
 
 #################
 # 4-state model #
 #################
 ase <- processAncStates("output/3_empirical/ase_r500_4State/anc_states_run_1.tre",
-                        state_labels=c("0"="Herbivore", "1"="Plant-dominant omnivore",
-                                       "2"="Non-plant-dominant omnivore", "3"="Carnivore"))
+                        state_labels=c("0"="Herbivorous", "1"="Plant-dominant omnivorous",
+                                       "2"="Non-plant-dominant omnivorous", "3"="Carnivorous"))
 # produce the plot object, showing MAP states at nodes.
 p4 <- plotAncStatesMAP(t = ase,
                        #tip_labels_offset = 0.5,
                        tip_labels = FALSE,
                        node_color_as = "state",
-                       node_color = c("Herbivore"                   = "#44AA99",
-                                      "Plant-dominant omnivore"     = "#999933",
-                                      "Non-plant-dominant omnivore" = "#CC6677",
-                                      "Carnivore"                   = "#882255"),
+                       node_color = c("Herbivorous"                   = "#44AA99",
+                                      "Plant-dominant omnivorous"     = "#999933",
+                                      "Non-plant-dominant omnivorous" = "#CC6677",
+                                      "Carnivorous"                   = "#882255"),
                        node_size = c(0.5, 2),
                        tip_states = TRUE,
                        #tip_states_size = c(0.01, 0.01),
@@ -165,10 +165,10 @@ ggsave(paste0("figures/3_empirical/ase_r500_4State/ase_map.pdf"), p4, width = 8,
 
 
 p5 <- plotAncStatesPie(t = ase,
-                       pie_colors = c("Herbivore"="#44AA99",
-                                      "Plant-dominant omnivore"="#999933",
-                                      "Non-plant-dominant omnivore"="#CC6677",
-                                      "Carnivore"="#882255"),
+                       pie_colors = c("Herbivorous"="#44AA99",
+                                      "Plant-dominant omnivorous"="#999933",
+                                      "Non-plant-dominant omnivorous"="#CC6677",
+                                      "Carnivorous"="#882255"),
                        #tip_labels_size = 1,
                        tip_pies = TRUE,
                        #tip_labels_offset = 0.5,
@@ -191,20 +191,20 @@ stoc_map <- processStochMaps(tree,
                              simmap = simmaps,
                              states=c("0", "1", "2", "3"))
 
-colnames(stoc_map)[6] = "Herbivore"
-colnames(stoc_map)[7] = "Plant-dominant omnivore"
-colnames(stoc_map)[8] = "Non-plant-dominant omnivore"
-colnames(stoc_map)[9] = "Carnivore"
+colnames(stoc_map)[6] = "Herbivorous"
+colnames(stoc_map)[7] = "Plant-dominant omnivorous"
+colnames(stoc_map)[8] = "Non-plant-dominant omnivorous"
+colnames(stoc_map)[9] = "Carnivorous"
 
 p6 <- plotStochMaps(tree, maps=stoc_map,
                     tip_labels = FALSE,
                     tree_layout = "circular",
                     line_width=0.25,
                     color_by = "MAP",
-                    colors = c("Herbivore"="#44AA99",
-                               "Plant-dominant omnivore"="#999933",
-                               "Non-plant-dominant omnivore"="#CC6677",
-                               "Carnivore"="#882255")) +
+                    colors = c("Herbivorous"="#44AA99",
+                               "Plant-dominant omnivorous"="#999933",
+                               "Non-plant-dominant omnivorous"="#CC6677",
+                               "Carnivorous"="#882255")) +
   theme(legend.position.inside = c(0.6,0.81))
 #p6
 ggsave(paste0("figures/3_empirical/ase_r500_4State/stoch_map.pdf"), p6, width = 8, height = 6)

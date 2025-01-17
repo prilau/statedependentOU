@@ -46,47 +46,64 @@ root_age <- tree.rootAge()
 ########################################
 
 # make the Q matrix
+rate_pr := tree.treeLength() / 10
 
-rate_12 ~ dnLognormal(0,1)
-rate_21 ~ dnLognormal(0,1)
-rate_13 ~ dnLognormal(0,1)
-rate_31 ~ dnLognormal(0,1)
-rate_14 ~ dnLognormal(0,1)
-rate_41 ~ dnLognormal(0,1)
-rate_23 ~ dnLognormal(0,1)
-rate_32 ~ dnLognormal(0,1)
-rate_24 ~ dnLognormal(0,1)
-rate_42 ~ dnLognormal(0,1)
-rate_34 ~ dnLognormal(0,1)
-rate_43 ~ dnLognormal(0,1)
+rate_12 ~ dnExp( root_age / 10)
+rate_21 ~ dnExp( root_age / 10)
+rate_13 := 0
+rate_31 := 0
+rate_14 := 0
+rate_41 := 0
+rate_23 ~ dnExp( root_age / 10)
+rate_32 ~ dnExp( root_age / 10)
+rate_24 := 0
+rate_42 := 0
+rate_34 ~ dnExp( root_age / 10)
+rate_43 ~ dnExp( root_age / 10)
 
 moves.append( mvScale(rate_12, weight=1.0) )
 moves.append( mvScale(rate_21, weight=1.0) )
-moves.append( mvScale(rate_13, weight=1.0) )
-moves.append( mvScale(rate_31, weight=1.0) )
-moves.append( mvScale(rate_14, weight=1.0) )
-moves.append( mvScale(rate_41, weight=1.0) )
 moves.append( mvScale(rate_23, weight=1.0) )
 moves.append( mvScale(rate_32, weight=1.0) )
-moves.append( mvScale(rate_24, weight=1.0) )
-moves.append( mvScale(rate_42, weight=1.0) )
 moves.append( mvScale(rate_34, weight=1.0) )
 moves.append( mvScale(rate_43, weight=1.0) )
 
-rates := [rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43]
-Q := fnFreeK(rates, rescaled=TRUE)
+avmvn_rate_12 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_21 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_23 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_32 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_34 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rate_43 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+
+avmvn_rate_12.addVariable(rate_12)
+avmvn_rate_21.addVariable(rate_21)
+avmvn_rate_23.addVariable(rate_23)
+avmvn_rate_32.addVariable(rate_32)
+avmvn_rate_34.addVariable(rate_34)
+avmvn_rate_43.addVariable(rate_43)
+
+moves.append( avmvn_rate_12 )
+moves.append( avmvn_rate_21 )
+moves.append( avmvn_rate_23 )
+moves.append( avmvn_rate_32 )
+moves.append( avmvn_rate_34 )
+moves.append( avmvn_rate_43 )
+
+Q := fnFreeK([rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43], rescaled=TRUE)
+
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
 moves.append( mvScale(lambda, weight=1.0) )
-avmvn_move.addVariable(lambda)
+avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_lambda.addVariable( lambda )
+moves.append( avmvn_lambda )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=50.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=100.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=100.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -101,51 +118,39 @@ char_hist := X.characterHistories()
 ##############################
 theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
 moves.append(mvSlide(theta[1], weight = 1.0) )
-avmvn_move.addVariable(theta[1])
+avmvn_theta[1] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_theta[1].addVariable(theta[1])
 
 halflife[1] ~ dnLognormal(4.3613845, 1.044495)
 moves.append(mvScale(halflife[1], weight = 1.0) )
-avmvn_move.addVariable(halflife[1])
+avmvn_halflife[1] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_halflife[1].addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
 stv[1] ~ dnLognormal(ln(13), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
-avmvn_move.addVariable(stv[1])
+avmvn_stv[1] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_stv[1].addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
 for (i in 2:num_disc_states){
   theta[i] ~ dnNormal(theta[i-1], 4)
   moves.append(mvSlide(theta[i], weight = 1.0) )
-  avmvn_move.addVariable(theta[i])
+  avmvn_theta[i] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+  avmvn_theta.addVariable(theta[i])
   
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
   moves.append(mvScale(halflife[i], weight = 1.0) )
-  avmvn_move.addVariable(halflife[i])
+  avmvn_halflife[i] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+  avmvn_halflife[i].addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
 
   stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
   moves.append(mvScale(stv[i], weight = 1.0) )
-  avmvn_move.addVariable(stv[i])
+  avmvn_stv[i] = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+  avmvn_stv[i].addVariable(stv[i])
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
-
-for (i in 1:num_disc_states){
-  for (j in 1:num_disc_states){
-    compare_theta[i][j] <- 0.0
-    compare_halflife[i][j] <- 0.0
-    compare_stv[i][j] <- 0.0
-  }
-}
-
-for (i in 1:num_disc_states){
-  for (j in i:num_disc_states){
-    compare_theta[i][j] := ifelse(theta[i] > theta[j], 1, 0)
-    compare_halflife[i][j] := ifelse(halflife[i] > halflife[j], 1, 0)
-    compare_stv[i][j] := ifelse(stv[i] > stv[j], 1, 0)
-  }
-}
-
-
 
 
 ##########################
@@ -161,9 +166,9 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_4StateModel/trace_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000, theta) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_4StateModel/augch_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 ################
@@ -178,7 +183,7 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=10, checkpointFile="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 ## quit ##
