@@ -102,10 +102,11 @@ for (i in 2:num_disc_states){
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
 
-avmvn_ou.addVariable(dtheta[2])
 avmvn_ou.addVariable(halflife[1])
-avmvn_ou.addVariable(halflife[2])
 avmvn_ou.addVariable(stv[1])
+
+avmvn_ou.addVariable(halflife[2])
+avmvn_ou.addVariable(dtheta[2])
 avmvn_ou.addVariable(stv[2])
 
 avmvn_ou.addVariable(halflife[3])
