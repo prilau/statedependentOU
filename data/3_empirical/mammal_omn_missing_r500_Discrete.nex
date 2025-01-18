@@ -1,7 +1,7 @@
 #NEXUS
 [Data written by write.nexus.data.R, Tue Jan ?4 09:59:52 2025]
 BEGIN DATA;
-  DIMENSIONS NTAX=500 NCHAR=?;
+  DIMENSIONS NTAX=500 NCHAR=1;
   FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="missingStates";
   MATRIX
     abrocoma_cinerea                   0

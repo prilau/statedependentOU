@@ -48,27 +48,28 @@ rate_pr := tree.treeLength() / 10
 
 rate_12 ~ dnExp(root_age / 10)
 rate_21 ~ dnExp(root_age / 10)
-rate_13 ~ dnExp(root_age / 10)
-rate_31 ~ dnExp(root_age / 10)
+#rate_13 ~ dnExp(root_age / 10)
+#rate_31 ~ dnExp(root_age / 10)
+rate_13 := 0
+rate_31 := 0
 rate_23 ~ dnExp(root_age / 10)
 rate_32 ~ dnExp(root_age / 10)
 
 moves.append( mvScale(rate_12, weight=1.0) )
 moves.append( mvScale(rate_21, weight=1.0) )
-moves.append( mvScale(rate_13, weight=1.0) )
-moves.append( mvScale(rate_31, weight=1.0) )
+#moves.append( mvScale(rate_13, weight=1.0) )
+#moves.append( mvScale(rate_31, weight=1.0) )
 moves.append( mvScale(rate_23, weight=1.0) )
 moves.append( mvScale(rate_32, weight=1.0) )
 
 avmvn_rates.addVariable(rate_12)
 avmvn_rates.addVariable(rate_21)
-avmvn_rates.addVariable(rate_13)
-avmvn_rates.addVariable(rate_31)
+#avmvn_rates.addVariable(rate_13)
+#avmvn_rates.addVariable(rate_31)
 avmvn_rates.addVariable(rate_23)
 avmvn_rates.addVariable(rate_32)
 
 moves.append( avmvn_rates )
-
 
 Q := fnFreeK([rate_12, rate_13, rate_21, rate_23, rate_31, rate_32], rescaled=FALSE)
 
@@ -89,18 +90,18 @@ X.clamp(disc)
 
 mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/ase_r500_3State/trace_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/ase_r500_3StateOrdered/trace_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
 monitors.append( mnJointConditionalAncestralState(tree=tree,
                                                   ctmc=X,
-                                                  filename="output/3_empirical/ase_r500_3State/states_run_" + RUN_INDEX + ".log",
+                                                  filename="output/3_empirical/ase_r500_3StateOrdered/states_run_" + RUN_INDEX + ".log",
                                                   type="Standard",
                                                   printgen=10,
                                                   withTips=true,
                                                   withStartStates=false) )
 
 monitors.append( mnStochasticCharacterMap(ctmc=X,
-                                          filename="output/3_empirical/ase_r500_3State/simmap_run_" + RUN_INDEX + ".log",
+                                          filename="output/3_empirical/ase_r500_3StateOrdered/simmap_run_" + RUN_INDEX + ".log",
                                           printgen=10,
                                           include_simmap=true) )
 
@@ -119,13 +120,13 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 mymcmc.burnin(generations=5000, tuningInterval=100)
 mymcmc.run(generations=50000, tuningInterval=200)
 
-anc_states = readAncestralStateTrace("output/3_empirical/ase_r500_3State/states_run_" + RUN_INDEX + ".log")
-anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_r500_3State/anc_states_run_" + RUN_INDEX + ".tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=3)
-anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_r500_3State/simmap_run_" + RUN_INDEX + ".log")
+anc_states = readAncestralStateTrace("output/3_empirical/ase_r500_3StateOrdered/states_run_" + RUN_INDEX + ".log")
+anc_tree = ancestralStateTree(tree=tree, ancestral_state_trace_vector=anc_states, include_start_states=false, file="output/3_empirical/ase_r500_3StateOrdered/anc_states_run_" + RUN_INDEX + ".tre", burnin=0.0, summary_statistic="MAP", site=1, nStates=3)
+anc_states_stoch_map = readAncestralStateTrace("output/3_empirical/ase_r500_3StateOrdered/simmap_run_" + RUN_INDEX + ".log")
 char_map_tree = characterMapTree(tree=tree,
                  ancestral_state_trace_vector=anc_states_stoch_map,
-                 character_file="output/3_empirical/ase_r500_3State/marginal_character_run_" + RUN_INDEX + ".tree",
-                 posterior_file="output/3_empirical/ase_r500_3State/marginal_posterior_run_" + RUN_INDEX + ".tree",
+                 character_file="output/3_empirical/ase_r500_3StateOrdered/marginal_character_run_" + RUN_INDEX + ".tree",
+                 posterior_file="output/3_empirical/ase_r500_3StateOrdered/marginal_posterior_run_" + RUN_INDEX + ".tree",
                  burnin=0.0,
                  num_time_slices=500)
 
