@@ -30,7 +30,7 @@ disc.includeCharacter(characterDisc)
 moves    = VectorMoves()
 monitors = VectorMonitors()
 avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rf = mvAVMVN(weight=5 waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rf = mvAVMVN(weight=5, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
