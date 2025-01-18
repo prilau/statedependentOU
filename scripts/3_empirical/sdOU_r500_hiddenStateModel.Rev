@@ -189,7 +189,7 @@ avmvn_stv2.addVariable(stv[2])
 sigma2[2] := stv[2] * 2 * alpha[2]
 
 # omnivores (hidden state 1)
-dtheta ~ dnLogormal(1, abs(ln(2)))
+dtheta ~ dnLognormal(1, abs(ln(2)))
 moves.append(mvSlide(dtheta, weight = 1.0) )
 avmvn_dtheta = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
 avmvn_dtheta.addVariable(dtheta)
