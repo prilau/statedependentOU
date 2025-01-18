@@ -85,7 +85,7 @@ moves.append( avmvn_rate_32 )
 moves.append( avmvn_rate_34 )
 moves.append( avmvn_rate_43 )
 
-Q := fnFreeK([rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43], rescaled=FALSE)
+Q := fnFreeK([rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43], rescaled=TRUE)
 
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone

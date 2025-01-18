@@ -27,7 +27,7 @@ trait <- trait %>%
     diet3 = herbivore + omnivore * 2 + carnivore * 3 - 1,
     diet4 = herbivore + p_omnivore * 2 + np_omnivore * 3 + carnivore * 4 - 1,
     log_mass_kg = log(Mass.g / 1000)) %>% 
-  select(Binomial.1.2, log_mass_kg, diet3, diet4)
+  select(Order.1.2, Binomial.1.2, log_mass_kg, diet3, diet4)
 
 # species names found in both trait data and tree
 tips_keep <- intersect(tree$tip.label, trait$Binomial.1.2)

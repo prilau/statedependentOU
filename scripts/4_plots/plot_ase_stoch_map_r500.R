@@ -138,16 +138,16 @@ ggsave(paste0("figures/3_empirical/ase_r500_3State/stoch_map.pdf"), p3, width = 
 # 4-state model #
 #################
 ase <- processAncStates("output/3_empirical/ase_r500_4State/anc_states_run_1.tre",
-                        state_labels=c("0"="Herbivorous", "1"="Plant-dominant omnivorous",
-                                       "2"="Non-plant-dominant omnivorous", "3"="Carnivorous"))
+                        state_labels=c("0"="Herbivorous", "1"="Omnivorous (predominantly plants)",
+                                       "2"="Omnivorous (predominantly non-plants)", "3"="Carnivorous"))
 # produce the plot object, showing MAP states at nodes.
 p4 <- plotAncStatesMAP(t = ase,
                        #tip_labels_offset = 0.5,
                        tip_labels = FALSE,
                        node_color_as = "state",
                        node_color = c("Herbivorous"                   = "#44AA99",
-                                      "Plant-dominant omnivorous"     = "#999933",
-                                      "Non-plant-dominant omnivorous" = "#CC6677",
+                                      "Omnivorous (predominantly plants)"     = "#999933",
+                                      "Omnivorous (predominantly non-plants)" = "#CC6677",
                                       "Carnivorous"                   = "#882255"),
                        node_size = c(0.5, 2),
                        tip_states = TRUE,
@@ -166,8 +166,8 @@ ggsave(paste0("figures/3_empirical/ase_r500_4State/ase_map.pdf"), p4, width = 8,
 
 p5 <- plotAncStatesPie(t = ase,
                        pie_colors = c("Herbivorous"="#44AA99",
-                                      "Plant-dominant omnivorous"="#999933",
-                                      "Non-plant-dominant omnivorous"="#CC6677",
+                                      "Omnivorous (predominantly plants)"="#999933",
+                                      "Omnivorous (predominantly non-plants)"="#CC6677",
                                       "Carnivorous"="#882255"),
                        #tip_labels_size = 1,
                        tip_pies = TRUE,
@@ -192,8 +192,8 @@ stoc_map <- processStochMaps(tree,
                              states=c("0", "1", "2", "3"))
 
 colnames(stoc_map)[6] = "Herbivorous"
-colnames(stoc_map)[7] = "Plant-dominant omnivorous"
-colnames(stoc_map)[8] = "Non-plant-dominant omnivorous"
+colnames(stoc_map)[7] = "Omnivorous (predominantly plants)"
+colnames(stoc_map)[8] = "Omnivorous (predominantly non-plants)"
 colnames(stoc_map)[9] = "Carnivorous"
 
 p6 <- plotStochMaps(tree, maps=stoc_map,
@@ -202,8 +202,8 @@ p6 <- plotStochMaps(tree, maps=stoc_map,
                     line_width=0.25,
                     color_by = "MAP",
                     colors = c("Herbivorous"="#44AA99",
-                               "Plant-dominant omnivorous"="#999933",
-                               "Non-plant-dominant omnivorous"="#CC6677",
+                               "Omnivorous (predominantly plants)"="#999933",
+                               "Omnivorous (predominantly non-plants)"="#CC6677",
                                "Carnivorous"="#882255")) +
   theme(legend.position.inside = c(0.6,0.81))
 #p6
