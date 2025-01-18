@@ -168,7 +168,9 @@ sigma2[1] := stv[1] * 2 * alpha[1]
 # herbivores (dummy state)
 theta[4]    := theta[1]   
 halflife[4] := halflife[1]
+alpha[4] := abs(ln(2)/halflife[4])
 stv[4]      := stv[1]     
+sigma2[4] := stv[4] * 2 * alpha[4]
 
 # omnivores (hidden state 0)
 theta[2] ~ dnNormal(theta[1], 4)
@@ -223,8 +225,9 @@ sigma2[3] := stv[3] * 2 * alpha[3]
 # carnivores (dummy state)
 theta[6]    := theta[3]   
 halflife[6] := halflife[3]
+alpha[6]    := abs(ln(2)/halflife[6])
 stv[6]      := stv[3]
-
+sigma2[6]   := stv[6] * 2 * alpha[6]
 
 ##########################
 # Specify the OU process #
