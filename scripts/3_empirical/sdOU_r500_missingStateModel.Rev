@@ -101,8 +101,8 @@ for (i in 2:num_disc_states){
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
 
-avmvn_theta2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta2.addVariable(dtheta[2])
+avmvn_dtheta2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_dtheta2.addVariable(dtheta[2])
 avmvn_halflife1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
 avmvn_halflife1.addVariable(halflife[1])
 avmvn_halflife2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
@@ -112,19 +112,19 @@ avmvn_stv1.addVariable(stv[1])
 avmvn_stv2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
 avmvn_stv2.addVariable(stv[2])
 
-#avmvn_halflife3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-#avmvn_halflife3.addVariable(halflife[3])
-#avmvn_theta3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-#avmvn_theta3.addVariable(theta[3])
-#avmvn_stv3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-#avmvn_stv3.addVariable(stv[3])
-#
-#avmvn_halflife4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-#avmvn_halflife4.addVariable(halflife[4])
-#avmvn_theta4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-#avmvn_theta4.addVariable(theta[4])
-#avmvn_stv4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-#avmvn_stv4.addVariable(stv[4])
+avmvn_halflife3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_halflife3.addVariable(halflife[3])
+avmvn_dtheta3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_dtheta3.addVariable(dtheta[3])
+avmvn_stv3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_stv3.addVariable(stv[3])
+
+avmvn_halflife4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_halflife4.addVariable(halflife[4])
+avmvn_dtheta4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_dtheta4.addVariable(dtheta[4])
+avmvn_stv4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_stv4.addVariable(stv[4])
 
 
 
