@@ -39,6 +39,8 @@ cont.includeCharacter(characterCont)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
+avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_ou = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -89,43 +91,28 @@ moves.append( mvScale( rates[5][6], weight=1.0 ) )
 moves.append( mvScale( rates[6][3], weight=1.0 ) )
 moves.append( mvScale( rates[6][5], weight=1.0 ) )
 
-avmvn_12 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_14 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_21 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_23 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_25 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_32 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_36 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_41 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_45 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_52 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_54 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_56 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_63 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_65 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-
-avmvn_12.addVariable( rates[1][2] )
-avmvn_14.addVariable( rates[1][4] )
-avmvn_21.addVariable( rates[2][1] )
-avmvn_23.addVariable( rates[2][3] )
-avmvn_25.addVariable( rates[2][5] )
-avmvn_32.addVariable( rates[3][2] )
-avmvn_36.addVariable( rates[3][6] )
-avmvn_41.addVariable( rates[4][1] )
-avmvn_45.addVariable( rates[4][5] )
-avmvn_52.addVariable( rates[5][2] )
-avmvn_54.addVariable( rates[5][4] )
-avmvn_56.addVariable( rates[5][6] )
-avmvn_63.addVariable( rates[6][3] )
-avmvn_65.addVariable( rates[6][5] )
+avmvn_rates.addVariable( rates[1][2] )
+avmvn_rates.addVariable( rates[1][4] )
+avmvn_rates.addVariable( rates[2][1] )
+avmvn_rates.addVariable( rates[2][3] )
+avmvn_rates.addVariable( rates[2][5] )
+avmvn_rates.addVariable( rates[3][2] )
+avmvn_rates.addVariable( rates[3][6] )
+avmvn_rates.addVariable( rates[4][1] )
+avmvn_rates.addVariable( rates[4][5] )
+avmvn_rates.addVariable( rates[5][2] )
+avmvn_rates.addVariable( rates[5][4] )
+avmvn_rates.addVariable( rates[5][6] )
+avmvn_rates.addVariable( rates[6][3] )
+avmvn_rates.addVariable( rates[6][5] )
 
 Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
-moves.append( mvScale(lambda, weight=1.0) )
-avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_lambda.addVariable( lambda )
-moves.append( avmvn_lambda )
+moves.append( mvScale(lambda, weight=2.0) )
+avmvn_rates.addVariable( lambda )
+
+moves.append( avmvn_rates )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="NaturalNumbers", nSites=1)
 X.clamp(disc_exp)
@@ -150,19 +137,16 @@ char_hist := X.characterHistories()
 # herbivores
 theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
 moves.append(mvSlide(theta[1], weight = 1.0) )
-avmvn_theta1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta1.addVariable(theta[1])
+avmvn_ou.addVariable(theta[1])
 
 halflife[1] ~ dnLognormal(4.3613845, 1.044495)
 moves.append(mvScale(halflife[1], weight = 1.0) )
-avmvn_halflife1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife1.addVariable(halflife[1])
+avmvn_ou.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
 stv[1] ~ dnLognormal(ln(13), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
-avmvn_stv1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv1.addVariable(stv[1])
+avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
 # herbivores (dummy state)
@@ -175,26 +159,22 @@ sigma2[4] := stv[4] * 2 * alpha[4]
 # omnivores (hidden state 0)
 theta[2] ~ dnNormal(theta[1], 4)
 moves.append(mvSlide(theta[2], weight = 1.0) )
-avmvn_theta2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta2.addVariable(theta[2])
+avmvn_ou.addVariable(theta[2])
 
 halflife[2] ~ dnLognormal(halflife[1], 1.044495)
 moves.append(mvScale(halflife[2], weight = 1.0) )
-avmvn_halflife2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife2.addVariable(halflife[2])
+avmvn_ou.addVariable(halflife[2])
 alpha[2] := abs(ln(2)/halflife[2])
 
 stv[2] ~ dnLognormal(stv[1], 0.587405)
 moves.append(mvScale(stv[2], weight = 1.0) )
-avmvn_stv2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv2.addVariable(stv[2])
+avmvn_ou.addVariable(stv[2])
 sigma2[2] := stv[2] * 2 * alpha[2]
 
 # omnivores (hidden state 1)
 dtheta ~ dnLognormal(1, abs(ln(2)))
 moves.append(mvSlide(dtheta, weight = 1.0) )
-avmvn_dtheta = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_dtheta.addVariable(dtheta)
+avmvn_ou.addVariable(dtheta)
 theta[5] := theta[2] - dtheta
 
 halflife[5] := halflife[2]
@@ -207,19 +187,16 @@ sigma2[5] := stv[5] * 2 * alpha[5]
 # carnivores
 theta[3] ~ dnNormal(theta[2], 4)
 moves.append(mvSlide(theta[3], weight = 1.0) )
-avmvn_theta3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta3.addVariable(theta[3])
+avmvn_ou.addVariable(theta[3])
 
 halflife[3] ~ dnLognormal(halflife[2], 1.044495)
 moves.append(mvScale(halflife[3], weight = 1.0) )
-avmvn_halflife3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife3.addVariable(halflife[3])
+avmvn_ou.addVariable(halflife[3])
 alpha[3] := abs(ln(2)/halflife[3])
 
 stv[3] ~ dnLognormal(stv[2], 0.587405)
 moves.append(mvScale(stv[3], weight = 1.0) )
-avmvn_stv3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv3.addVariable(stv[3])
+avmvn_ou.addVariable(stv[3])
 sigma2[3] := stv[3] * 2 * alpha[3]
 
 # carnivores (dummy state)
@@ -228,6 +205,8 @@ halflife[6] := halflife[3]
 alpha[6]    := abs(ln(2)/halflife[6])
 stv[6]      := stv[3]
 sigma2[6]   := stv[6] * 2 * alpha[6]
+
+moves.append( avmvn_ou )
 
 ##########################
 # Specify the OU process #
@@ -260,6 +239,7 @@ mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first ru
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_hiddenStateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
 mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_hiddenStateModel/run_" + RUN_INDEX + ".state")
+mymcmc.operatorSummary()
 
 ## quit ##
 q()

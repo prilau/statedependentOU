@@ -32,7 +32,8 @@ cont.includeCharacter(characterCont)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_move = mvAVMVN(weight=50, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_ou = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -49,10 +50,10 @@ root_age <- tree.rootAge()
 Q := fnJC(num_disc_states)
 
 lambda ~ dnLognormal(ln(0.01), 0.4)
-moves.append( mvScale(lambda, weight=1.0) )
-avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_lambda.addVariable( lambda )
-moves.append( avmvn_lambda )
+moves.append( mvScale(lambda, weight=2.0) )
+avmvn_rates.addVariable( lambda )
+
+moves.append( avmvn_rates )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
@@ -60,8 +61,8 @@ X.clamp(disc)
 
 # include proposals for the discrete character history
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=100.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=100.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=100.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=150.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=150.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -101,32 +102,21 @@ for (i in 2:num_disc_states){
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
 
-avmvn_dtheta2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_dtheta2.addVariable(dtheta[2])
-avmvn_halflife1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife1.addVariable(halflife[1])
-avmvn_halflife2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife2.addVariable(halflife[2])
-avmvn_stv1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv1.addVariable(stv[1])
-avmvn_stv2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv2.addVariable(stv[2])
+avmvn_ou.addVariable(dtheta[2])
+avmvn_ou.addVariable(halflife[1])
+avmvn_ou.addVariable(halflife[2])
+avmvn_ou.addVariable(stv[1])
+avmvn_ou.addVariable(stv[2])
 
-avmvn_halflife3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife3.addVariable(halflife[3])
-avmvn_dtheta3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_dtheta3.addVariable(dtheta[3])
-avmvn_stv3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv3.addVariable(stv[3])
+avmvn_ou.addVariable(halflife[3])
+avmvn_ou.addVariable(dtheta[3])
+avmvn_ou.addVariable(stv[3])
 
-avmvn_halflife4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife4.addVariable(halflife[4])
-avmvn_dtheta4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_dtheta4.addVariable(dtheta[4])
-avmvn_stv4 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv4.addVariable(stv[4])
+avmvn_ou.addVariable(halflife[4])
+avmvn_ou.addVariable(dtheta[4])
+avmvn_ou.addVariable(stv[4])
 
-
+moves.append( avmvn_ou )
 
 ##########################
 # Specify the OU process #
@@ -160,8 +150,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state") #comment this out for the first run
-# checkpointInterval was 10 in 1st run
 mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/" + NUM_MISSING_STATE + "state_run_" + RUN_INDEX + ".state")
+mymcmc.operatorSummary()
 
 
 ## quit ##

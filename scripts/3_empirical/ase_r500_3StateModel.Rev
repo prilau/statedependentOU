@@ -29,7 +29,8 @@ disc.includeCharacter(characterDisc)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_move = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rf = mvAVMVN(weight=5 waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -59,26 +60,15 @@ moves.append( mvScale(rate_31, weight=1.0) )
 moves.append( mvScale(rate_23, weight=1.0) )
 moves.append( mvScale(rate_32, weight=1.0) )
 
-avmvn_rate_12 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_21 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_13 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_31 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_23 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_32 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rates.addVariable(rate_12)
+avmvn_rates.addVariable(rate_21)
+avmvn_rates.addVariable(rate_13)
+avmvn_rates.addVariable(rate_31)
+avmvn_rates.addVariable(rate_23)
+avmvn_rates.addVariable(rate_32)
 
-avmvn_rate_12.addVariable(rate_12)
-avmvn_rate_21.addVariable(rate_21)
-avmvn_rate_13.addVariable(rate_13)
-avmvn_rate_31.addVariable(rate_31)
-avmvn_rate_23.addVariable(rate_23)
-avmvn_rate_32.addVariable(rate_32)
+moves.append( avmvn_rates )
 
-moves.append( avmvn_rate_12 )
-moves.append( avmvn_rate_21 )
-moves.append( avmvn_rate_13 )
-moves.append( avmvn_rate_31 )
-moves.append( avmvn_rate_23 )
-moves.append( avmvn_rate_32 )
 
 Q := fnFreeK([rate_12, rate_13, rate_21, rate_23, rate_31, rate_32], rescaled=FALSE)
 
@@ -86,8 +76,8 @@ rf_prior <- rep(1,num_disc_states)
 rf ~ dnDirichlet( rf_prior )
 moves.append( mvBetaSimplex( rf, weight=2 ) )
 moves.append( mvDirichletSimplex( rf, weight=2 ) )
-avmvn_rf = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
 avmvn_rf.addVariable( rf )
+moves.append( avmvn_rf )
 
 # make the CTCM model
 X ~ dnPhyloCTMC(tree=tree, Q=Q, rootFrequencies=rf, type="Standard")

@@ -32,6 +32,8 @@ cont.includeCharacter(characterCont)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
+avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_ou = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -61,35 +63,23 @@ moves.append( mvScale(rate_31, weight=1.0) )
 moves.append( mvScale(rate_23, weight=1.0) )
 moves.append( mvScale(rate_32, weight=1.0) )
 
-avmvn_rate_12 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_21 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_13 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_31 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_23 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_32 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rates.addVariable(rate_12)
+avmvn_rates.addVariable(rate_21)
+avmvn_rates.addVariable(rate_13)
+avmvn_rates.addVariable(rate_31)
+avmvn_rates.addVariable(rate_23)
+avmvn_rates.addVariable(rate_32)
 
-avmvn_rate_12.addVariable(rate_12)
-avmvn_rate_21.addVariable(rate_21)
-avmvn_rate_13.addVariable(rate_13)
-avmvn_rate_31.addVariable(rate_31)
-avmvn_rate_23.addVariable(rate_23)
-avmvn_rate_32.addVariable(rate_32)
 
-moves.append( avmvn_rate_12 )
-moves.append( avmvn_rate_21 )
-moves.append( avmvn_rate_13 )
-moves.append( avmvn_rate_31 )
-moves.append( avmvn_rate_23 )
-moves.append( avmvn_rate_32 )
 
 rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
-moves.append( mvScale(lambda, weight=1.0) )
-avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_lambda.addVariable( lambda )
-moves.append( avmvn_lambda )
+moves.append( mvScale(lambda, weight=2.0) )
+avmvn_rates.addVariable(lambda)
+
+
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
@@ -112,48 +102,35 @@ char_hist := X.characterHistories()
 ##############################
 theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
 moves.append(mvSlide(theta[1], weight = 1.0) )
+avmvn_ou.addVariable(theta[1])
 
 halflife[1] ~ dnLognormal(4.3613845, 1.044495)
 moves.append(mvScale(halflife[1], weight = 1.0) )
+avmvn_ou.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
 stv[1] ~ dnLognormal(ln(13), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
+avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
 for (i in 2:num_disc_states){
   theta[i] ~ dnNormal(theta[i-1], 4)
   moves.append(mvSlide(theta[i], weight = 1.0) )
+  avmvn_ou.addVariable(theta[i])
 
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
   moves.append(mvScale(halflife[i], weight = 1.0) )
+  avmvn_ou.addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
 
   stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
   moves.append(mvScale(stv[i], weight = 1.0) )
+  avmvn_ou.addVariable(stv[i])
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
 
-avmvn_theta1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta1.addVariable(theta[1])
-avmvn_theta2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta2.addVariable(theta[2])
-avmvn_theta3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_theta3.addVariable(theta[3])
-
-avmvn_halflife1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife1.addVariable(halflife[1])
-avmvn_halflife2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife2.addVariable(halflife[2])
-avmvn_halflife3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_halflife3.addVariable(halflife[3])
-
-avmvn_stv1 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv1.addVariable(stv[1])
-avmvn_stv2 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv2.addVariable(stv[2])
-avmvn_stv3 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_stv3.addVariable(stv[3])
+moves.append( avmvn_ou )
 
 ##########################
 # Specify the OU process #

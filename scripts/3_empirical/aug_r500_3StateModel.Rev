@@ -27,6 +27,7 @@ num_disc_states <- disc.getStateDescriptions().size()
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
+avmvn_moves = mvAVMVN(weight=12, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -55,42 +56,28 @@ moves.append( mvScale(rate_31, weight=1.0) )
 moves.append( mvScale(rate_23, weight=1.0) )
 moves.append( mvScale(rate_32, weight=1.0) )
 
-avmvn_rate_12 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_21 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_13 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_31 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_23 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_rate_32 = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_moves.addVariable(rate_12)
+avmvn_moves.addVariable(rate_21)
+avmvn_moves.addVariable(rate_13)
+avmvn_moves.addVariable(rate_31)
+avmvn_moves.addVariable(rate_23)
+avmvn_moves.addVariable(rate_32)
 
-avmvn_rate_12.addVariable(rate_12)
-avmvn_rate_21.addVariable(rate_21)
-avmvn_rate_13.addVariable(rate_13)
-avmvn_rate_31.addVariable(rate_31)
-avmvn_rate_23.addVariable(rate_23)
-avmvn_rate_32.addVariable(rate_32)
-
-moves.append( avmvn_rate_12 )
-moves.append( avmvn_rate_21 )
-moves.append( avmvn_rate_13 )
-moves.append( avmvn_rate_31 )
-moves.append( avmvn_rate_23 )
-moves.append( avmvn_rate_32 )
 
 rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
-moves.append( mvScale(lambda, weight=1.0) )
-avmvn_lambda = mvAVMVN(weight=2, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_lambda.addVariable( lambda )
-moves.append( avmvn_lambda )
+moves.append( mvScale(lambda, weight=5.0) )
+avmvn_moves.addVariable(lambda)
+
+moves.append( avmvn_moves )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=50.0) )
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=180.0) )
 moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=180.0) )
 
@@ -108,9 +95,9 @@ char_hist := X.characterHistories()
 
 mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/aug_r500_3StateModel/trace_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_r500_3StateModel/run_" + RUN_INDEX + ".trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_r500_3StateModel/augch_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 ################
