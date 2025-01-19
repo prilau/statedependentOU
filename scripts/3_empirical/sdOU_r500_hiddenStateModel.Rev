@@ -106,20 +106,20 @@ avmvn_rates.addVariable( rates[5][6] )
 avmvn_rates.addVariable( rates[6][3] )
 avmvn_rates.addVariable( rates[6][5] )
 
-rate.12 := rates[1][2]
-rate.14 := rates[1][4]
-rate.21 := rates[2][1]
-rate.23 := rates[2][3]
-rate.25 := rates[2][5]
-rate.32 := rates[3][2]
-rate.36 := rates[3][6]
-rate.41 := rates[4][1]
-rate.45 := rates[4][5]
-rate.52 := rates[5][2]
-rate.54 := rates[5][4]
-rate.56 := rates[5][6]
-rate.63 := rates[6][3]
-rate.65 := rates[6][5]
+rate_12 := rates[1][2]
+rate_14 := rates[1][4]
+rate_21 := rates[2][1]
+rate_23 := rates[2][3]
+rate_25 := rates[2][5]
+rate_32 := rates[3][2]
+rate_36 := rates[3][6]
+rate_41 := rates[4][1]
+rate_45 := rates[4][5]
+rate_52 := rates[5][2]
+rate_54 := rates[5][4]
+rate_56 := rates[5][6]
+rate_63 := rates[6][3]
+rate_65 := rates[6][5]
 
 Q := fnFreeK(rates, rescaled=TRUE)
 
