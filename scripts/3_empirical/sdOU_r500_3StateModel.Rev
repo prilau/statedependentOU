@@ -77,7 +77,7 @@ Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
 moves.append( mvScale(lambda, weight=2.0) )
-avmvn_rates.addVariable(lambda)
+#avmvn_rates.addVariable(lambda)
 
 
 
@@ -159,9 +159,9 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
+#mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
-#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_3StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_3StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
 mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_3StateModel/run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
