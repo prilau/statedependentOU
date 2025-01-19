@@ -2,10 +2,10 @@
 [Data written by write.nexus.data.R, Tue Jan ?4 09:59:52 2025]
 BEGIN DATA;
   DIMENSIONS NTAX=500 NCHAR=1;
-  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="missingStates";
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123";
   MATRIX
     abrocoma_cinerea                   0
-    acinonyx_jubatus                   2
+    acinonyx_jubatus                   3
     acomys_ignitus                     ?
     aconaemys_fuscus                   0
     aegialomys_xanthaeolus             ?
@@ -25,15 +25,15 @@ BEGIN DATA;
     alouatta_caraya                    0
     alticola_semicanus                 0
     anoura_latidens                    ?
-    antechinus_godmani                 2
-    antechinus_stuartii                2
-    anthops_ornatus                    2
+    antechinus_godmani                 3
+    antechinus_stuartii                3
+    anthops_ornatus                    3
     aplodontia_rufa                    0
     apodemus_draco                     ?
     apodemus_latronum                  ?
     apodemus_peninsulae                ?
     apomys_microdon                    ?
-    arielulus_aureocollaris            2
+    arielulus_aureocollaris            3
     artibeus_inopinatus                ?
     arvicanthis_abyssinicus            0
     atelerix_frontalis                 ?
@@ -41,8 +41,8 @@ BEGIN DATA;
     auliscomys_pictus                  ?
     avahi_laniger                      0
     avahi_unicolor                     0
-    balaenoptera_edeni                 2
-    balantiopteryx_plicata             2
+    balaenoptera_edeni                 3
+    balantiopteryx_plicata             3
     bandicota_bengalensis              ?
     bandicota_savilei                  ?
     bathyergus_suillus                 0
@@ -61,18 +61,18 @@ BEGIN DATA;
     burramys_parvus                    ?
     callicebus_personatus              ?
     callithrix_geoffroyi               ?
-    callorhinus_ursinus                2
+    callorhinus_ursinus                3
     callosciurus_erythraeus            ?
     callosciurus_inornatus             ?
     callosciurus_prevostii             ?
     callospermophilus_saturatus        ?
     calomys_laucha                     0
     calomys_tener                      0
-    caperea_marginata                  2
+    caperea_marginata                  3
     capreolus_pygargus                 0
     cardiocranius_paradoxus            0
     carollia_castanea                  0
-    catopuma_temminckii                2
+    catopuma_temminckii                3
     cephalophus_harveyi                0
     cephalophus_ogilbyi                ?
     cercartetus_caudatus               ?
@@ -80,11 +80,11 @@ BEGIN DATA;
     cercopithecus_diana                ?
     cervus_elaphus                     0
     chaetodipus_goldmani               ?
-    chalinolobus_tuberculatus          2
+    chalinolobus_tuberculatus          3
     cheirogaleus_major                 ?
     cheirogaleus_sibreei               ?
     chelemys_megalonyx                 ?
-    chimarrogale_phaeura               2
+    chimarrogale_phaeura               3
     chionomys_roberti                  0
     chiroderma_improvisum              0
     chiroderma_villosum                0
@@ -93,38 +93,38 @@ BEGIN DATA;
     chiruromys_vates                   0
     chlorocebus_djamdjamensis          ?
     chlorocebus_sabaeus                ?
-    chlorotalpa_sclateri               2
-    chrysochloris_stuhlmanni           2
+    chlorotalpa_sclateri               3
+    chrysochloris_stuhlmanni           3
     civettictis_civetta                ?
     colobus_guereza                    0
     cratogeomys_perotensis             0
     cricetulus_barabensis              0
     cricetus_cricetus                  ?
-    crocidura_attenuata                2
-    crocidura_baileyi                  2
-    crocidura_horsfieldii              2
-    crocidura_lasiura                  2
-    crocidura_mariquensis              2
-    crocidura_mindorus                 2
-    crocidura_monax                    2
-    crocidura_nimbae                   2
-    crocidura_wimmeri                  2
+    crocidura_attenuata                3
+    crocidura_baileyi                  3
+    crocidura_horsfieldii              3
+    crocidura_lasiura                  3
+    crocidura_mariquensis              3
+    crocidura_mindorus                 3
+    crocidura_monax                    3
+    crocidura_nimbae                   3
+    crocidura_wimmeri                  3
     crossarchus_obscurus               ?
-    cryptochloris_wintoni              2
+    cryptochloris_wintoni              3
     ctenodactylus_vali                 0
     cynogale_bennettii                 ?
     cynomys_ludovicianus               0
     cynopterus_horsfieldii             0
     cynopterus_sphinx                  0
-    cyttarops_alecto                   2
+    cyttarops_alecto                   3
     dasyprocta_fuliginosa              ?
     dasyprocta_leporina                ?
-    dasypus_kappleri                   2
-    dasypus_septemcinctus              2
+    dasypus_kappleri                   3
+    dasypus_septemcinctus              3
     daubentonia_madagascariensis       ?
     delanymys_brooksi                  0
     dendrolagus_goodfellowi            0
-    diaemus_youngi                     2
+    diaemus_youngi                     3
     diceros_bicornis                   0
     didelphis_virginiana               ?
     dipodomys_deserti                  ?
@@ -132,7 +132,7 @@ BEGIN DATA;
     dolichotis_patagonum               0
     dremomys_lokriah                   ?
     dryomys_laniger                    ?
-    dusicyon_australis                 2
+    dusicyon_australis                 3
     eidolon_dupreanum                  0
     eidolon_helvum                     0
     emballonura_semicaudata            ?
@@ -140,19 +140,19 @@ BEGIN DATA;
     eoglaucomys_fimbriatus             ?
     eothenomys_chinensis               0
     eothenomys_custos                  0
-    eptesicus_furinalis                2
-    eptesicus_fuscus                   2
+    eptesicus_furinalis                3
+    eptesicus_fuscus                   3
     equus_hemionus                     0
     equus_kiang                        0
     erophylla_sezekorni                ?
     erythrocebus_patas                 0
     eulemur_collaris                   0
     eulemur_rufus                      0
-    eumops_floridanus                  2
+    eumops_floridanus                  3
     eupetaurus_cinereus                0
-    euroscaptor_klossi                 2
-    euroscaptor_longirostris           2
-    euroscaptor_mizura                 2
+    euroscaptor_klossi                 3
+    euroscaptor_longirostris           3
+    euroscaptor_mizura                 3
     euryoryzomys_lamia                 ?
     euryoryzomys_russatus              ?
     fukomys_ochraceocinereus           0
@@ -163,15 +163,15 @@ BEGIN DATA;
     galea_musteloides                  0
     gazella_dorcas                     0
     gazella_leptoceros                 0
-    genetta_cristata                   2
-    genetta_victoriae                  2
+    genetta_cristata                   3
+    genetta_victoriae                  3
     gerbillurus_setzeri                0
     gerbillus_andersoni                ?
     gerbillus_nancillus                ?
     gerbillus_tarabuli                 ?
-    glauconycteris_beatrix             2
-    globicephala_macrorhynchus         2
-    globicephala_melas                 2
+    glauconycteris_beatrix             3
+    globicephala_macrorhynchus         3
+    globicephala_melas                 3
     glossophaga_leachii                ?
     glossophaga_morenoi                ?
     graomys_griseoflavus               0
@@ -182,40 +182,40 @@ BEGIN DATA;
     hapalomys_delacouri                0
     harpyionycteris_whiteheadi         0
     hemibelideus_lemuroides            0
-    hemigalus_derbyanus                2
+    hemigalus_derbyanus                3
     herpestes_edwardsii                ?
     herpestes_ichneumon                ?
     herpestes_naso                     ?
-    hipposideros_calcaratus            2
-    hipposideros_coxi                  2
-    hipposideros_jonesi                2
-    hipposideros_obscurus              2
-    hipposideros_speoris               2
+    hipposideros_calcaratus            3
+    hipposideros_coxi                  3
+    hipposideros_jonesi                3
+    hipposideros_obscurus              3
+    hipposideros_speoris               3
     hydropotes_inermis                 0
     hylobates_agilis                   ?
     hylobates_pileatus                 ?
     hylopetes_spadiceus                ?
     hystrix_cristata                   0
-    isoodon_macrourus                  2
+    isoodon_macrourus                  3
     isthmomys_pirrensis                ?
     jaculus_orientalis                 0
-    kerivoula_minuta                   2
-    kerivoula_whiteheadi               2
-    kogia_breviceps                    2
+    kerivoula_minuta                   3
+    kerivoula_whiteheadi               3
+    kogia_breviceps                    3
     lagorchestes_conspicillatus        0
     lagostrophus_fasciatus             0
     lagurus_lagurus                    0
     lariscus_insignis                  0
     lasiopodomys_brandtii              0
     lasiopodomys_mandarinus            0
-    lasiurus_intermedius               2
+    lasiurus_intermedius               3
     lemniscomys_barbarus               ?
     leontopithecus_rosalia             ?
-    leopardus_colocolo                 2
-    leopardus_wiedii                   2
+    leopardus_colocolo                 3
+    leopardus_wiedii                   3
     lepilemur_microdon                 0
     lepilemur_septentrionalis          0
-    leptomys_elegans                   2
+    leptomys_elegans                   3
     leptonycteris_nivalis              ?
     lepus_americanus                   0
     lepus_brachyurus                   0
@@ -224,19 +224,19 @@ BEGIN DATA;
     lepus_oiostolus                    0
     lepus_peguensis                    0
     lepus_tolai                        0
-    liberiictis_kuhni                  2
-    lipotes_vexillifer                 2
-    lobodon_carcinophaga               2
-    lonchorhina_orinocensis            2
-    lontra_felina                      2
-    lontra_provocax                    2
-    loris_lydekkerianus                2
+    liberiictis_kuhni                  3
+    lipotes_vexillifer                 3
+    lobodon_carcinophaga               3
+    lonchorhina_orinocensis            3
+    lontra_felina                      3
+    lontra_provocax                    3
+    loris_lydekkerianus                3
     lycalopex_sechurae                 ?
-    lynx_rufus                         2
+    lynx_rufus                         3
     macaca_cyclopis                    ?
     macaca_fuscata                     ?
     macaca_leonina                     ?
-    macrophyllum_macrophyllum          2
+    macrophyllum_macrophyllum          3
     madoqua_guentheri                  0
     mallomys_rothschildi               0
     marmosops_noctivagus               ?
@@ -253,10 +253,10 @@ BEGIN DATA;
     mephitis_mephitis                  ?
     meriones_meridianus                ?
     mesocricetus_auratus               ?
-    mesoplodon_bidens                  2
-    mesoplodon_densirostris            2
-    mesoplodon_grayi                   2
-    mesoplodon_stejnegeri              2
+    mesoplodon_bidens                  3
+    mesoplodon_densirostris            3
+    mesoplodon_grayi                   3
+    mesoplodon_stejnegeri              3
     micromys_minutus                   ?
     microperoryctes_aplini             ?
     micropteropus_pusillus             0
@@ -266,52 +266,52 @@ BEGIN DATA;
     microtus_montanus                  0
     microtus_richardsoni               0
     microtus_thomasi                   0
-    miniopterus_gleni                  2
-    miniopterus_griveaudi              2
-    miniopterus_tristis                2
-    mogera_robusta                     2
-    monachus_monachus                  2
+    miniopterus_gleni                  3
+    miniopterus_griveaudi              3
+    miniopterus_tristis                3
+    mogera_robusta                     3
+    monachus_monachus                  3
     monodelphis_dimidiata              ?
-    mops_condylurus                    2
+    mops_condylurus                    3
     moschus_fuscus                     0
-    mungotictis_decemlineata           2
+    mungotictis_decemlineata           3
     muntiacus_reevesi                  0
-    murina_leucogaster                 2
+    murina_leucogaster                 3
     mus_crociduroides                  ?
     mus_famulus                        ?
     mus_pahari                         ?
     mus_platythrix                     ?
     mus_tenellus                       ?
-    mustela_sibirica                   2
+    mustela_sibirica                   3
     myocastor_coypus                   0
     myodes_glareolus                   ?
-    myoictis_wallacei                  2
-    myosorex_varius                    2
+    myoictis_wallacei                  3
+    myosorex_varius                    3
     myospalax_aspalax                  0
-    myotis_altarium                    2
-    myotis_daubentonii                 2
-    myotis_goudoti                     2
-    myotis_horsfieldii                 2
-    myotis_longipes                    2
-    myotis_martiniquensis              2
-    myotis_muricola                    2
-    myotis_nigricans                   2
-    myotis_sodalis                     2
-    myotis_thysanodes                  2
-    myotis_velifer                     2
-    myotis_volans                      2
+    myotis_altarium                    3
+    myotis_daubentonii                 3
+    myotis_goudoti                     3
+    myotis_horsfieldii                 3
+    myotis_longipes                    3
+    myotis_martiniquensis              3
+    myotis_muricola                    3
+    myotis_nigricans                   3
+    myotis_sodalis                     3
+    myotis_thysanodes                  3
+    myotis_velifer                     3
+    myotis_volans                      3
     naemorhedus_griseus                0
     nanger_granti                      0
     nanonycteris_veldkampii            0
     nasalis_larvatus                   0
     nasua_narica                       ?
-    natalus_tumidirostris              2
+    natalus_tumidirostris              3
     neacomys_guianae                   ?
     necromys_lactens                   ?
-    nectogale_elegans                  2
+    nectogale_elegans                  3
     nectomys_squamipes                 ?
-    neophocaena_phocaenoides           2
-    neoromicia_capensis                2
+    neophocaena_phocaenoides           3
+    neoromicia_capensis                3
     neotoma_fuscipes                   ?
     neotoma_stephensi                  ?
     neotragus_batesi                   0
@@ -327,29 +327,29 @@ BEGIN DATA;
     oligoryzomys_fulvescens            ?
     oligoryzomys_longicaudatus         ?
     oreamnos_americanus                0
-    ornithorhynchus_anatinus           2
+    ornithorhynchus_anatinus           3
     orthogeomys_cavator                0
     orthogeomys_lanius                 0
     oryctolagus_cuniculus              0
     oryx_beisa                         0
     oryx_leucoryx                      0
     oryzomys_palustris                 ?
-    otocolobus_manul                   2
+    otocolobus_manul                   3
     otocyon_megalotis                  ?
     otomys_angoniensis                 0
     otomys_typus                       0
     ourebia_ourebi                     0
     ovis_canadensis                    0
     ovis_dalli                         0
-    panthera_onca                      2
-    panthera_uncia                     2
+    panthera_onca                      3
+    panthera_uncia                     3
     papio_anubis                       ?
     papio_papio                        ?
-    paracynictis_selousi               2
+    paracynictis_selousi               3
     paraechinus_hypomelas              ?
-    parascaptor_leucura                2
+    parascaptor_leucura                3
     pelomys_fallax                     0
-    peponocephala_electra              2
+    peponocephala_electra              3
     perognathus_longimembris           ?
     perognathus_parvus                 ?
     peromyscus_furvus                  ?
@@ -364,13 +364,13 @@ BEGIN DATA;
     petropseudes_dahli                 0
     phalanger_carmelitae               ?
     phalanger_lullulae                 ?
-    phascogale_tapoatafa               2
+    phascogale_tapoatafa               3
     phenacomys_intermedius             0
     phyllomys_blainvillii              0
     phyllotis_gerbillus                0
     piliocolobus_kirkii                0
-    pipistrellus_kuhlii                2
-    pipistrellus_paterculus            2
+    pipistrellus_kuhlii                3
+    pipistrellus_paterculus            3
     platyrrhinus_dorsalis              ?
     pogonomys_macrourus                0
     pongo_pygmaeus                     ?
@@ -379,7 +379,7 @@ BEGIN DATA;
     praomys_morio                      ?
     presbytis_frontata                 0
     presbytis_thomasi                  0
-    prionodon_pardicolor               2
+    prionodon_pardicolor               3
     procapra_przewalskii               0
     proechimys_guyannensis             0
     proechimys_quadruplicatus          0
@@ -396,12 +396,12 @@ BEGIN DATA;
     pseudochirulus_canescens           0
     pseudois_nayaur                    0
     pseudoryx_nghetinhensis            0
-    pteronotus_macleayii               2
+    pteronotus_macleayii               3
     pteronotus_rubiginosus             ?
-    pteronura_brasiliensis             2
+    pteronura_brasiliensis             3
     pteropus_molossinus                0
     pteropus_tonganus                  0
-    puma_concolor                      2
+    puma_concolor                      3
     raphicerus_campestris              0
     rattus_argentiventer               ?
     rattus_fuscipes                    ?
@@ -412,17 +412,17 @@ BEGIN DATA;
     ratufa_affinis                     ?
     redunca_fulvorufula                0
     reithrodon_auritus                 0
-    rheomys_raptor                     2
-    rhinolophus_eloquens               2
-    rhinolophus_ferrumequinum          2
-    rhinolophus_landeri                2
-    rhinolophus_marshalli              2
-    rhinolophus_stheno                 2
+    rheomys_raptor                     3
+    rhinolophus_eloquens               3
+    rhinolophus_ferrumequinum          3
+    rhinolophus_landeri                3
+    rhinolophus_marshalli              3
+    rhinolophus_stheno                 3
     rhinopithecus_brelichi             0
     rhipidomys_wetzeli                 ?
     rhizomys_sinensis                  0
-    rhogeessa_genowaysi                2
-    rhogeessa_mira                     2
+    rhogeessa_genowaysi                3
+    rhogeessa_mira                     3
     romerolagus_diazi                  0
     rousettus_obliviosus               0
     rucervus_schomburgki               0
@@ -435,21 +435,21 @@ BEGIN DATA;
     sciurus_ignitus                    0
     sciurus_vulgaris                   0
     scotonycteris_zenkeri              0
-    scotophilus_dinganii               2
-    scotophilus_heathii                2
-    scotophilus_kuhlii                 2
-    scotophilus_nux                    2
-    scotophilus_robustus               2
+    scotophilus_dinganii               3
+    scotophilus_heathii                3
+    scotophilus_kuhlii                 3
+    scotophilus_nux                    3
+    scotophilus_robustus               3
     sekeetamys_calurus                 ?
-    sminthopsis_griseoventer           2
-    sorex_coronatus                    2
-    sorex_cylindricauda                2
-    sorex_haydeni                      2
-    sorex_isodon                       2
-    sorex_milleri                      2
-    sorex_ornatus                      2
-    sorex_roboratus                    2
-    speothos_venaticus                 2
+    sminthopsis_griseoventer           3
+    sorex_coronatus                    3
+    sorex_cylindricauda                3
+    sorex_haydeni                      3
+    sorex_isodon                       3
+    sorex_milleri                      3
+    sorex_ornatus                      3
+    sorex_roboratus                    3
+    speothos_venaticus                 3
     spermophilopsis_leptodactylus      ?
     spermophilus_citellus              ?
     spermophilus_major                 ?
@@ -460,31 +460,31 @@ BEGIN DATA;
     sturnira_magna                     0
     sturnira_tildae                    0
     stylodipus_telum                   0
-    suncus_fellowesgordoni             2
-    suncus_madagascariensis            2
+    suncus_fellowesgordoni             3
+    suncus_madagascariensis            3
     sundasciurus_fraterculus           ?
     sundasciurus_hippurus              ?
     sundasciurus_hoogstraali           ?
     sundasciurus_rabori                ?
     sus_verrucosus                     ?
-    sylvisorex_johnstoni               2
+    sylvisorex_johnstoni               3
     symphalangus_syndactylus           ?
     synaptomys_borealis                ?
-    talpa_caucasica                    2
-    talpa_romana                       2
-    talpa_stankovici                   2
+    talpa_caucasica                    3
+    talpa_romana                       3
+    talpa_stankovici                   3
     tamiasciurus_douglasii             ?
-    taphozous_georgianus               2
-    tarsius_syrichta                   2
-    tarsomys_apoensis                  2
+    taphozous_georgianus               3
+    tarsius_syrichta                   3
+    tarsomys_apoensis                  3
     taterillus_gracilis                ?
     tetracerus_quadricornis            0
     thallomys_paedulcus                0
     thomomys_monticola                 0
-    thylamys_karimii                   2
+    thylamys_karimii                   3
     thylamys_pallidior                 ?
     thylamys_velutinus                 ?
-    thyroptera_tricolor                2
+    thyroptera_tricolor                3
     toromys_rhipidurus                 0
     tragelaphus_spekii                 0
     transandinomys_bolivaris           ?
@@ -493,16 +493,16 @@ BEGIN DATA;
     tupaia_chrysogaster                ?
     tupaia_javanica                    ?
     tupaia_palawanensis                ?
-    tursiops_aduncus                   2
+    tursiops_aduncus                   3
     tympanoctomys_barrerae             0
-    uranomys_ruddi                     2
-    uropsilus_gracilis                 2
+    uranomys_ruddi                     3
+    uropsilus_gracilis                 3
     vampyriscus_brocki                 0
     vampyriscus_nymphaea               0
-    vespadelus_darlingtoni             2
+    vespadelus_darlingtoni             3
     viverra_tangalunga                 ?
     vulpes_corsac                      ?
-    vulpes_velox                       2
+    vulpes_velox                       3
     vulpes_vulpes                      ?
   ;
 END;

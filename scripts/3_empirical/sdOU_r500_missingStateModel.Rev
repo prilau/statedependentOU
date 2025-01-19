@@ -47,7 +47,32 @@ root_age <- tree.rootAge()
 ########################################
 
 # make the Q matrix
-Q := fnJC(num_disc_states)
+for (i in 1:num_disc_states) {
+  for (j in 1:num_disc_states) {
+    rates[i][j] <- 0.0
+  }
+}
+
+rates[1][2] ~ dnExp( root_age / 10 )
+moves.append( mvScale( rates[1][2], weight=1.0 ) )
+avmvn_rates.addVariable( rates[1][2] )
+
+rates[num_disc_states][num_disc_states-1] ~ dnExp( root_age / 10 )
+moves.append( mvScale( rates[num_disc_states][num_disc_states-1], weight=1.0 ) )
+avmvn_rates.addVariable( rates[num_disc_states][num_disc_states-1] )
+
+
+for (i in 2:(num_disc_states-1)) {
+  rates[i][i+1] ~ dnExp( root_age / 10 )
+  moves.append( mvScale( rates[i][i+1], weight=1.0 ) ) 
+  avmvn_rates.addVariable( rates[i][i+1] )
+  rates[i][i-1] ~ dnExp( root_age / 10 )
+  moves.append( mvScale( rates[i][i-1], weight=1.0 ) ) 
+  avmvn_rates.addVariable( rates[i][i-1] )
+
+}
+
+Q := fnFreeK(rates, rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4)
 moves.append( mvScale(lambda, weight=5.0) )
@@ -89,33 +114,21 @@ sigma2[1] := stv[1] * 2 * alpha[1]
 
 for (i in 2:num_disc_states){
   # theta[i] always > theta[i+1]
-  dtheta[i] ~ dnLognormal(0.6, abs(ln(3)))
+  dtheta[i] ~ dnUniform(0, 18.4)
   moves.append(mvSlide(dtheta[i], weight = 1.0) )
+  avmvn_ou.addVariable(dtheta[i])
   theta[i] := theta[i-1] + abs(dtheta[i])
   
   halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
   moves.append(mvScale(halflife[i], weight = 1.0) )
+  avmvn_ou.addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
   
   stv[i] ~ dnLognormal(ln(stv[i-1]), 0.587405)
-  moves.append(mvScale(stv[i], weight = 2.0) )
+  moves.append(mvScale(stv[i], weight = 1.0) )
+  avmvn_ou.addVariable(stv[i])
   sigma2[i] := stv[i] * 2 * alpha[i]
 }
-
-avmvn_ou.addVariable(halflife[1])
-avmvn_ou.addVariable(stv[1])
-
-avmvn_ou.addVariable(halflife[2])
-avmvn_ou.addVariable(dtheta[2])
-avmvn_ou.addVariable(stv[2])
-
-#avmvn_ou.addVariable(halflife[3])
-#avmvn_ou.addVariable(dtheta[3])
-#avmvn_ou.addVariable(stv[3])
-#
-#avmvn_ou.addVariable(halflife[4])
-#avmvn_ou.addVariable(dtheta[4])
-#avmvn_ou.addVariable(stv[4])
 
 moves.append( avmvn_ou )
 

@@ -32,8 +32,8 @@ cont.includeCharacter(characterCont)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_ou = mvAVMVN(weight=10, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rates = mvAVMVN(weight=15, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_ou = mvAVMVN(weight=15, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -51,8 +51,6 @@ root_age <- tree.rootAge()
 
 rate_12 ~ dnExp(root_age / 10)
 rate_21 ~ dnExp(root_age / 10)
-#rate_13 ~ dnExp(root_age / 10)
-#rate_31 ~ dnExp(root_age / 10)
 rate_13 := 0
 rate_31 := 0
 rate_23 ~ dnExp(root_age / 10)
@@ -60,15 +58,11 @@ rate_32 ~ dnExp(root_age / 10)
 
 moves.append( mvScale(rate_12, weight=1.0) )
 moves.append( mvScale(rate_21, weight=1.0) )
-#moves.append( mvScale(rate_13, weight=1.0) )
-#moves.append( mvScale(rate_31, weight=1.0) )
 moves.append( mvScale(rate_23, weight=1.0) )
 moves.append( mvScale(rate_32, weight=1.0) )
 
 avmvn_rates.addVariable(rate_12)
 avmvn_rates.addVariable(rate_21)
-#avmvn_rates.addVariable(rate_13)
-#avmvn_rates.addVariable(rate_31)
 avmvn_rates.addVariable(rate_23)
 avmvn_rates.addVariable(rate_32)
 
@@ -80,8 +74,6 @@ Q := fnFreeK(rates, rescaled=TRUE)
 lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
 moves.append( mvScale(lambda, weight=2.0) )
 avmvn_rates.addVariable(lambda)
-
-
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
@@ -161,10 +153,10 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
+mymcmc.burnin(generations=12000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=120000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 ## quit ##
