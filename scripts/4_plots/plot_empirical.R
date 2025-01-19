@@ -162,68 +162,90 @@ probs %>% summarise(ptheta = mean(ptheta12),
                     phl = mean(phalflife12))
 
 
-################################
-# state dependency in combined #
-################################
+###########################
+# sdOU hidden-state model #
+###########################
 
 # specify input and output directories
-dir_in="output/3_empirical/sdOU_r500_pica/"
-dir_out="figures/3_empirical/sdOU_r500_pica/"
+dir_in="output/3_empirical/sdOU_r500_hiddenStateModel/"
+dir_out="figures/3_empirical/sdOU_r500_hiddenStateModel/"
 
-runs = 4
-
-probs <- tibble(run = 1:length(runs),
-                ptheta12 = 0, ptheta13 = 0, ptheta14 = 0, ptheta23 = 0, ptheta24 = 0, ptheta34 = 0,
-                pstv12 = 0, pstv13 = 0, pstv14 = 0, pstv23 = 0, pstv24 = 0, pstv34 = 0,
-                phalflife12 = 0, phalflife13 = 0, phalflife14 = 0, phalflife23 = 0, phalflife24 = 0, phalflife34 = 0)
+runs = c(5)
+probs <- tibble(run = runs,
+                ptheta.12 = 0, ptheta.13 = 0, ptheta.15 = 0, ptheta.23 = 0, ptheta.25 = 0, ptheta.35 = 0,   
+                pstv.12 = 0, pstv.13 = 0, pstv.15 = 0, pstv.23 = 0, pstv.25 = 0, pstv.35 = 0,
+                phalflife.12 = 0, phalflife.13 = 0, phalflife.15 = 0, phalflife.23 = 0, phalflife.25 = 0, phalflife.35 = 0,
+                psigma2.12 = 0, psigma2.13 = 0, psigma2.15 = 0, psigma2.23 = 0, psigma2.25 = 0, psigma2.35 = 0)
 
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:length(runs)){
-  filename <- paste0(dir_in, list.files(dir_in, pattern=paste0(runs[i], ".log")))
-  probs[i,2:19] <- readTrace(filename, burnin = 0.1)[[1]] %>% 
-    select(`theta[1]`, `theta[2]`, `theta[3]`, `theta[4]`,
-           `stv[1]`, `stv[2]`, `stv[3]`, `stv[4]`,
-           `halflife[1]`, `halflife[2]`, `halflife[3]`, `halflife[4]`) %>% 
-    mutate(dtheta12 = ifelse(`theta[1]` > `theta[2]`, 1, 0),
-           dtheta13 = ifelse(`theta[1]` > `theta[3]`, 1, 0),
-           dtheta14 = ifelse(`theta[1]` > `theta[4]`, 1, 0),
-           dtheta23 = ifelse(`theta[2]` > `theta[3]`, 1, 0),
-           dtheta24 = ifelse(`theta[2]` > `theta[4]`, 1, 0),
-           dtheta34 = ifelse(`theta[3]` > `theta[4]`, 1, 0),
-           dstv12 = ifelse(`stv[1]` > `stv[2]`, 1, 0),
-           dstv13 = ifelse(`stv[1]` > `stv[3]`, 1, 0),
-           dstv14 = ifelse(`stv[1]` > `stv[4]`, 1, 0),
-           dstv23 = ifelse(`stv[2]` > `stv[3]`, 1, 0),
-           dstv24 = ifelse(`stv[2]` > `stv[4]`, 1, 0),
-           dstv34 = ifelse(`stv[3]` > `stv[4]`, 1, 0),
-           dhalflife12 = ifelse(`halflife[1]` > `halflife[2]`, 1, 0),
-           dhalflife13 = ifelse(`halflife[1]` > `halflife[3]`, 1, 0),
-           dhalflife14 = ifelse(`halflife[1]` > `halflife[4]`, 1, 0),
-           dhalflife23 = ifelse(`halflife[2]` > `halflife[3]`, 1, 0),
-           dhalflife24 = ifelse(`halflife[2]` > `halflife[4]`, 1, 0),
-           dhalflife34 = ifelse(`halflife[3]` > `halflife[4]`, 1, 0)) %>% 
-    summarise(ptheta12 = mean(dtheta12),
-              ptheta13 = mean(dtheta13),
-              ptheta14 = mean(dtheta14),
-              ptheta23 = mean(dtheta23),
-              ptheta24 = mean(dtheta24),
-              ptheta34 = mean(dtheta34),
-              pstv12 = mean(dstv12),
-              pstv13 = mean(dstv13),
-              pstv14 = mean(dstv14),
-              pstv23 = mean(dstv23),
-              pstv24 = mean(dstv24),
-              pstv34 = mean(dstv34),
-              phalflife12 = mean(dhalflife12),
-              phalflife13 = mean(dhalflife13),
-              phalflife14 = mean(dhalflife14),
-              phalflife23 = mean(dhalflife23),
-              phalflife24 = mean(dhalflife24),
-              phalflife34 = mean(dhalflife34)) %>% 
+  filename <- paste0(dir_in, list.files(dir_in, pattern=paste0("trace_run_", runs[i])))
+  probs[i,2:25] <- readTrace(filename, burnin = 0.0)[[1]] %>% 
+    select(`theta[1]`, `theta[2]`, `theta[3]`, `theta[5]`,
+           `stv[1]`, `stv[2]`, `stv[3]`, `stv[5]`,
+           `halflife[1]`, `halflife[2]`, `halflife[3]`, `halflife[5]`,
+           `sigma2[1]`, `sigma2[2]`, `sigma2[3]`, `sigma2[5]`) %>% 
+    mutate(dtheta.12 = ifelse(`theta[1]` > `theta[2]`, 1, 0),
+           dtheta.13 = ifelse(`theta[1]` > `theta[3]`, 1, 0),
+           dtheta.15 = ifelse(`theta[1]` > `theta[5]`, 1, 0),
+           dtheta.23 = ifelse(`theta[2]` > `theta[3]`, 1, 0),
+           dtheta.25 = ifelse(`theta[2]` > `theta[5]`, 1, 0),
+           dtheta.35 = ifelse(`theta[3]` > `theta[5]`, 1, 0),
+           
+           dstv.12 = ifelse(`stv[1]` > `stv[2]`, 1, 0),
+           dstv.13 = ifelse(`stv[1]` > `stv[3]`, 1, 0),
+           dstv.15 = ifelse(`stv[1]` > `stv[5]`, 1, 0),
+           dstv.23 = ifelse(`stv[2]` > `stv[3]`, 1, 0),
+           dstv.25 = ifelse(`stv[2]` > `stv[5]`, 1, 0),
+           dstv.35 = ifelse(`stv[3]` > `stv[5]`, 1, 0),
+           
+           dhalflife.12 = ifelse(`halflife[1]` > `halflife[2]`, 1, 0),
+           dhalflife.13 = ifelse(`halflife[1]` > `halflife[3]`, 1, 0),
+           dhalflife.15 = ifelse(`halflife[1]` > `halflife[5]`, 1, 0),
+           dhalflife.23 = ifelse(`halflife[2]` > `halflife[3]`, 1, 0),
+           dhalflife.25 = ifelse(`halflife[2]` > `halflife[5]`, 1, 0),
+           dhalflife.35 = ifelse(`halflife[3]` > `halflife[5]`, 1, 0),
+           
+           dsigma2.12 = ifelse(`sigma2[1]` > `sigma2[2]`, 1, 0),
+           dsigma2.13 = ifelse(`sigma2[1]` > `sigma2[3]`, 1, 0),
+           dsigma2.15 = ifelse(`sigma2[1]` > `sigma2[5]`, 1, 0),
+           dsigma2.23 = ifelse(`sigma2[2]` > `sigma2[3]`, 1, 0),
+           dsigma2.25 = ifelse(`sigma2[2]` > `sigma2[5]`, 1, 0),
+           dsigma2.35 = ifelse(`sigma2[3]` > `sigma2[5]`, 1, 0)
+    ) %>% 
+    summarise(ptheta.12 = mean(dtheta.12),
+              ptheta.13 = mean(dtheta.13),
+              ptheta.15 = mean(dtheta.15),
+              ptheta.23 = mean(dtheta.23),
+              ptheta.25 = mean(dtheta.25),
+              ptheta.35 = mean(dtheta.35),
+              
+              pstv.12 = mean(dstv.12),
+              pstv.13 = mean(dstv.13),
+              pstv.15 = mean(dstv.15),
+              pstv.23 = mean(dstv.23),
+              pstv.25 = mean(dstv.25),
+              pstv.35 = mean(dstv.35),
+              
+              phalflife.12 = mean(dhalflife.12),
+              phalflife.13 = mean(dhalflife.13),
+              phalflife.15 = mean(dhalflife.15),
+              phalflife.23 = mean(dhalflife.23),
+              phalflife.25 = mean(dhalflife.25),
+              phalflife.35 = mean(dhalflife.35),
+              
+              psigma2.12 = mean(dsigma2.12),
+              psigma2.13 = mean(dsigma2.13),
+              psigma2.15 = mean(dsigma2.15),
+              psigma2.23 = mean(dsigma2.23),
+              psigma2.25 = mean(dsigma2.25),
+              psigma2.35 = mean(dsigma2.35)
+    ) %>% 
     #unlist() %>% 
     unname()
-  setTxtProgressBar(bar, i / num_run)
+  setTxtProgressBar(bar, i / length(runs))
 }
+
 
 ################
 # df for plots #

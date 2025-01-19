@@ -1,0 +1,162 @@
+################################################################################
+#
+# RevBayes Example: Testing missing for state-dependent OU model
+#
+# authors: Priscilla Lau
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+characterDisc <- 1
+characterCont <- 1
+
+### Read in the tree
+T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
+ntips <- T.ntips()
+nbranches <- 2 * ntips - 2
+
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_missing_r500_Discrete_tmp.nex")
+
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+num_disc_states <- disc.getStateDescriptions().size()
+
+cont <- readContinuousCharacterData("data/3_empirical/mammal_log_kg_r500_Continuous.nex")
+cont.excludeAll()
+cont.includeCharacter(characterCont)
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+avmvn_rates = mvAVMVN(weight=30, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_ou = mvAVMVN(weight=15, waitBeforeLearning=500, waitBeforeUsing=1000)
+
+##########################
+# Specify the tree model #
+##########################
+
+tree <- T
+root_age <- tree.rootAge()
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+for (i in 1:num_disc_states) {
+  for (j in 1:num_disc_states) {
+    rates[i][j] <- 0.0
+  }
+}
+
+rates[1][2] ~ dnExp( root_age / 10 )
+moves.append( mvScale( rates[1][2], weight=1.0 ) )
+avmvn_rates.addVariable( rates[1][2] )
+
+rates[2][1] ~ dnExp( root_age / 10 )
+moves.append( mvScale( rates[2][1], weight=1.0 ) )
+avmvn_rates.addVariable( rates[2][1] )
+
+Q := fnFreeK(rates, rescaled=TRUE)
+
+lambda ~ dnLognormal(ln(0.01), 0.4)
+moves.append( mvScale(lambda, weight=5.0) )
+#avmvn_rates.addVariable( lambda )
+
+moves.append( avmvn_rates )
+
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X.clamp(disc)
+
+
+# include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=120.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
+
+# keep track of the number of transitions
+for(i in 1:nbranches) {
+    num_changes[i] := sum(X.numCharacterChanges(i))
+}
+total_num_changes := sum(num_changes)
+
+char_hist := X.characterHistories()
+
+##############################
+# continuous character model #
+##############################
+theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
+moves.append(mvSlide(theta[1], weight = 1.0) )
+avmvn_ou.addVariable(theta[1])
+
+halflife[1] ~ dnLognormal(4.3613845, 1.044495)
+moves.append(mvScale(halflife[1], weight = 1.0) )
+avmvn_ou.addVariable(halflife[1])
+alpha[1] := abs(ln(2)/halflife[1])
+
+stv[1] ~ dnLognormal(ln(13), 0.587405)
+moves.append(mvScale(stv[1], weight = 1.0) )
+avmvn_ou.addVariable(stv[1])
+sigma2[1] := stv[1] * 2 * alpha[1]
+
+
+# theta[2] always > theta[1]
+dtheta ~ dnLognormal(0.5, 1.2)
+moves.append(mvScale(dtheta, weight = 1.0) )
+avmvn_ou.addVariable(dtheta)
+theta[2] := theta[1] - abs(dtheta)
+
+halflife[2] ~ dnLognormal(ln(halflife[1]), 1.044495)
+moves.append(mvScale(halflife[2], weight = 1.0) )
+avmvn_ou.addVariable(halflife[2])
+alpha[2] := abs(ln(2)/halflife[2])
+
+stv[2] ~ dnLognormal(ln(stv[1]), 0.587405)
+moves.append(mvScale(stv[2], weight = 1.0) )
+avmvn_ou.addVariable(stv[2])
+sigma2[2] := stv[2] * 2 * alpha[2]
+
+moves.append( avmvn_ou )
+
+##########################
+# Specify the OU process #
+##########################
+
+Y ~ dnPhyloOUSD(char_hist, theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+Y.clamp(cont)
+
+#############
+# The Model #
+#############
+
+mymodel = model(Y)
+
+monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_missingStateModel/trace_nstate_2_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnScreen(printgen=1000) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_" + RUN_INDEX + ".trees", printgen=100 ) )
+
+
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
+
+
+### run the MCMC ###
+mymcmc.burnin(generations=12000, tuningInterval=100) # comment out after first run
+
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/nstate_2_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=120000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/nstate_2_run_" + RUN_INDEX + ".state")
+mymcmc.operatorSummary()
+
+
+## quit ##
+q()
