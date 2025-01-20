@@ -203,16 +203,16 @@ avmvn_ou.addVariable(stv[5])
 sigma2[5] := stv[5] * 2 * alpha[5]
 
 # carnivores
-theta[3] ~ dnNormal(theta[2], 4)
+theta[3] ~ dnNormal(theta[1], 4)
 moves.append(mvSlide(theta[3], weight = 1.0) )
 avmvn_ou.addVariable(theta[3])
 
-halflife[3] ~ dnLognormal(halflife[2], 1.044495)
+halflife[3] ~ dnLognormal(halflife[1], 1.044495)
 moves.append(mvScale(halflife[3], weight = 1.0) )
 avmvn_ou.addVariable(halflife[3])
 alpha[3] := abs(ln(2)/halflife[3])
 
-stv[3] ~ dnLognormal(stv[2], 0.587405)
+stv[3] ~ dnLognormal(stv[1], 0.587405)
 moves.append(mvScale(stv[3], weight = 1.0) )
 avmvn_ou.addVariable(stv[3])
 sigma2[3] := stv[3] * 2 * alpha[3]
