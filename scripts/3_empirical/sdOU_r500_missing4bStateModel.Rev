@@ -185,9 +185,9 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_missingStateModel/trace_nstate_4a_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_missingStateModel/trace_nstate_4b_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_4a_run_" + RUN_INDEX + ".trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_4b_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 
@@ -203,8 +203,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
-#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/nstate_4a_run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=100000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/nstate_4a_run_" + RUN_INDEX + ".state")
+#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/nstate_4b_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=100000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/nstate_4b_run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 
