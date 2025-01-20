@@ -164,12 +164,7 @@ moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
-# herbivores (dummy state)
-theta[4]    := theta[1]   
-halflife[4] := halflife[1]
-alpha[4] := abs(ln(2)/halflife[4])
-stv[4]      := stv[1]     
-sigma2[4] := stv[4] * 2 * alpha[4]
+
 
 # omnivores (hidden state 0)
 theta[2] ~ dnNormal(theta[1], 4)
@@ -186,21 +181,6 @@ moves.append(mvScale(stv[2], weight = 1.0) )
 avmvn_ou.addVariable(stv[2])
 sigma2[2] := stv[2] * 2 * alpha[2]
 
-# omnivores (hidden state 1)
-dtheta ~ dnLognormal(1, abs(ln(2)))
-moves.append(mvSlide(dtheta, weight = 1.0) )
-avmvn_ou.addVariable(dtheta)
-theta[5] := theta[2] - dtheta
-
-halflife[5] ~ dnLognormal(halflife[2], 1.044495)
-moves.append(mvScale(halflife[5], weight = 1.0) )
-avmvn_ou.addVariable(halflife[5])
-alpha[5] := abs(ln(2)/halflife[5])
-
-stv[5] ~ dnLognormal(stv[2], 0.587405)
-moves.append(mvScale(stv[5], weight = 1.0) )
-avmvn_ou.addVariable(stv[5])
-sigma2[5] := stv[5] * 2 * alpha[5]
 
 # carnivores
 theta[3] ~ dnNormal(theta[1], 4)
@@ -216,6 +196,29 @@ stv[3] ~ dnLognormal(stv[1], 0.587405)
 moves.append(mvScale(stv[3], weight = 1.0) )
 avmvn_ou.addVariable(stv[3])
 sigma2[3] := stv[3] * 2 * alpha[3]
+
+# herbivores (dummy state)
+theta[4]    := theta[1]   
+halflife[4] := halflife[1]
+alpha[4] := abs(ln(2)/halflife[4])
+stv[4]      := stv[1]     
+sigma2[4] := stv[4] * 2 * alpha[4]
+
+# omnivores (hidden state 1)
+dtheta ~ dnLognormal(1, abs(ln(2)))
+moves.append(mvSlide(dtheta, weight = 1.0) )
+avmvn_ou.addVariable(dtheta)
+theta[5] := theta[2] - dtheta
+
+halflife[5] ~ dnLognormal(halflife[2], 1.044495)
+moves.append(mvScale(halflife[5], weight = 1.0) )
+avmvn_ou.addVariable(halflife[5])
+alpha[5] := abs(ln(2)/halflife[5])
+
+stv[5] ~ dnLognormal(stv[2], 0.587405)
+moves.append(mvScale(stv[5], weight = 1.0) )
+avmvn_ou.addVariable(stv[5])
+sigma2[5] := stv[5] * 2 * alpha[5]
 
 # carnivores (dummy state)
 theta[6]    := theta[3]   
