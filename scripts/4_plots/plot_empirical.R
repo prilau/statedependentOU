@@ -13,8 +13,8 @@ library(latex2exp)
 dir_in="output/3_empirical/sdOU_r500_4StateModel/"
 dir_out="figures/3_empirical/sdOU_r500_4StateModel/"
 
-runs = c(4, 5)
-probs <- tibble(run = runs,
+runs = c(1:10)
+probs_4 <- tibble(run = runs,
                 ptheta.12 = 0, ptheta.13 = 0, ptheta.14 = 0,  ptheta.23 = 0, ptheta.24 = 0, ptheta.34 = 0,   
                 pstv.12 = 0, pstv.13 = 0, pstv.14 = 0, pstv.23 = 0, pstv.24 = 0, pstv.34 = 0,
                 phalflife.12 = 0, phalflife.13 = 0, phalflife.14 = 0, phalflife.23 = 0, phalflife.24 = 0, phalflife.34 = 0,
@@ -23,7 +23,7 @@ probs <- tibble(run = runs,
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:length(runs)){
   filename <- paste0(dir_in, list.files(dir_in, pattern=paste0("trace_run_", runs[i])))
-  probs[i,2:25] <- readTrace(filename, burnin = 0.0)[[1]] %>% 
+  probs_4[i,2:25] <- readTrace(filename, burnin = 0.0)[[1]] %>% 
     select(`theta[1]`, `theta[2]`, `theta[3]`, `theta[4]`,
            `stv[1]`, `stv[2]`, `stv[3]`, `stv[4]`,
            `halflife[1]`, `halflife[2]`, `halflife[3]`, `halflife[4]`,
@@ -89,24 +89,45 @@ for (i in 1:length(runs)){
   setTxtProgressBar(bar, i / length(runs))
 }
 
-probs %>% summarise(ptheta = mean(ptheta12),
-                    pstv = mean(pstv12),
-                    phl = mean(phalflife12))
+probs_4_sum <- probs_4 %>% summarise(ptheta.12 = mean(ptheta.12),
+                          ptheta.13 = mean(ptheta.13),
+                          ptheta.14 = mean(ptheta.14),
+                          ptheta.23 = mean(ptheta.23),
+                          ptheta.24 = mean(ptheta.24),
+                          ptheta.34 = mean(ptheta.34),
+                          
+                          pstv.12 = mean(pstv.12),
+                          pstv.13 = mean(pstv.13),
+                          pstv.14 = mean(pstv.14),
+                          pstv.23 = mean(pstv.23),
+                          pstv.24 = mean(pstv.24),
+                          pstv.34 = mean(pstv.34),
+                          
+                          phalflife.12 = mean(phalflife.12),
+                          phalflife.13 = mean(phalflife.13),
+                          phalflife.14 = mean(phalflife.14),
+                          phalflife.23 = mean(phalflife.23),
+                          phalflife.24 = mean(phalflife.24),
+                          phalflife.34 = mean(phalflife.34),
+                          
+                          psigma2.12 = mean(psigma2.12),
+                          psigma2.13 = mean(psigma2.13),
+                          psigma2.14 = mean(psigma2.14),
+                          psigma2.23 = mean(psigma2.23),
+                          psigma2.24 = mean(psigma2.24),
+                          psigma2.34 = mean(psigma2.34))
 
 ######################
 # sdOU 3-state model #
 ######################
 
 # specify input and output directories
-dir_in="output/3_empirical/sdOU_r500_3StateModel/"
-dir_out="figures/3_empirical/sdOU_r500_3StateModel/"
+dir_in="output/3_empirical/sdOU_r500_3StateOrderedModel/"
+dir_out="figures/3_empirical/sdOU_r500_3StateOrderedModel/"
 
 #num_run = length(list.files(dir_in, pattern=".log"))
-runs = c(3)
-probs <- tibble(run = runs, ptheta12 = 0, pstv12 = 0, phalflife12 = 0,)
-
-bar = txtProgressBar(style=3, width=40)
-probs <- tibble(run = runs,
+runs = c(1:10)
+probs_3 <- tibble(run = runs,
                 ptheta.12 = 0, ptheta.13 = 0, ptheta.23 = 0,
                 pstv.12 = 0, pstv.13 = 0, pstv.23 = 0,
                 phalflife.12 = 0, phalflife.13 = 0, phalflife.23 = 0,
@@ -115,7 +136,7 @@ probs <- tibble(run = runs,
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:length(runs)){
   filename <- paste0(dir_in, list.files(dir_in, pattern=paste0("trace_run_", runs[i])))
-  probs[i,2:13] <- readTrace(filename, burnin = 0.0)[[1]] %>% 
+  probs_3[i,2:13] <- readTrace(filename, burnin = 0.0)[[1]] %>% 
     select(`theta[1]`, `theta[2]`, `theta[3]`,
            `stv[1]`, `stv[2]`, `stv[3]`,
            `halflife[1]`, `halflife[2]`, `halflife[3]`,
@@ -157,9 +178,21 @@ for (i in 1:length(runs)){
   setTxtProgressBar(bar, i / length(runs))
 }
 
-probs %>% summarise(ptheta = mean(ptheta12),
-                    pstv = mean(pstv12),
-                    phl = mean(phalflife12))
+probs_3_sum <- probs %>% summarise(ptheta.12 = mean(ptheta.12),
+                                   ptheta.13 = mean(ptheta.13),
+                                   ptheta.23 = mean(ptheta.23),
+                                   
+                                   pstv.12 = mean(pstv.12),
+                                   pstv.13 = mean(pstv.13),
+                                   pstv.23 = mean(pstv.23),
+                                   
+                                   phalflife.12 = mean(phalflife.12),
+                                   phalflife.13 = mean(phalflife.13),
+                                   phalflife.23 = mean(phalflife.23),
+                                   
+                                   psigma2.12 = mean(psigma2.12),
+                                   psigma2.13 = mean(psigma2.13),
+                                   psigma2.23 = mean(psigma2.23))
 
 
 ###########################
@@ -170,8 +203,8 @@ probs %>% summarise(ptheta = mean(ptheta12),
 dir_in="output/3_empirical/sdOU_r500_hiddenStateModel/"
 dir_out="figures/3_empirical/sdOU_r500_hiddenStateModel/"
 
-runs = c(5)
-probs <- tibble(run = runs,
+runs = c(1:20)
+probs_h <- tibble(run = runs,
                 ptheta.12 = 0, ptheta.13 = 0, ptheta.15 = 0, ptheta.23 = 0, ptheta.25 = 0, ptheta.35 = 0,   
                 pstv.12 = 0, pstv.13 = 0, pstv.15 = 0, pstv.23 = 0, pstv.25 = 0, pstv.35 = 0,
                 phalflife.12 = 0, phalflife.13 = 0, phalflife.15 = 0, phalflife.23 = 0, phalflife.25 = 0, phalflife.35 = 0,
@@ -180,7 +213,7 @@ probs <- tibble(run = runs,
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:length(runs)){
   filename <- paste0(dir_in, list.files(dir_in, pattern=paste0("trace_run_", runs[i])))
-  probs[i,2:25] <- readTrace(filename, burnin = 0.0)[[1]] %>% 
+  probs_h[i,2:25] <- readTrace(filename, burnin = 0.0)[[1]] %>% 
     select(`theta[1]`, `theta[2]`, `theta[3]`, `theta[5]`,
            `stv[1]`, `stv[2]`, `stv[3]`, `stv[5]`,
            `halflife[1]`, `halflife[2]`, `halflife[3]`, `halflife[5]`,
@@ -245,7 +278,33 @@ for (i in 1:length(runs)){
     unname()
   setTxtProgressBar(bar, i / length(runs))
 }
-
+probs_h_sum <- probs_h %>% summarise(ptheta.12 = mean(ptheta.12),
+                              ptheta.13 = mean(ptheta.13),
+                              ptheta.15 = mean(ptheta.15),
+                              ptheta.23 = mean(ptheta.23),
+                              ptheta.25 = mean(ptheta.25),
+                              ptheta.35 = mean(ptheta.35),
+                              
+                              pstv.12 = mean(pstv.12),
+                              pstv.13 = mean(pstv.13),
+                              pstv.15 = mean(pstv.15),
+                              pstv.23 = mean(pstv.23),
+                              pstv.25 = mean(pstv.25),
+                              pstv.35 = mean(pstv.35),
+                              
+                              phalflife.12 = mean(phalflife.12),
+                              phalflife.13 = mean(phalflife.13),
+                              phalflife.15 = mean(phalflife.15),
+                              phalflife.23 = mean(phalflife.23),
+                              phalflife.25 = mean(phalflife.25),
+                              phalflife.35 = mean(phalflife.35),
+                              
+                              psigma2.12 = mean(psigma2.12),
+                              psigma2.13 = mean(psigma2.13),
+                              psigma2.15 = mean(psigma2.15),
+                              psigma2.23 = mean(psigma2.23),
+                              psigma2.25 = mean(psigma2.25),
+                              psigma2.35 = mean(psigma2.35))
 
 ################
 # df for plots #

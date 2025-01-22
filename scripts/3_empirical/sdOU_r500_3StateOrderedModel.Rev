@@ -32,8 +32,8 @@ cont.includeCharacter(characterCont)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_rates = mvAVMVN(weight=15, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_ou = mvAVMVN(weight=15, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_ou = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -71,7 +71,7 @@ avmvn_rates.addVariable(rate_32)
 rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 Q := fnFreeK(rates, rescaled=TRUE)
 
-lambda ~ dnLognormal(ln(0.01), 0.4) # should check lambda with aug model alone
+lambda ~ dnLognormal(ln(0.005), 0.5)
 moves.append( mvScale(lambda, weight=2.0) )
 avmvn_rates.addVariable(lambda)
 
@@ -80,8 +80,8 @@ X.clamp(disc)
 
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=220.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=220.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -94,7 +94,7 @@ char_hist := X.characterHistories()
 ##############################
 # continuous character model #
 ##############################
-theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
+theta[1] ~ dnUniform(-10, 15)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])
 
@@ -103,7 +103,7 @@ moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_ou.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
-stv[1] ~ dnLognormal(ln(13), 0.587405)
+stv[1] ~ dnLognormal(ln(10), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
@@ -113,7 +113,7 @@ for (i in 2:num_disc_states){
   moves.append(mvSlide(theta[i], weight = 1.0) )
   avmvn_ou.addVariable(theta[i])
 
-  halflife[i] ~ dnLognormal(ln(halflife[i-1]), 1.044495)
+  halflife[i] ~ dnLognormal(ln(halflife[i-1]), 0.587405)
   moves.append(mvScale(halflife[i], weight = 1.0) )
   avmvn_ou.addVariable(halflife[i])
   alpha[i] := abs(ln(2)/halflife[i])
@@ -153,10 +153,10 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=12000, tuningInterval=100) # comment out after first run
+mymcmc.burnin(generations=10000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=120000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 ## quit ##

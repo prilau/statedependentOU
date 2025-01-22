@@ -1,6 +1,7 @@
 library(ape)
 library(ggplot2)
 library(tidyverse)
+library(ggtree)
 
 # plot characters on tree
 # script modified from Boyko et al. (2023)

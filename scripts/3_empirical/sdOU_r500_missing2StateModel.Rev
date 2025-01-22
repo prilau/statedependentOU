@@ -89,11 +89,11 @@ char_hist := X.characterHistories()
 ##############################
 # continuous character model #
 ##############################
-theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
+theta[1] ~ dnUniform(9, 12)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])
 
-halflife[1] ~ dnLognormal(4.3613845, 1.044495)
+halflife[1] ~ dnLognormal(4.16, 0.587405)
 moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_ou.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
@@ -104,13 +104,12 @@ avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
 
-# theta[2] always > theta[1]
-dtheta ~ dnLognormal(0.5, 1.2)
-moves.append(mvScale(dtheta, weight = 1.0) )
-avmvn_ou.addVariable(dtheta)
-theta[2] := theta[1] - abs(dtheta)
+# theta[2] always <= theta[1]
+theta[2] ~ dnUniform(-6.4, theta[1])
+moves.append(mvScale(theta[2], weight = 1.0) )
+avmvn_ou.addVariable(theta[2])
 
-halflife[2] ~ dnLognormal(ln(halflife[1]), 1.044495)
+halflife[2] ~ dnLognormal(ln(halflife[1]), 0.587405)
 moves.append(mvScale(halflife[2], weight = 1.0) )
 avmvn_ou.addVariable(halflife[2])
 alpha[2] := abs(ln(2)/halflife[2])
@@ -160,3 +159,12 @@ mymcmc.operatorSummary()
 
 ## quit ##
 q()
+
+
+
+wget https://cran.r-project.org/src/contrib/Archive/bayou/bayou_2.1.1.tar.gz
+R CMD INSTALL bayou_2.1.1.tar.gz
+or use the remotes package, it works on local as well
+wget https://cran.r-project.org/src/contrib/Archive/bayou/bayou_2.1.1.tar.gz
+R
+R> remotes::install_local("bayou_2.1.1.tar.gz")
