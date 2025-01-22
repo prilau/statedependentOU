@@ -47,19 +47,14 @@ root_age <- tree.rootAge()
 ########################################
 
 # make the Q matrix
-for (i in 1:num_disc_states) {
-  for (j in 1:num_disc_states) {
-    rates[i][j] <- 0.0
-  }
-}
 
-rates[1][2] ~ dnExp( root_age / 10 )
-moves.append( mvScale( rates[1][2], weight=1.0 ) )
-avmvn_rates.addVariable( rates[1][2] )
+rates_12 ~ dnExp( root_age / 10 )
+moves.append( mvScale( rates_12, weight=1.0 ) )
+avmvn_rates.addVariable( rates_12 )
 
-rates[2][1] ~ dnExp( root_age / 10 )
-moves.append( mvScale( rates[2][1], weight=1.0 ) )
-avmvn_rates.addVariable( rates[2][1] )
+rates_21 ~ dnExp( root_age / 10 )
+moves.append( mvScale( rates_21, weight=1.0 ) )
+avmvn_rates.addVariable( rates_21 )
 
 Q := fnFreeK(rates, rescaled=TRUE)
 
@@ -89,7 +84,7 @@ char_hist := X.characterHistories()
 ##############################
 # continuous character model #
 ##############################
-theta[1] ~ dnUniform(9, 12)
+theta[1] ~ dnUniform(10, 15)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])
 
@@ -98,14 +93,14 @@ moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_ou.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
-stv[1] ~ dnLognormal(ln(13), 0.587405)
+stv[1] ~ dnLognormal(ln(10), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
 
 # theta[2] always <= theta[1]
-theta[2] ~ dnUniform(-6.4, theta[1])
+theta[2] ~ dnUniform(-10, theta[1])
 moves.append(mvScale(theta[2], weight = 1.0) )
 avmvn_ou.addVariable(theta[2])
 
@@ -150,10 +145,10 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=12000, tuningInterval=100) # comment out after first run
+mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/nstate_2_run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=120000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/nstate_2_run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/nstate_2_run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 
