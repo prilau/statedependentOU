@@ -69,9 +69,9 @@ X.clamp(disc)
 
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=120.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=200.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=200.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -154,12 +154,3 @@ mymcmc.operatorSummary()
 
 ## quit ##
 q()
-
-
-
-wget https://cran.r-project.org/src/contrib/Archive/bayou/bayou_2.1.1.tar.gz
-R CMD INSTALL bayou_2.1.1.tar.gz
-or use the remotes package, it works on local as well
-wget https://cran.r-project.org/src/contrib/Archive/bayou/bayou_2.1.1.tar.gz
-R
-R> remotes::install_local("bayou_2.1.1.tar.gz")
