@@ -123,8 +123,8 @@ rate_65 := rates[6][5]
 
 Q := fnFreeK(rates, rescaled=TRUE)
 
-lambda ~ dnLognormal(ln(0.01), 0.45) # should check lambda with aug model alone
-moves.append( mvScale(lambda, weight=3.0) )
+lambda ~ dnLognormal(ln(0.05), 0.4) # should check lambda with aug model alone
+moves.append( mvScale(lambda, weight=1.0) )
 #avmvn_rates.addVariable( lambda )
 
 moves.append( avmvn_rates )
@@ -133,9 +133,9 @@ X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="NaturalNumbers", nSi
 X.clamp(disc_exp)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=100.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=225.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=225.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="tip",    proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {

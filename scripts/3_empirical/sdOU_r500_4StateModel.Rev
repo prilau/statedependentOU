@@ -79,16 +79,16 @@ avmvn_rates.addVariable(rate_43)
 Q := fnFreeK([rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43], rescaled=TRUE)
 
 
-lambda ~ dnLognormal(ln(0.005), 0.5)
-moves.append( mvScale(lambda, weight=2.0) )
+lambda ~ dnLognormal(ln(0.05), 0.4)
+moves.append( mvScale(lambda, weight=1.0) )
 avmvn_rates.addVariable( lambda )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=220.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=220.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {

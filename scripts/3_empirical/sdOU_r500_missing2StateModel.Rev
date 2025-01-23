@@ -56,7 +56,7 @@ rates_21 ~ dnExp( root_age / 10 )
 moves.append( mvScale( rates_21, weight=1.0 ) )
 avmvn_rates.addVariable( rates_21 )
 
-Q := fnFreeK(rates, rescaled=TRUE)
+Q := fnFreeK([rates_12, rates_21], rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.01), 0.4)
 moves.append( mvScale(lambda, weight=5.0) )

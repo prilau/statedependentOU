@@ -2,7 +2,7 @@ library(RevGadgets)
 library(tidyverse)
 tree <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
 
-index_to_rev <- matchNodes(tree)
+index_to_rev <- RevGadgets::matchNodes(tree)
 
 dir_in = "output/3_empirical/aug_r500_3StateOrderedModel/"
 files <- list.files(dir_in)[grepl(".trees", list.files(dir_in))]
@@ -41,24 +41,22 @@ simmap_to_ancStates <- function(input_path, output_path){
 }
 
 for (i in 1:length(files)){
-  file_in <- paste0("output/3_empirical/aug_r500_3StateOrderedModel/augch_run_", i, ".trees")
-  file_out <- paste0("output/3_empirical/aug_r500_3StateOrderedModel/states_run_", i, ".log")
+  file_in <- paste0(dir_in, "augch_run_", i, ".trees")
+  file_out <- paste0(dir_in, "states_run_", i, ".log")
   simmap_to_ancStates(file_in, file_out)
 }
 
 
 #Do this in RevBayes!
 #tree <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
-#files_in <- ["output/3_empirical/aug_r500_3StateOrderedModel/states_run_1.log",
-#             "output/3_empirical/aug_r500_3StateOrderedModel/states_run_2.log",
-#             "output/3_empirical/aug_r500_3StateOrderedModel/states_run_3.log",
-#             "output/3_empirical/aug_r500_3StateOrderedModel/states_run_4.log",
-#             "output/3_empirical/aug_r500_3StateOrderedModel/states_run_5.log"]
-#files_out <- ["output/3_empirical/aug_r500_3StateOrderedModel/anc_states_run_1.tre",
-#              "output/3_empirical/aug_r500_3StateOrderedModel/anc_states_run_2.tre",
-#              "output/3_empirical/aug_r500_3StateOrderedModel/anc_states_run_3.tre",
-#              "output/3_empirical/aug_r500_3StateOrderedModel/anc_states_run_4.tre",
-#              "output/3_empirical/aug_r500_3StateOrderedModel/anc_states_run_5.tre"]
+#files_in <- ["output/3_empirical/aug_highBranchMoves/states_run_1.log",
+#             "output/3_empirical/aug_highBranchMoves/states_run_2.log",
+#             "output/3_empirical/aug_highNodeMoves/states_run_1.log",
+#             "output/3_empirical/aug_highNodeMoves/states_run_2.log"]
+#files_out <- ["output/3_empirical/aug_highBranchMoves/anc_states_run_1.tre",
+#              "output/3_empirical/aug_highBranchMoves/anc_states_run_2.tre",
+#              "output/3_empirical/aug_highNodeMoves/anc_states_run_1.tre",
+#              "output/3_empirical/aug_highNodeMoves/anc_states_run_2.tre"]
 #i=1
 #for (file in files_in){
 #  anc_states = readAncestralStateTrace(file)
