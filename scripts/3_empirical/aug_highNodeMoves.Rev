@@ -1,0 +1,115 @@
+################################################################################
+#
+# RevBayes Example: Testing hidden rates for state-dependent OU model
+#
+# authors: Priscilla Lau
+#
+################################################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Select the character to analyze
+characterDisc <- 1
+
+### Read in the tree
+T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
+ntips <- T.ntips()
+nbranches <- 2 * ntips - 2
+
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet3_r500_Discrete.nex")
+
+disc.excludeAll()
+disc.includeCharacter(characterDisc)
+num_disc_states <- disc.getStateDescriptions().size()
+
+# Create some vector for the moves and monitors of this analysis
+moves    = VectorMoves()
+monitors = VectorMonitors()
+avmvn_moves = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
+
+##########################
+# Specify the tree model #
+##########################
+
+tree <- T
+root_age <- tree.rootAge()
+
+########################################
+# Specify the discrete-character model #
+########################################
+
+# make the Q matrix
+
+rate_12 ~ dnExp(root_age / 10)
+rate_21 ~ dnExp(root_age / 10)
+rate_13 := 0
+rate_31 := 0
+rate_23 ~ dnExp(root_age / 10)
+rate_32 ~ dnExp(root_age / 10)
+
+moves.append( mvScale(rate_12, weight=2.0) )
+moves.append( mvScale(rate_21, weight=2.0) )
+moves.append( mvScale(rate_23, weight=2.0) )
+moves.append( mvScale(rate_32, weight=2.0) )
+
+avmvn_moves.addVariable(rate_12)
+avmvn_moves.addVariable(rate_21)
+avmvn_moves.addVariable(rate_23)
+avmvn_moves.addVariable(rate_32)
+
+
+rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
+Q := fnFreeK(rates, rescaled=TRUE)
+
+lambda ~ dnLognormal(ln(0.005), 0.5)
+moves.append( mvScale(lambda, weight=1.0) )
+avmvn_moves.addVariable(lambda)
+
+moves.append( avmvn_moves )
+
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X.clamp(disc)
+
+
+# include proposals for the discrete character history
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=100.0) )
+
+# keep track of the number of transitions
+for(i in 1:nbranches) {
+    num_changes[i] := sum(X.numCharacterChanges(i))
+}
+total_num_changes := sum(num_changes)
+
+char_hist := X.characterHistories()
+
+#############
+# The Model #
+#############
+
+mymodel = model(X)
+
+monitors.append( mnModel(filename="output/3_empirical/aug_highNodeMoves/trace_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnScreen(printgen=1000) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_highNodeMoves/augch_run_" + RUN_INDEX + ".trees", printgen=100 ) )
+
+
+################
+# The Analysis #
+################
+
+### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
+
+
+### run the MCMC ###
+#mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
+
+#mymcmc.initializeFromCheckpoint("output/3_empirical/aug_highNodeMoves/run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=10000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/aug_highNodeMoves/run_" + RUN_INDEX + ".state")
+mymcmc.operatorSummary()
+
+## quit ##
+q()
