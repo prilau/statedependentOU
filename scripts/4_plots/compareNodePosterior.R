@@ -4,7 +4,7 @@ tree <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
 
 index_to_rev <- RevGadgets::matchNodes(tree)
 
-dir_in = "output/3_empirical/aug_r500_3StateOrderedModel/"
+dir_in = "output/3_empirical/sdOU_r500_3StateOrderedModel/"
 files <- list.files(dir_in)[grepl(".trees", list.files(dir_in))]
 for (file in files){
   path = paste0(dir_in, file)

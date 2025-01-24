@@ -150,20 +150,19 @@ char_hist := X.characterHistories()
 ##############################
 
 # herbivores
-theta[1] ~ dnSoftBoundUniformNormal(-6.4, 12, 1, 0.95)
+theta[1] ~ dnUniform(-10, 15)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])
 
-halflife[1] ~ dnLognormal(4.3613845, 1.044495)
+halflife[1] ~ dnLognormal(4.16, 1.044495)
 moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_ou.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
-stv[1] ~ dnLognormal(ln(13), 0.587405)
+stv[1] ~ dnLognormal(ln(10), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
-
 
 
 # omnivores (hidden state 0)

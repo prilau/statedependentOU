@@ -71,7 +71,7 @@ avmvn_rates.addVariable( rates_32 )
 
 Q := fnFreeK([rates_12, rates_13, rates_21, rates_23, rates_31, rates_32], rescaled=TRUE)
 
-lambda ~ dnLognormal(ln(0.01), 0.4)
+lambda ~ dnLognormal(ln(0.05), 0.4)
 moves.append( mvScale(lambda, weight=5.0) )
 #avmvn_rates.addVariable( lambda )
 
