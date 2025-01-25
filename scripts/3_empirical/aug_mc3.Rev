@@ -42,12 +42,12 @@ root_age <- tree.rootAge()
 
 # make the Q matrix
 
-rate_12 ~ dnExp(root_age / 10)
-rate_21 ~ dnExp(root_age / 10)
+rate_12 ~ dnExp( root_age )
+rate_21 ~ dnExp( root_age )
 rate_13 := 0
 rate_31 := 0
-rate_23 ~ dnExp(root_age / 10)
-rate_32 ~ dnExp(root_age / 10)
+rate_23 ~ dnExp( root_age )
+rate_32 ~ dnExp( root_age )
 
 moves.append( mvScale(rate_12, weight=2.0) )
 moves.append( mvScale(rate_21, weight=2.0) )
@@ -105,8 +105,8 @@ mymc3 = mcmcmc(mymodel, monitors, moves, nruns=1, combine="none", nchains=4, del
 #mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/aug_mc3/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=10000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/aug_mc3/run_" + RUN_INDEX + ".state")
-mymcmc.operatorSummary()
+mymc3.run(generations=10000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/aug_mc3/run_" + RUN_INDEX + ".state")
+mymc3.operatorSummary()
 
 ## quit ##
 q()
