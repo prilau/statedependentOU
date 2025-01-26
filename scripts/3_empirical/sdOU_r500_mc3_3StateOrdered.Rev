@@ -69,7 +69,7 @@ avmvn_rates.addVariable(rate_32)
 rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 Q := fnFreeK(rates, rescaled=TRUE)
 
-X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=1, type="Standard", nSites=1)
 X.clamp(disc)
 
 

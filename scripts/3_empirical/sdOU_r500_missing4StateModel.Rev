@@ -114,6 +114,11 @@ char_hist := X.characterHistories()
 ##############################
 # continuous character model #
 ##############################
+-0 -5 00 05 10 15
+  4   3   2   1
+
+
+
 theta[1] ~ dnUniform(10, 15)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])
@@ -129,7 +134,7 @@ avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
 # theta[2] < theta[1]
-theta[2] ~ dnUniform(-10, theta[1])
+theta[2] ~ dnUniform(5, theta[1])
 moves.append(mvSlide(theta[2], weight = 1.0) )
 avmvn_ou.addVariable(theta[2])
 
@@ -144,7 +149,7 @@ avmvn_ou.addVariable(stv[2])
 sigma2[2] := stv[2] * 2 * alpha[2]
 
 # theta[3]
-theta[3] ~ dnUniform(-10, theta[2])
+theta[3] ~ dnUniform(-5, theta[2])
 moves.append(mvScale(theta[3], weight = 1.0) )
 avmvn_ou.addVariable(theta[3])
 
