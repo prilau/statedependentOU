@@ -19,13 +19,13 @@ T <- readTrees("data/1_validation/artiodactyla/artiodactyla.tree")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/2_simulation/missing_state/sim" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_discrete.nex")
+disc <- readDiscreteCharacterData("data/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_discrete.nex")
 
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
 num_disc_states <- disc.getStateDescriptions().size()
 
-cont <- readContinuousCharacterData("data/2_simulation/missing_state/sim" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_continuous.nex")
+cont <- readContinuousCharacterData("data/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
