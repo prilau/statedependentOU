@@ -15,17 +15,17 @@ characterDisc <- 1
 characterCont <- 1
 
 ### Read in the tree
-T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
+T <- readTrees("data/1_validation/artiodactyla/artiodactyla.tree")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_missing_r500_Discrete_tmp.nex")
+disc <- readDiscreteCharacterData("data/2_simulation/missing_state/sim" + SIM_INDEX + "nstate_" + NUM_MISSING + "_discrete.nex")
 
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
 num_disc_states <- disc.getStateDescriptions().size()
 
-cont <- readContinuousCharacterData("data/3_empirical/mammal_log_kg_r500_Continuous.nex")
+cont <- readContinuousCharacterData("data/2_simulation/missing_state/sim" + SIM_INDEX + "nstate_" + NUM_MISSING + "_continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
@@ -57,8 +57,6 @@ avmvn_rates.addVariable( rates_21 )
 
 rates_13 := 0
 rates_31 := 0
-rates_14 := 0
-rates_41 := 0
 
 rates_23 ~ dnExp( root_age )
 moves.append( mvScale( rates_23, weight=1.0 ) )
@@ -68,19 +66,7 @@ rates_32 ~ dnExp( root_age )
 moves.append( mvScale( rates_32, weight=1.0 ) )
 avmvn_rates.addVariable( rates_32 )
 
-rates_24 := 0
-rates_42 := 0
-
-rates_34 ~ dnExp( root_age )
-moves.append( mvScale( rates_34, weight=1.0 ) )
-avmvn_rates.addVariable( rates_34 )
-
-rates_43 ~ dnExp( root_age )
-moves.append( mvScale( rates_43, weight=1.0 ) )
-avmvn_rates.addVariable( rates_43 )
-
-
-Q := fnFreeK([rates_12, rates_13, rates_14, rates_21, rates_23, rates_24, rates_31, rates_32, rates_34, rates_41, rates_42, rates_43], rescaled=TRUE)
+Q := fnFreeK([rates_12, rates_13, rates_21, rates_23, rates_31, rates_32], rescaled=TRUE)
 
 moves.append( avmvn_rates )
 
@@ -104,37 +90,38 @@ char_hist := X.characterHistories()
 ##############################
 # continuous character model #
 ##############################
-theta[1] ~ dnUniform(10, 15)
+theta[1] ~ dnUniform(4, 8)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])
 
-halflife[1] ~ dnLognormal(4.16, 0.587405)
+halflife[1] ~ dnLognormal(2.1516, 0.587405)
 moves.append(mvScale(halflife[1], weight = 1.0) )
 avmvn_ou.addVariable(halflife[1])
 alpha[1] := abs(ln(2)/halflife[1])
 
-stv[1] ~ dnLognormal(ln(10), 0.587405)
+stv[1] ~ dnLognormal(ln(STV), 0.587405)
 moves.append(mvScale(stv[1], weight = 1.0) )
 avmvn_ou.addVariable(stv[1])
 sigma2[1] := stv[1] * 2 * alpha[1]
 
-# theta[2] < theta[1]
-theta[2] ~ dnUniform(5, theta[1])
-moves.append(mvSlide(theta[2], weight = 1.0) )
+
+# theta[2] always <= theta[1]
+theta[2] ~ dnUniform(-4, theta[1])
+moves.append(mvScale(theta[2], weight = 1.0) )
 avmvn_ou.addVariable(theta[2])
 
 halflife[2] ~ dnLognormal(ln(halflife[1]), 0.587405)
 moves.append(mvScale(halflife[2], weight = 1.0) )
 avmvn_ou.addVariable(halflife[2])
 alpha[2] := abs(ln(2)/halflife[2])
-  
+
 stv[2] ~ dnLognormal(ln(stv[1]), 0.587405)
 moves.append(mvScale(stv[2], weight = 1.0) )
 avmvn_ou.addVariable(stv[2])
 sigma2[2] := stv[2] * 2 * alpha[2]
 
 # theta[3]
-theta[3] ~ dnUniform(-5, theta[2])
+theta[3] ~ dnUniform(-8, theta[2])
 moves.append(mvScale(theta[3], weight = 1.0) )
 avmvn_ou.addVariable(theta[3])
 
@@ -148,21 +135,6 @@ moves.append(mvScale(stv[3], weight = 1.0) )
 avmvn_ou.addVariable(stv[3])
 sigma2[3] := stv[3] * 2 * alpha[3]
 
-
-# theta[4] < theta[3]
-theta[4] ~ dnUniform(-10, theta[3])
-moves.append(mvScale(theta[4], weight = 1.0) )
-avmvn_ou.addVariable(theta[4])
-
-halflife[4] ~ dnLognormal(ln(halflife[3]), 0.587405)
-moves.append(mvScale(halflife[4], weight = 1.0) )
-avmvn_ou.addVariable(halflife[4])
-alpha[4] := abs(ln(2)/halflife[4])
-  
-stv[4] ~ dnLognormal(ln(stv[3]), 0.587405)
-moves.append(mvScale(stv[4], weight = 1.0) )
-avmvn_ou.addVariable(stv[4])
-sigma2[4] := stv[4] * 2 * alpha[4]
 
 
 moves.append( avmvn_ou )
@@ -180,9 +152,9 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-monitors.append( mnModel(filename="output/3_empirical/sdOU_r500_missingStateModel/trace_nstate_4_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/trace_nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_4_run_" + RUN_INDEX + ".trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/augch_nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 
@@ -198,8 +170,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
-#mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_missingStateModel/nstate_4_run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_missingStateModel/nstate_4_run_" + RUN_INDEX + ".state")
+#mymcmc.initializeFromCheckpoint("output/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=25000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 

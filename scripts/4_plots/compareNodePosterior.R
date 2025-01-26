@@ -3,17 +3,6 @@ library(tidyverse)
 tree <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
 
 index_to_rev <- RevGadgets::matchNodes(tree)
-
-dir_in = "output/3_empirical/sdOU_r500_3StateOrderedModel/"
-files <- list.files(dir_in)[grepl(".trees", list.files(dir_in))]
-for (file in files){
-  path = paste0(dir_in, file)
-  log <- read_tsv(path)
-  log <- as.data.frame(log$char_hist)
-  write_tsv(log, file=path, col_names = FALSE)
-}
-
-
 simmap_to_ancStates <- function(input_path, output_path){
   #input_path <- paste0(dir_in, list.files(dir_in))
   simmaps <- read.simmap(input_path, format="phylip")
@@ -40,23 +29,46 @@ simmap_to_ancStates <- function(input_path, output_path){
   write_tsv(df_rev, output_path)
 }
 
+dir_in = "output/3_empirical/sdOU_r500_3StateOrderedModel/"
+files <- list.files(dir_in)[grepl(".trees", list.files(dir_in))]
+for (file in files){
+  path = paste0(dir_in, file)
+  log <- read_tsv(path)
+  log <- as.data.frame(log$char_hist)
+  write_tsv(log, file=path, col_names = FALSE)
+}
+
+
+
 for (i in 1:length(files)){
-  file_in <- paste0(dir_in, "augch_run_", i, ".trees")
-  file_out <- paste0(dir_in, "states_run_", i, ".log")
+  file_in <- paste0(dir_in, files[i])
+  file_out <- paste0(gsub(pattern="trees", replacement="", x=file_in), "log")
   simmap_to_ancStates(file_in, file_out)
 }
 
 
 #Do this in RevBayes!
 #tree <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
-#files_in <- ["output/3_empirical/aug_highBranchMoves/states_run_1.log",
-#             "output/3_empirical/aug_highBranchMoves/states_run_2.log",
-#             "output/3_empirical/aug_highNodeMoves/states_run_1.log",
-#             "output/3_empirical/aug_highNodeMoves/states_run_2.log"]
-#files_out <- ["output/3_empirical/aug_highBranchMoves/anc_states_run_1.tre",
-#              "output/3_empirical/aug_highBranchMoves/anc_states_run_2.tre",
-#              "output/3_empirical/aug_highNodeMoves/anc_states_run_1.tre",
-#              "output/3_empirical/aug_highNodeMoves/anc_states_run_2.tre"]
+#files_in <-  ["output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_1.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_2.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_3.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_4.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_5.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_6.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_7.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_8.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_9.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_10.log"]
+#files_out <- ["output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_1.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_2.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_3.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_4.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_5.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_6.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_7.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_8.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_9.log",
+#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_10.log"]
 #i=1
 #for (file in files_in){
 #  anc_states = readAncestralStateTrace(file)
@@ -67,8 +79,8 @@ for (i in 1:length(files)){
 #  file=files_out[i],
 #  summary_statistic="MAP",
 #  reconstruction="marginal",
-#  burnin=0.1,
-#  nStates=3,
+#  burnin=0.0,
+#  nStates=2,
 #  site=1)
 #  i+=1
 # }
