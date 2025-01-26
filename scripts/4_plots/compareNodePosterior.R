@@ -70,6 +70,7 @@ for (i in 1:length(files)){
 #              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_9.log",
 #              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_10.log"]
 #i=1
+# # nStates always >=3 !!!!
 #for (file in files_in){
 #  anc_states = readAncestralStateTrace(file)
 #  anc_tree = ancestralStateTree(
@@ -80,15 +81,21 @@ for (i in 1:length(files)){
 #  summary_statistic="MAP",
 #  reconstruction="marginal",
 #  burnin=0.0,
-#  nStates=2,
+#  nStates=3,
 #  site=1)
 #  i+=1
 # }
 
-ase <- processAncStates("output/3_empirical/ase_r500_3StateOrdered/anc_states_run_1.tre",
-                        state_labels=c("0"="Herbivorous",
-                                       "1"="Omnivorous",
-                                       "2"="Carnivorous"))
+# 01.26.2024 redo the rb step! 
+
+ase <- processAncStates("output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_1.log",
+                        state_labels=c("0"="0",
+                                       "1"="1",
+                                       "2"="2"))
+
+
+
+
 aug <- processAncStates("output/3_empirical/aug_r500_3StateModel/anc_states_run_1.tre",
                         state_labels=c("0"="Herbivorous",
                                        "1"="Omnivorous",

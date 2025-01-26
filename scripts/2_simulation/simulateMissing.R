@@ -1,3 +1,5 @@
+library(phytools)
+library(tidyverse)
 source("scripts/5_miscellaneous/readWriteCharacterData.R")
 
 dir_in = "data/2_simulation/missing_state/"
@@ -74,28 +76,32 @@ cat("\n")
 
 
 # 2 missing states
+halflives <- c("1"=0.3, "2"=0.6)
+this_alpha <- log(2) / halflives
+this_stv <- c("1"=1, "2"=2)
+this_sigma2 <- 2 * this_alpha * this_stv
+this_theta <- c("1"=-6, "2"=6)
+
+v2 <- c()
+
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
                     i, "/nstate_2_history.Rda")
   load(file_in)
-  
-  halflives <- c("1"=0.3, "2"=0.6)
-  this_alpha <- log(2) / halflives
-  this_stv <- c("1"=1, "2"=2)
-  this_sigma2 <- 2 * this_alpha * this_stv
-  this_theta <- c("1"=-6, "2"=6)
 
-  sim <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
+  sim <- simulateContinuous(tree=history2, alpha=this_alpha, sigma2=this_sigma2,
                             theta=this_theta)
-  
+  v2[i] <- var(sim %>% unlist())
   this_dir <- paste0(dir_out, "sim_", i)
   write.nexus.data(sim, file = paste0(this_dir, "/nstate_2_continuous.nex"),
                    format="Continuous")
   setTxtProgressBar(bar, i / num_sim)
 }
+write_tsv(as_tibble(v2), file=paste0(dir_in, "nstate_2_var_cont.txt"), col_names = FALSE)
 
 # 3 missing states
+v3 <- c()
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
@@ -108,16 +114,18 @@ for (i in 1:num_sim){
   this_sigma2 <- 2 * this_alpha * this_stv
   this_theta <- c("1"=-6, "2"=0, "3"=6)
   
-  sim <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
+  sim <- simulateContinuous(tree=history3, alpha=this_alpha, sigma2=this_sigma2,
                             theta=this_theta)
-  
+  v3[i] <- var(sim %>% unlist())
   this_dir <- paste0(dir_out, "sim_", i)
   write.nexus.data(sim, file = paste0(this_dir, "/nstate_3_continuous.nex"),
                    format="Continuous")
   setTxtProgressBar(bar, i / num_sim)
 }
+write_tsv(as_tibble(v3), file=paste0(dir_in, "nstate_3_var_cont.txt"), col_names = FALSE)
 
 # 4 missing states
+v4 <- c()
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
@@ -130,12 +138,13 @@ for (i in 1:num_sim){
   this_sigma2 <- 2 * this_alpha * this_stv
   this_theta <- c("1"=-6, "2"=-2, "3"=2, "4"=6)
   
-  sim <- simulateContinuous(tree=history, alpha=this_alpha, sigma2=this_sigma2,
+  sim <- simulateContinuous(tree=history4, alpha=this_alpha, sigma2=this_sigma2,
                             theta=this_theta)
-  
+  v4[i] <- var(sim %>% unlist())
   this_dir <- paste0(dir_out, "sim_", i)
   write.nexus.data(sim, file = paste0(this_dir, "/nstate_4_continuous.nex"),
                    format="Continuous")
   setTxtProgressBar(bar, i / num_sim)
 }
+write_tsv(as_tibble(v4), file=paste0(dir_in, "nstate_4_var_cont.txt"), col_names = FALSE)
 

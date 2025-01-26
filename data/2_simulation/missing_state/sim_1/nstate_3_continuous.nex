@@ -1,52 +1,52 @@
 #NEXUS
-[Data written by write.nexus.data.R, Sun Jan 26 16:41:39 2025]
+[Data written by write.nexus.data.R, Sun Jan 26 23:16:57 2025]
 BEGIN DATA;
   DIMENSIONS NTAX=43 NCHAR=1;
   FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
   MATRIX
-    Antilocapra_americana                           -5.59497996048159
-    Addax_nasomaculatus                             -6.19873017962004
-    Oryx_dammah                                     -0.492528493592201
-    Oryx_gazella                                    -2.36482872175048
-    Hippotragus_equinus                             0.799972752077176
-    Hippotragus_niger                               -1.76345498866902
-    Alcelaphus_buselaphus_buselaphus                0.890736772598933
-    Connochaetes_gnou                               -6.44403378850689
-    Connochaetes_taurinus_1                         -6.72476534601257
-    Rupicapra_rupicapra_FJ207538                    -5.47713583295206
-    Cephalophus_natalensis                          1.64577712747167
-    Cephalophus_nigrifrons                          -2.07199168330223
-    Sylvicapra_grimmia                              0.572424796224903
-    Philantomba_monticola_1                         -7.52248582534261
-    Oreotragus_oreotragus                           -5.903590403628
-    Antidorcas_marsupialis                          -1.28811536310395
-    Litocranius_walleri                             -7.52423832361511
-    Antilope_cervicapra                             -3.89397391600099
-    Eudorcas_rufifrons_2                            -0.659378769434634
-    Nanger_dama                                     0.397434850517408
-    Nanger_granti                                   -0.555163936048559
-    Gazella_dorcas_pelzelnii                        -6.94093474802522
-    Saiga_tatarica                                  -5.62886631561296
-    Ourebia_ourebi                                  -6.4974879543829
-    Madoqua_kirkii                                  -4.69747660936579
-    Rahicerus_campestris                            -2.09619972142082
-    Kobus_ellipsiprymnus                            -0.628286332448631
-    Kobus_leche                                     -1.4019985253771
-    Redunca_arundinum                               0.25965671765732
-    Redunca_fulvorufula                             -0.925893148955802
-    Aepyceros_melampus                              -4.50001939105787
-    Nesotragus_moschatus                            -3.63003481297818
-    Syncerus_caffer                                 -5.44768633197403
-    Tragelaphus_oryx                                -4.58596728933709
-    Tragelaphus_strepsiceros                        -0.446712002367152
-    Tragelaphus_eurycerus                           -5.99142831049845
-    Tragelaphus_spekii                              -1.74635889690483
-    Tragelaphus_scriptus_3                          -0.659487051518771
-    Tragelaphus_angasii                             0.423532780795342
-    Tragelaphus_imberbis                            1.6835312190168
-    Capreolus_capreolus                             -1.03364695746604
-    Giraffa_camelopardalis_angolensis_NC012100      0.620918674727217
-    Okapia_johnstoni                                -7.14723460931258
+    Antilocapra_americana                           -4.86815007165482
+    Addax_nasomaculatus                             5.52815446344816
+    Oryx_dammah                                     8.17871714559792
+    Oryx_gazella                                    7.45983869611807
+    Hippotragus_equinus                             6.90706722213829
+    Hippotragus_niger                               6.12673552580557
+    Alcelaphus_buselaphus_buselaphus                1.82576832307178
+    Connochaetes_gnou                               3.22226646691454
+    Connochaetes_taurinus_1                         3.55275145721307
+    Rupicapra_rupicapra_FJ207538                    5.5280326665878
+    Cephalophus_natalensis                          -5.79498819572313
+    Cephalophus_nigrifrons                          -5.83073515084663
+    Sylvicapra_grimmia                              5.11276207351482
+    Philantomba_monticola_1                         -7.15292531455367
+    Oreotragus_oreotragus                           -6.66929669749097
+    Antidorcas_marsupialis                          0.978806202559957
+    Litocranius_walleri                             -6.42841476737181
+    Antilope_cervicapra                             5.04113942725061
+    Eudorcas_rufifrons_2                            6.0484535740376
+    Nanger_dama                                     -5.71175430387771
+    Nanger_granti                                   -6.49196624653014
+    Gazella_dorcas_pelzelnii                        7.38625295825602
+    Saiga_tatarica                                  5.32665412111204
+    Ourebia_ourebi                                  7.87893359552582
+    Madoqua_kirkii                                  -0.747128495305881
+    Rahicerus_campestris                            -6.82542831136962
+    Kobus_ellipsiprymnus                            -4.74862765785525
+    Kobus_leche                                     -5.75494219848292
+    Redunca_arundinum                               -1.11755790454925
+    Redunca_fulvorufula                             -4.73536978185181
+    Aepyceros_melampus                              -0.265607100781225
+    Nesotragus_moschatus                            -0.621030513562715
+    Syncerus_caffer                                 5.46559743450039
+    Tragelaphus_oryx                                5.10785912836054
+    Tragelaphus_strepsiceros                        5.397222185239
+    Tragelaphus_eurycerus                           2.28437774233389
+    Tragelaphus_spekii                              4.05091658749167
+    Tragelaphus_scriptus_3                          6.12967693189023
+    Tragelaphus_angasii                             1.02223113043627
+    Tragelaphus_imberbis                            -4.27133259451668
+    Capreolus_capreolus                             -6.59518890004502
+    Giraffa_camelopardalis_angolensis_NC012100      0.691871144588861
+    Okapia_johnstoni                                -6.29370293522704
   ;
 END;
 
