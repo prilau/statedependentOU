@@ -54,11 +54,11 @@ for (i in 1:num_disc_states) {
 }
 
 
-rates_12 ~ dnExp( root_age / 10 )
+rates_12 ~ dnExp( root_age )
 moves.append( mvScale( rates_12, weight=1.0 ) )
 avmvn_rates.addVariable( rates_12 )
 
-rates_21 ~ dnExp( root_age / 10 )
+rates_21 ~ dnExp( root_age )
 moves.append( mvScale( rates_21, weight=1.0 ) )
 avmvn_rates.addVariable( rates_21 )
 
@@ -67,34 +67,31 @@ rates_31 := 0
 rates_14 := 0
 rates_41 := 0
 
-rates_23 ~ dnExp( root_age / 10 )
+rates_23 ~ dnExp( root_age )
 moves.append( mvScale( rates_23, weight=1.0 ) )
 avmvn_rates.addVariable( rates_23 )
 
-rates_32 ~ dnExp( root_age / 10 )
+rates_32 ~ dnExp( root_age )
 moves.append( mvScale( rates_32, weight=1.0 ) )
 avmvn_rates.addVariable( rates_32 )
 
 rates_24 := 0
 rates_42 := 0
 
-rates_34 ~ dnExp( root_age / 10 )
+rates_34 ~ dnExp( root_age )
 moves.append( mvScale( rates_34, weight=1.0 ) )
 avmvn_rates.addVariable( rates_34 )
 
-rates_43 ~ dnExp( root_age / 10 )
+rates_43 ~ dnExp( root_age )
 moves.append( mvScale( rates_43, weight=1.0 ) )
 avmvn_rates.addVariable( rates_43 )
 
 
 Q := fnFreeK([rates_12, rates_13, rates_14, rates_21, rates_23, rates_24, rates_31, rates_32, rates_34, rates_41, rates_42, rates_43], rescaled=TRUE)
 
-lambda ~ dnLognormal(ln(0.05), 0.4)
-moves.append( mvScale(lambda, weight=5.0) )
-
 moves.append( avmvn_rates )
 
-X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=1, type="Standard", nSites=1)
 X.clamp(disc)
 
 
@@ -114,11 +111,6 @@ char_hist := X.characterHistories()
 ##############################
 # continuous character model #
 ##############################
--0 -5 00 05 10 15
-  4   3   2   1
-
-
-
 theta[1] ~ dnUniform(10, 15)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])

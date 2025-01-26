@@ -48,22 +48,22 @@ root_age <- tree.rootAge()
 
 # make the Q matrix
 
-rates_12 ~ dnExp( root_age / 10 )
+rates_12 ~ dnExp( root_age)
 moves.append( mvScale( rates_12, weight=1.0 ) )
 avmvn_rates.addVariable( rates_12 )
 
-rates_21 ~ dnExp( root_age / 10 )
+rates_21 ~ dnExp( root_age)
 moves.append( mvScale( rates_21, weight=1.0 ) )
 avmvn_rates.addVariable( rates_21 )
 
 rates_13 := 0
 rates_31 := 0
 
-rates_23 ~ dnExp( root_age / 10 )
+rates_23 ~ dnExp( root_age)
 moves.append( mvScale( rates_23, weight=1.0 ) )
 avmvn_rates.addVariable( rates_23 )
 
-rates_32 ~ dnExp( root_age / 10 )
+rates_32 ~ dnExp( root_age)
 moves.append( mvScale( rates_32, weight=1.0 ) )
 avmvn_rates.addVariable( rates_32 )
 
