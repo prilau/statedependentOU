@@ -1,3 +1,4 @@
+library(ape)
 library(phytools)
 library(tidyverse)
 source("scripts/5_miscellaneous/readWriteCharacterData.R")
@@ -9,7 +10,7 @@ num_sim=10
 
 tree <- read.tree("data/1_validation/artiodactyla/artiodactyla.tree")
 tree_length = sum(tree$edge.length)
-rate = 50 / tree_length # expected number of changes is 50
+rate = 20 / tree_length # expected number of changes is 50
 
 Q2 = matrix(1, 2, 2, dimnames=list(1:2, 1:2))
 diag(Q2) = -1
@@ -33,19 +34,19 @@ bar = txtProgressBar(style=3, width=40)
 for(i in 1:num_sim) {
 
   history2 = sim.history(tree, rate * Q2, nsim=1, message=FALSE)
-  while (! (mean(history2$states == "1") > 0.1 & mean(history2$states == "2") > 0.1 ) ) {
+  while (! (mean(history2$states == "1") > 0.2 & mean(history2$states == "2") > 0.2 ) ) {
     history2 = sim.history(tree, rate * Q2, nsim=1, message=FALSE)
   }
   maps = history2$mapped.edge[,c("1","2")]
   
   history3 = sim.history(tree, rate * Q3, nsim=1, message=FALSE)
-  while (! (mean(history3$states == "1") > 0.1 & mean(history3$states == "2") > 0.1 & mean(history3$states == "3") > 0.1) ) {
+  while (! (mean(history3$states == "1") > 0.2 & mean(history3$states == "2") > 0.2 & mean(history3$states == "3") > 0.2) ) {
     history3 = sim.history(tree, rate * Q3, nsim=1, message=FALSE)
   }
   maps = history3$mapped.edge[,c("1","2","3")]
   
   history4 = sim.history(tree, rate * Q4, nsim=1, message=FALSE)
-  while (! (mean(history4$states == "1") > 0.1 & mean(history4$states == "2") > 0.1 & mean(history4$states == "3") > 0.1 & mean(history4$states == "4") > 0.1) ) {
+  while (! (mean(history4$states == "1") > 0.2 & mean(history4$states == "2") > 0.2 & mean(history4$states == "3") > 0.2 & mean(history4$states == "4") > 0.2) ) {
     history4 = sim.history(tree, rate * Q4, nsim=1, message=FALSE)
   }
   maps = history4$mapped.edge[,c("1","2","3","4")]
@@ -74,9 +75,11 @@ for(i in 1:num_sim) {
 } 
 cat("\n")
 
+# Root age
+root_age <- max(node.depth.edgelength(tree))
 
 # 2 missing states
-halflives <- c("1"=0.3, "2"=0.6)
+halflives <- c("1"=0.3*root_age, "2"=0.6*root_age)
 this_alpha <- log(2) / halflives
 this_stv <- c("1"=1, "2"=2)
 this_sigma2 <- 2 * this_alpha * this_stv
@@ -101,19 +104,20 @@ for (i in 1:num_sim){
 write_tsv(as_tibble(v2), file=paste0(dir_in, "nstate_2_var_cont.txt"), col_names = FALSE)
 
 # 3 missing states
+halflives <- c("1"=0.3*root_age, "2"=0.6*root_age, "3"=0.6*root_age)
+this_alpha <- log(2) / halflives
+this_stv <- c("1"=1, "2"=2, "3"=2)
+this_sigma2 <- 2 * this_alpha * this_stv
+this_theta <- c("1"=-6, "2"=0, "3"=6)
+
 v3 <- c()
+
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
                     i, "/nstate_3_history.Rda")
   load(file_in)
-  
-  halflives <- c("1"=0.3, "2"=0.6, "3"=0.6)
-  this_alpha <- log(2) / halflives
-  this_stv <- c("1"=1, "2"=2, "3"=2)
-  this_sigma2 <- 2 * this_alpha * this_stv
-  this_theta <- c("1"=-6, "2"=0, "3"=6)
-  
+
   sim <- simulateContinuous(tree=history3, alpha=this_alpha, sigma2=this_sigma2,
                             theta=this_theta)
   v3[i] <- var(sim %>% unlist())
@@ -125,18 +129,19 @@ for (i in 1:num_sim){
 write_tsv(as_tibble(v3), file=paste0(dir_in, "nstate_3_var_cont.txt"), col_names = FALSE)
 
 # 4 missing states
+halflives <- c("1"=0.3*root_age, "2"=0.6*root_age, "3"=0.6*root_age, "4"=0.6*root_age)
+this_alpha <- log(2) / halflives
+this_stv <- c("1"=1, "2"=2, "3"=2, "4"=2)
+this_sigma2 <- 2 * this_alpha * this_stv
+this_theta <- c("1"=-6, "2"=-2, "3"=2, "4"=6)
+
 v4 <- c()
+
 bar = txtProgressBar(style=3, width=40)
 for (i in 1:num_sim){
   file_in <- paste0(dir_in, "sim_",
                     i, "/nstate_4_history.Rda")
   load(file_in)
-  
-  halflives <- c("1"=0.3, "2"=0.6, "3"=0.6, "4"=0.6)
-  this_alpha <- log(2) / halflives
-  this_stv <- c("1"=1, "2"=2, "3"=2, "4"=2)
-  this_sigma2 <- 2 * this_alpha * this_stv
-  this_theta <- c("1"=-6, "2"=-2, "3"=2, "4"=6)
   
   sim <- simulateContinuous(tree=history4, alpha=this_alpha, sigma2=this_sigma2,
                             theta=this_theta)
@@ -147,4 +152,3 @@ for (i in 1:num_sim){
   setTxtProgressBar(bar, i / num_sim)
 }
 write_tsv(as_tibble(v4), file=paste0(dir_in, "nstate_4_var_cont.txt"), col_names = FALSE)
-
