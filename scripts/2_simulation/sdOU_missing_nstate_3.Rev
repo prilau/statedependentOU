@@ -32,7 +32,6 @@ cont.includeCharacter(characterCont)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
-avmvn_rates = mvAVMVN(weight=30, waitBeforeLearning=500, waitBeforeUsing=1000)
 avmvn_ou = mvAVMVN(weight=15, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
@@ -47,28 +46,14 @@ root_age <- tree.rootAge()
 ########################################
 
 # make the Q matrix
-rates_12 ~ dnExp( root_age )
-moves.append( mvScale( rates_12, weight=1.0 ) )
-avmvn_rates.addVariable( rates_12 )
-
-rates_21 ~ dnExp( root_age )
-moves.append( mvScale( rates_21, weight=1.0 ) )
-avmvn_rates.addVariable( rates_21 )
-
+rates_12 := 0.03285318
+rates_21 := 0.03285318
 rates_13 := 0
 rates_31 := 0
+rates_23 := 0.03285318
+rates_32 := 0.03285318
 
-rates_23 ~ dnExp( root_age )
-moves.append( mvScale( rates_23, weight=1.0 ) )
-avmvn_rates.addVariable( rates_23 )
-
-rates_32 ~ dnExp( root_age )
-moves.append( mvScale( rates_32, weight=1.0 ) )
-avmvn_rates.addVariable( rates_32 )
-
-Q := fnFreeK([rates_12, rates_13, rates_21, rates_23, rates_31, rates_32], rescaled=TRUE)
-
-moves.append( avmvn_rates )
+Q := fnFreeK([rates_12, rates_13, rates_21, rates_23, rates_31, rates_32], rescaled=FALSE)
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=1, type="Standard", nSites=1)
 X.clamp(disc)
