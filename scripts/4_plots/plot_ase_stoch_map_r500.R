@@ -365,3 +365,68 @@ p9 <- plotStochMaps(tree, maps=stoc_map,
 #p3
 ggsave(paste0("figures/3_empirical/sdOU_r500_missingStateModel/nstate_2_stoch_map.pdf"), p9, width = 8, height = 6)
 
+
+################
+# missing sim  #
+################
+#  2-state     #
+################
+ase <- processAncStates("output/2_simulation/missing_state/anc_states_nstate_2_run_2.log",
+                        state_labels=c("0"="0", "1"="1", "2"="2"))
+# produce the plot object, showing MAP states at nodes.
+p7 <- plotAncStatesMAP(t = ase,
+                       #tip_labels_offset = 0.5,
+                       tip_labels = FALSE,
+                       node_color_as = "state",
+                       node_color = c("0"="#44AA99", "1"="#ddcc77", "2"="#882255"),
+                       node_size = c(0.5, 2),
+                       tip_states = TRUE,
+                       #tip_states_size = c(0.01, 0.01),
+                       #tip_states_shape = 1,
+                       state_transparency = 0.7,
+                       tree_layout = "circular",
+                       #tip_labels_size = 0.5
+                       tree_color = "#bbbbbb",
+                       tree_linewidth = 0.25) +
+  # modify legend location using ggplot2
+  theme(legend.position.inside = c(0.6,0.81))
+#p1
+ggsave(paste0("figures/2_simulation/missing_state/nstate_2_ase_map.pdf"), p7, width = 8, height = 6)
+
+
+p8 <- plotAncStatesPie(t = ase,
+                       pie_colors = c("0"="#44AA99", "1"="#ddcc77", "2"="#882255"),
+                       #tip_labels_size = 1,
+                       tip_pies = TRUE,
+                       #tip_labels_offset = 0.5,
+                       node_pie_size = 0.7,
+                       tip_pie_size = 0.2,
+                       tree_layout = "circular",
+                       tip_labels = FALSE,
+                       state_transparency = 0.7,
+                       tree_color = "#bbbbbb",
+                       tree_linewidth = 0.25) +
+  # modify legend location using ggplot2
+  theme(legend.position.inside = c(0.6,0.81))
+#p2
+ggsave(paste0("figures/2_simulation/missing_state/nstate_2_ase_pie.pdf"), p8, width = 8, height = 6)
+
+
+# p3
+simmaps <- read.simmap("output/2_simulation/missing_state/sim_1/augch_nstate_2_run_1.trees", format="phylip")
+stoc_map <- processStochMaps(tree,
+                             simmap = simmaps,
+                             states=c("0", "1", "2"))
+
+p9 <- plotStochMaps(tree, maps=stoc_map,
+                    tip_labels = FALSE,
+                    tree_layout = "circular",
+                    line_width=0.25,
+                    color_by = "MAP",
+                    colors = c("0"="#44AA99",
+                               "1"="#ddcc77",
+                               "2"="#882255")) +
+  theme(legend.position.inside = c(0.6,0.81))
+#p3
+ggsave(paste0("figures/2_simulation/missing_state/nstate_2_stoch_map.pdf"), p9, width = 8, height = 6)
+

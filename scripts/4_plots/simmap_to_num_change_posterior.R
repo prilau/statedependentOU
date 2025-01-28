@@ -1,6 +1,6 @@
 library(stringr)
 
-numChangePosterior <- function(simmap_path, trace_path){
+numChangePosterior <- function(simmap_path=NULL, trace_path=NULL){
   df <- read_tsv(simmap_path) %>%
     select(!c(head(colnames(.), 1), tail(colnames(.), 1)))
   
@@ -17,9 +17,13 @@ numChangePosterior <- function(simmap_path, trace_path){
   return(num_change)
 }
 
+#dir_in <- "output/3_empirical/ase_r500_3StateOrdered/"
+dir_in <- "output/3_empirical/ase_r500_4State/"
 
-simmap_path <- "output/3_empirical/ase_carnivory/simmap.log"
-trace_path <- "output/3_empirical/ase_carnivory/trace.log"
+simmap_paths <- paste0(dir_in, list.files(dir_in, pattern = "simmap"))
+trace_paths <- paste0(dir_in, list.files(dir_in, pattern = "trace"))
 
-numChangePosterior(simmap_path, trace_path)
+for (i in 1:length(simmap_paths)){
+  numChangePosterior(simmap_paths[i], trace_paths[i])
+}
 

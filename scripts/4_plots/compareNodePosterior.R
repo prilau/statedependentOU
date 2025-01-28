@@ -1,3 +1,5 @@
+library(ape)
+library(phytools)
 library(RevGadgets)
 library(tidyverse)
 tree <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
@@ -30,7 +32,7 @@ simmap_to_ancStates <- function(input_path, output_path){
 }
 
 dir_in = "output/3_empirical/sdOU_r500_3StateOrderedModel/"
-files <- list.files(dir_in)[grepl(".trees", list.files(dir_in))]
+files <- list.files(dir_in, recursive = TRUE)[grepl(".trees", list.files(dir_in, recursive = TRUE))]
 for (file in files){
   path = paste0(dir_in, file)
   log <- read_tsv(path)
@@ -49,26 +51,66 @@ for (i in 1:length(files)){
 
 #Do this in RevBayes!
 #tree <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
-#files_in <-  ["output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_1.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_2.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_3.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_4.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_5.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_6.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_7.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_8.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_9.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/augch_nstate_2_run_10.log"]
-#files_out <- ["output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_1.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_2.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_3.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_4.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_5.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_6.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_7.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_8.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_9.log",
-#              "output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_10.log"]
+#files_in <-  ["output/2_simulation/missing_state/sim_1/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_1/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_1/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_2/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_2/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_2/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_3/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_3/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_3/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_4/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_4/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_4/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_5/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_5/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_5/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_6/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_6/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_6/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_7/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_7/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_7/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_8/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_8/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_8/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_9/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_9/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_9/augch_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_10/augch_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_10/augch_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_10/augch_nstate_4_run_1.log"]
+#files_out <- ["output/2_simulation/missing_state/sim_1/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_1/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_1/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_2/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_2/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_2/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_3/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_3/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_3/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_4/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_4/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_4/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_5/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_5/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_5/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_6/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_6/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_6/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_7/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_7/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_7/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_8/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_8/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_8/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_9/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_9/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_9/anc_states_nstate_4_run_1.log",
+#              "output/2_simulation/missing_state/sim_10/anc_states_nstate_2_run_1.log",
+#              "output/2_simulation/missing_state/sim_10/anc_states_nstate_3_run_1.log",
+#              "output/2_simulation/missing_state/sim_10/anc_states_nstate_4_run_1.log"]
 #i=1
 # # nStates always >=3 !!!!
 #for (file in files_in){
@@ -81,17 +123,18 @@ for (i in 1:length(files)){
 #  summary_statistic="MAP",
 #  reconstruction="marginal",
 #  burnin=0.0,
-#  nStates=3,
+#  nStates=4,
 #  site=1)
 #  i+=1
 # }
 
 # 01.26.2024 redo the rb step! 
 
-ase <- processAncStates("output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_1.log",
+ase <- processAncStates("output/2_simulation/missing_state/sim_1/anc_states_nstate_2_run_1.log",
                         state_labels=c("0"="0",
                                        "1"="1",
-                                       "2"="2"))
+                                       "2"="2",
+                                       "3"="3"))
 
 
 

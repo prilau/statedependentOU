@@ -1,0 +1,51 @@
+#NEXUS
+
+BEGIN DATA;
+	DIMENSIONS NTAX=43 NCHAR=1;
+	FORMAT DATATYPE=STANDARD SYMBOLS="1234" MISSING=? GAP=-;
+MATRIX
+Antilocapra_americana	2
+Addax_nasomaculatus	1
+Oryx_dammah	1
+Oryx_gazella	1
+Hippotragus_equinus	1
+Hippotragus_niger	1
+Alcelaphus_buselaphus_buselaphus	3
+Connochaetes_gnou	3
+Connochaetes_taurinus_1	3
+Rupicapra_rupicapra_FJ207538	3
+Cephalophus_natalensis	3
+Cephalophus_nigrifrons	3
+Sylvicapra_grimmia	3
+Philantomba_monticola_1	2
+Oreotragus_oreotragus	1
+Antidorcas_marsupialis	4
+Litocranius_walleri	3
+Antilope_cervicapra	2
+Eudorcas_rufifrons_2	3
+Nanger_dama	4
+Nanger_granti	3
+Gazella_dorcas_pelzelnii	3
+Saiga_tatarica	3
+Ourebia_ourebi	2
+Madoqua_kirkii	4
+Rahicerus_campestris	2
+Kobus_ellipsiprymnus	3
+Kobus_leche	3
+Redunca_arundinum	3
+Redunca_fulvorufula	2
+Aepyceros_melampus	3
+Nesotragus_moschatus	3
+Syncerus_caffer	4
+Tragelaphus_oryx	3
+Tragelaphus_strepsiceros	3
+Tragelaphus_eurycerus	3
+Tragelaphus_spekii	3
+Tragelaphus_scriptus_3	3
+Tragelaphus_angasii	3
+Tragelaphus_imberbis	3
+Capreolus_capreolus	3
+Giraffa_camelopardalis_angolensis_NC012100	3
+Okapia_johnstoni	4
+;
+END;

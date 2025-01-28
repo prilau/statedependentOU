@@ -42,12 +42,12 @@ root_age <- tree.rootAge()
 
 # make the Q matrix
 
-rate_12 ~ dnExp(root_age / 10)
-rate_21 ~ dnExp(root_age / 10)
+rate_12 ~ dnExp( root_age )
+rate_21 ~ dnExp( root_age )
 rate_13 := 0
 rate_31 := 0
-rate_23 ~ dnExp(root_age / 10)
-rate_32 ~ dnExp(root_age / 10)
+rate_23 ~ dnExp( root_age )
+rate_32 ~ dnExp( root_age )
 
 moves.append( mvScale(rate_12, weight=2.0) )
 moves.append( mvScale(rate_21, weight=2.0) )
@@ -61,21 +61,18 @@ avmvn_moves.addVariable(rate_32)
 
 
 rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
-Q := fnFreeK(rates, rescaled=TRUE)
+Q := fnFreeK(rates, rescaled=FALSE)
 
-lambda ~ dnLognormal(ln(0.005), 0.5)
-moves.append( mvScale(lambda, weight=1.0) )
-avmvn_moves.addVariable(lambda)
 
 moves.append( avmvn_moves )
 
-X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=1, type="Standard", nSites=1)
 X.clamp(disc)
 
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=100.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=300.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=300.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -91,9 +88,9 @@ char_hist := X.characterHistories()
 
 mymodel = model(X)
 
-monitors.append( mnModel(filename="output/3_empirical/aug_highNodeMoves/trace_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/3_empirical/aug_test_mc3/trace_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
-monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_highNodeMoves/augch_run_" + RUN_INDEX + ".trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_test_mc3/augch_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 ################
@@ -101,15 +98,15 @@ monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_highNodeMov
 ################
 
 ### workspace mcmc ###
-mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
-
+#mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
+mymc3 = mcmcmc(mymodel, monitors, moves, nruns=1, combine="none", nchains=4, deltaHeat=5, swapMethod="random", swapMode="multiple") 
 
 ### run the MCMC ###
 #mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
-#mymcmc.initializeFromCheckpoint("output/3_empirical/aug_highNodeMoves/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=10000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/aug_highNodeMoves/run_" + RUN_INDEX + ".state")
-mymcmc.operatorSummary()
+#mymcmc.initializeFromCheckpoint("output/3_empirical/aug_test_mc3/run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymc3.run(generations=10000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/aug_test_mc3/run_" + RUN_INDEX + ".state")
+mymc3.operatorSummary()
 
 ## quit ##
 q()

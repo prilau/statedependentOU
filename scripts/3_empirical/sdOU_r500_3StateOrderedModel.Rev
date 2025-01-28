@@ -48,38 +48,33 @@ root_age <- tree.rootAge()
 
 # make the Q matrix
 
-
-rate_12 ~ dnExp(root_age / 10)
-rate_21 ~ dnExp(root_age / 10)
+rate_12 := 0.00393
+rate_21 := 0.0131
 rate_13 := 0
 rate_31 := 0
-rate_23 ~ dnExp(root_age / 10)
-rate_32 ~ dnExp(root_age / 10)
+rate_23 := 0.00636
+rate_32 := 0.00516
 
-moves.append( mvScale(rate_12, weight=1.0) )
-moves.append( mvScale(rate_21, weight=1.0) )
-moves.append( mvScale(rate_23, weight=1.0) )
-moves.append( mvScale(rate_32, weight=1.0) )
+rates ~ dnDirichlet([rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]*5000)
+moves.append( mvBetaSimplex( rates, weight=2 ) )
+moves.append( mvDirichletSimplex( rates, weight=2 ) )
+avmvn_rates.addVariable( rates )
 
-avmvn_rates.addVariable(rate_12)
-avmvn_rates.addVariable(rate_21)
-avmvn_rates.addVariable(rate_23)
-avmvn_rates.addVariable(rate_32)
-
-rates := [rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]
 Q := fnFreeK(rates, rescaled=TRUE)
 
-lambda ~ dnLognormal(ln(0.05), 0.4)
+lambda ~ dnLoguniform(ln(0.05), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
-avmvn_rates.addVariable(lambda)
+avmvn_rates.addVariable( lambda )
+
+moves.append( avmvn_rates )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=800.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=800.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {

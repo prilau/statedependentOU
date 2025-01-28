@@ -62,7 +62,8 @@ for (i in 1:total_num_states) {
 }
 
 rates[1][2] ~ dnExp( root_age / 10 )
-rates[1][4] ~ dnExp( root_age / 10 )
+rates[1][4] ~ dnExp
+( root_age / 10 )
 rates[2][1] ~ dnExp( root_age / 10 )
 rates[2][3] ~ dnExp( root_age / 10 )
 rates[2][5] ~ dnExp( root_age / 10 )
@@ -121,15 +122,11 @@ rate_56 := rates[5][6]
 rate_63 := rates[6][3]
 rate_65 := rates[6][5]
 
-Q := fnFreeK(rates, rescaled=TRUE)
-
-lambda ~ dnLognormal(ln(0.05), 0.4) # should check lambda with aug model alone
-moves.append( mvScale(lambda, weight=1.0) )
-#avmvn_rates.addVariable( lambda )
+Q := fnFreeK(rates, rescaled=FALSE)
 
 moves.append( avmvn_rates )
 
-X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="NaturalNumbers", nSites=1)
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=1, type="NaturalNumbers", nSites=1)
 X.clamp(disc_exp)
 
 # include proposals for the discrete character history

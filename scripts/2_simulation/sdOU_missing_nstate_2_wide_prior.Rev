@@ -48,7 +48,7 @@ root_age <- tree.rootAge()
 # make the Q matrix
 
 rates_12 := 0.04380424
-rates_21 :=0.04380424
+rates_21 := 0.04380424
 
 Q := fnFreeK([rates_12, rates_21], rescaled=FALSE)
 
@@ -72,7 +72,7 @@ char_hist := X.characterHistories()
 ##############################
 # continuous character model #
 ##############################
-theta[1] ~ dnUniform(4, 8)
+theta[1] ~ dnUniform(-8, 8)
 moves.append(mvSlide(theta[1], weight = 1.0) )
 avmvn_ou.addVariable(theta[1])
 
@@ -88,7 +88,7 @@ sigma2[1] := stv[1] * 2 * alpha[1]
 
 
 # theta[2] always <= theta[1]
-theta[2] ~ dnUniform(-8, theta[1])
+theta[2] ~ dnUniform(theta[1], 8)
 moves.append(mvScale(theta[2], weight = 1.0) )
 avmvn_ou.addVariable(theta[2])
 
@@ -117,9 +117,9 @@ Y.clamp(cont)
 
 mymodel = model(Y)
 
-monitors.append( mnModel(filename="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/trace_nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".log", printgen=10) )
+monitors.append( mnModel(filename="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/trace_nstate_" + NUM_MISSING + "_wide_prior_run_" + RUN_INDEX + ".log", printgen=10) )
 monitors.append( mnScreen(printgen=1000) )
-monitors.append( mnFile( char_hist, filename="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/augch_nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".trees", printgen=100 ) )
+monitors.append( mnFile( char_hist, filename="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/augch_nstate_" + NUM_MISSING + "_wide_prior_run_" + RUN_INDEX + ".trees", printgen=100 ) )
 
 
 
@@ -135,8 +135,8 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
 
-#mymcmc.initializeFromCheckpoint("output/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=25000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_run_" + RUN_INDEX + ".state")
+#mymcmc.initializeFromCheckpoint("output/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_wide_prior_run_" + RUN_INDEX + ".state") #comment this out for the first run
+mymcmc.run(generations=25000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/2_simulation/missing_state/sim_" + SIM_INDEX + "/nstate_" + NUM_MISSING + "_wide_prior_run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 
