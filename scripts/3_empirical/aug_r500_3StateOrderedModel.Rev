@@ -28,7 +28,6 @@ num_disc_states <- disc.getStateDescriptions().size()
 moves    = VectorMoves()
 monitors = VectorMonitors()
 avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
-avmvn_ou = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
 # Specify the tree model #
@@ -50,14 +49,14 @@ rate_31 := 0
 rate_23 := 0.00636
 rate_32 := 0.00516
 
-rates ~ dnDirichlet([rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]*5000)
+rates ~ dnDirichlet([rate_12, rate_21, rate_23, rate_32]*5000)
 moves.append( mvBetaSimplex( rates, weight=2 ) )
 moves.append( mvDirichletSimplex( rates, weight=2 ) )
 avmvn_rates.addVariable( rates )
 
-Q := fnFreeK(rates, rescaled=TRUE)
+Q := fnFreeK([rates[1], rate_13, rates[2], rates[3], rates_31, rates[4]], rescaled=TRUE)
 
-lambda ~ dnLoguniform(ln(0.05), 0.4)
+lambda ~ dnLognormal(ln(0.05), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
 avmvn_rates.addVariable( lambda )
 
@@ -96,8 +95,6 @@ monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_r500_3State
 ################
 
 ### workspace mcmc ###
-mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
-
 
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
