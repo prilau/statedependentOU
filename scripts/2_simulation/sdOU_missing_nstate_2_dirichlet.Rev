@@ -32,6 +32,7 @@ cont.includeCharacter(characterCont)
 # Create some vector for the moves and monitors of this analysis
 moves    = VectorMoves()
 monitors = VectorMonitors()
+avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
 avmvn_ou = mvAVMVN(weight=15, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 ##########################
@@ -63,6 +64,7 @@ Q := fnFreeK(rates, rescaled=TRUE)
 lambda ~ dnLognormal(ln(0.1), 0.3)
 moves.append( mvScale(lambda, weight=1.0) )
 avmvn_rates.addVariable( lambda )
+moves.append( avmvn_rates )
 
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
