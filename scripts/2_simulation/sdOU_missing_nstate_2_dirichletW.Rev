@@ -51,7 +51,7 @@ root_age <- tree.rootAge()
 #rates_12 := 0.04380424
 #rates_21 := 0.04380424
 
-rates ~ dnDirichlet([1, 1]*100)
+rates ~ dnDirichlet([1, 1]*5000)
 moves.append( mvBetaSimplex( rates, weight=2 ) )
 moves.append( mvDirichletSimplex( rates, weight=2 ) )
 avmvn_rates.addVariable( rates )
