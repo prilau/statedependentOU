@@ -49,7 +49,15 @@ root_age <- tree.rootAge()
 #rate_31 := 0
 #rate_32 := 0.00516
 
-rates ~ dnDirichlet([0.00393, 0.0131, 0.00636, 0.00516]*5000)
+tol_rate <- 0.00393 + 0.0131 + 0.00636 + 0.00516
+
+rel_12 := 0.00393 / tol_rate
+rel_21 := 0.01310 / tol_rate
+rel_23 := 0.00636 / tol_rate
+rel_32 := 0.00516 / tol_rate
+
+
+rates ~ dnDirichlet([rel_12, rel_21, rel_23, rel_32]*2500)
 moves.append( mvBetaSimplex( rates, weight=2 ) )
 moves.append( mvDirichletSimplex( rates, weight=2 ) )
 avmvn_rates.addVariable( rates )
@@ -72,8 +80,8 @@ X.clamp(disc)
 
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=800.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=800.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=2000.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=2000.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
