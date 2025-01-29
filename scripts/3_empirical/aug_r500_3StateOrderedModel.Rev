@@ -42,19 +42,24 @@ root_age <- tree.rootAge()
 
 # make the Q matrix
 
-rate_12 := 0.00393
-rate_21 := 0.0131
-rate_13 := 0
-rate_31 := 0
-rate_23 := 0.00636
-rate_32 := 0.00516
+#rate_12 := 0.00393
+#rate_13 := 0
+#rate_21 := 0.0131
+#rate_23 := 0.00636
+#rate_31 := 0
+#rate_32 := 0.00516
 
-rates ~ dnDirichlet([rate_12, rate_21, rate_23, rate_32]*5000)
+rates ~ dnDirichlet([0.00393, 0.0131, 0.00636, 0.00516]*5000)
 moves.append( mvBetaSimplex( rates, weight=2 ) )
 moves.append( mvDirichletSimplex( rates, weight=2 ) )
 avmvn_rates.addVariable( rates )
 
-Q := fnFreeK([rates[1], rate_13, rates[2], rates[3], rates_31, rates[4]], rescaled=TRUE)
+rate_12 := rates[1]
+rate_21 := rates[2]
+rate_23 := rates[3]
+rate_22 := rates[4]
+
+Q := fnFreeK([rates[1], 0, rates[2], rates[3], 0, rates[4]], rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.05), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
@@ -95,6 +100,7 @@ monitors.append( mnFile( char_hist, filename="output/3_empirical/aug_r500_3State
 ################
 
 ### workspace mcmc ###
+mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 ### run the MCMC ###
 mymcmc.burnin(generations=5000, tuningInterval=100) # comment out after first run
