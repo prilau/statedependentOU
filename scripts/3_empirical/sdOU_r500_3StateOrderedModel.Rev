@@ -47,22 +47,26 @@ root_age <- tree.rootAge()
 ########################################
 
 # make the Q matrix
+tol_rate <- 0.00393 + 0.0131 + 0.00636 + 0.00516
 
-rate_12 := 0.00393
-rate_21 := 0.0131
-rate_13 := 0
-rate_31 := 0
-rate_23 := 0.00636
-rate_32 := 0.00516
+rel_12 := 0.00393 / tol_rate
+rel_21 := 0.01310 / tol_rate
+rel_23 := 0.00636 / tol_rate
+rel_32 := 0.00516 / tol_rate
 
-rates ~ dnDirichlet([rate_12, rate_13, rate_21, rate_23, rate_31, rate_32]*5000)
+rates ~ dnDirichlet([rel_12, rel_21, rel_23, rel_32]*2500)
 moves.append( mvBetaSimplex( rates, weight=2 ) )
 moves.append( mvDirichletSimplex( rates, weight=2 ) )
 avmvn_rates.addVariable( rates )
 
-Q := fnFreeK(rates, rescaled=TRUE)
+rate_12 := rates[1]
+rate_21 := rates[2]
+rate_23 := rates[3]
+rate_22 := rates[4]
 
-lambda ~ dnLoguniform(ln(0.05), 0.4)
+Q := fnFreeK([rates[1], 0, rates[2], rates[3], 0, rates[4]], rescaled=TRUE)
+
+lambda ~ dnLognormal(ln(0.05), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
 avmvn_rates.addVariable( lambda )
 
@@ -73,8 +77,8 @@ X.clamp(disc)
 
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=800.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=800.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=2000.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=2000.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -146,10 +150,10 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=10000, tuningInterval=100) # comment out after first run
+#mymcmc.burnin(generations=10000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=100000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_3StateOrderedModel/run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 ## quit ##
