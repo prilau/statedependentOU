@@ -1,0 +1,65 @@
+#Do this in RevBayes!
+tree <- readTrees("data/1_validation/artiodactyla/artiodactyla.tree")[1]
+files_in <-  ["data/2_simulation/missing_state/sim_1/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_2/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_3/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_4/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_5/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_6/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_7/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_8/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_9/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_10/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_11/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_12/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_13/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_14/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_15/nstate_2_true_history.log",
+              "data/2_simulation/missing_state/sim_16/nstate_2_true_history.log"]
+ 
+files_out_char <- ["data/2_simulation/missing_state/sim_1/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_2/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_3/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_4/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_5/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_6/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_7/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_8/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_9/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_10/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_11/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_12/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_13/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_14/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_15/nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_16/nstate_2_true_history.tree"]
+
+files_out_post <- ["data/2_simulation/missing_state/sim_1/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_2/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_3/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_4/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_5/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_6/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_7/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_8/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_9/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_10/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_11/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_12/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_13/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_14/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_15/delete_nstate_2_true_history.tree",
+                   "data/2_simulation/missing_state/sim_16/delete_nstate_2_true_history.tree"]
+
+
+i=1
+for (file in files_in){
+  anc_states_stoch_map = readAncestralStateTrace(file)
+  char_map_tree = characterMapTree(tree=tree,
+                 ancestral_state_trace_vector=anc_states_stoch_map,
+                 character_file=files_out_char[i],
+                 posterior_file=files_out_post[i],
+                 burnin=0.0,
+                 num_time_slices=500)
+  i+=1
+}
