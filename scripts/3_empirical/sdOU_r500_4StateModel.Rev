@@ -46,29 +46,55 @@ root_age <- tree.rootAge()
 ########################################
 
 # make the Q matrix
-rate_pr := tree.treeLength() / 10
+#rate_12 := 0.00384
+#rate_21 := 0.0194
+#rate_13 := 0
+#rate_31 := 0
+#rate_14 := 0
+#rate_41 := 0
+#rate_23 := 0.0101
+#rate_32 := 0.00649
+#rate_24 := 0
+#rate_42 := 0
+#rate_34 := 0.0259
+#rate_43 := 0.00159
 
-rate_12 := 0.00384
-rate_21 := 0.0194
-rate_13 := 0
-rate_31 := 0
-rate_14 := 0
-rate_41 := 0
-rate_23 := 0.0101
-rate_32 := 0.00649
-rate_24 := 0
-rate_42 := 0
-rate_34 := 0.0259
-rate_43 := 0.00159
+tol_rate <- 0.00384 + 0.0194 + 0.0101 + 0.00649 + 0.0259 + 0.00159
 
-Q := fnFreeK([rate_12, rate_13, rate_14, rate_21, rate_23, rate_24, rate_31, rate_32, rate_34, rate_41, rate_42, rate_43], rescaled=FALSE)
+rel_12 := 0.00384 / tol_rate
+rel_21 := 0.0194 / tol_rate
+rel_23 := 0.0101 / tol_rate
+rel_32 := 0.00649 / tol_rate
+rel_34 := 0.0259 / tol_rate
+rel_43 := 0.00159 / tol_rate
 
-X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=1, type="Standard", nSites=1)
+rates ~ dnDirichlet([rel_12, rel_21, rel_23, rel_32, rel_34, rel_43]*2500)
+moves.append( mvBetaSimplex( rates, weight=2 ) )
+moves.append( mvDirichletSimplex( rates, weight=2 ) )
+avmvn_rates.addVariable( rates )
+
+rate_12 := rates[1]
+rate_21 := rates[2]
+rate_23 := rates[3]
+rate_32 := rates[4]
+rate_34 := rates[5]
+rate_43 := rates[6]
+
+Q := fnFreeK([rates[1], 0, 0, rates[2], rates[3], 0, 0, rates[4], rates[5], 0, 0, rates[6]], rescaled=TRUE)
+
+lambda ~ dnLognormal(ln(0.005), 0.4)
+moves.append( mvScale(lambda, weight=1.0) )
+avmvn_rates.addVariable(lambda)
+
+moves.append( avmvn_rates )
+
+X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
+
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=400.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=400.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=2000.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=2000.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -140,10 +166,10 @@ mymcmc = mcmc(mymodel, monitors, moves, nruns=1, combine="none")
 
 
 ### run the MCMC ###
-mymcmc.burnin(generations=10000, tuningInterval=100) # comment out after first run
+#mymcmc.burnin(generations=10000, tuningInterval=100) # comment out after first run
 
 #mymcmc.initializeFromCheckpoint("output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state") #comment this out for the first run
-mymcmc.run(generations=50000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state")
+mymcmc.run(generations=100000, tuningInterval=200, checkpointInterval=50, checkpointFile="output/3_empirical/sdOU_r500_4StateModel/run_" + RUN_INDEX + ".state")
 mymcmc.operatorSummary()
 
 ## quit ##

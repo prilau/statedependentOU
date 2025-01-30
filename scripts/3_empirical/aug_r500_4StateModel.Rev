@@ -69,6 +69,13 @@ moves.append( mvBetaSimplex( rates, weight=2 ) )
 moves.append( mvDirichletSimplex( rates, weight=2 ) )
 avmvn_rates.addVariable( rates )
 
+rate_12 := rates[1]
+rate_21 := rates[2]
+rate_23 := rates[3]
+rate_32 := rates[4]
+rate_34 := rates[5]
+rate_43 := rates[6]
+
 Q := fnFreeK([rates[1], 0, 0, rates[2], rates[3], 0, 0, rates[4], rates[5], 0, 0, rates[6]], rescaled=TRUE)
 
 lambda ~ dnLognormal(ln(0.005), 0.4)
