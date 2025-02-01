@@ -26,6 +26,7 @@ for (i in 1:length(files)){
 
 
 # simmap object to rb format
+# simulation is in state 1234, not 0123
 dir_in = "data/2_simulation/missing_state/"
 files <- list.files(dir_in, recursive = TRUE)[grepl(".Rda", list.files(dir_in, recursive = TRUE))]
 for (i in 1:length(files)){
