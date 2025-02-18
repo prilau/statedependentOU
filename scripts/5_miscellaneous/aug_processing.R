@@ -37,4 +37,3 @@ for (i in 1:length(files)){
   simmaps[[1]] <- history2
   simmap_to_stochmap(file_in, file_out, tree, simmaps=simmaps)
 }
-

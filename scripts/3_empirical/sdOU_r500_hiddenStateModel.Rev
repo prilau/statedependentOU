@@ -74,7 +74,7 @@ avmvn_rates.addVariable( rel_rates )
 rate_12 := rel_rates[1]
 rate_21 := rel_rates[2]
 rate_23 := rel_rates[3]
-rate_22 := rel_rates[4]
+rate_32 := rel_rates[4]
 rate_45 := rel_rates[5]
 rate_54 := rel_rates[6]
 rate_56 := rel_rates[7]

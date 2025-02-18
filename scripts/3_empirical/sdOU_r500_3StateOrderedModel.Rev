@@ -62,7 +62,7 @@ avmvn_rates.addVariable( rates )
 rate_12 := rates[1]
 rate_21 := rates[2]
 rate_23 := rates[3]
-rate_22 := rates[4]
+rate_32 := rates[4]
 
 Q := fnFreeK([rates[1], 0, rates[2], rates[3], 0, rates[4]], rescaled=TRUE)
 

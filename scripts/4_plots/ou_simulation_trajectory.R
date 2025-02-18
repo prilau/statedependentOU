@@ -1,5 +1,6 @@
 library(ggplot2)
 library(tidyverse)
+library(grid)
 
 OU <- function(y, sigma2, alpha, theta, dt) {
   dy <- alpha * ( theta - y ) * dt + sigma2 * rnorm(1, mean = 0, sd = dt)
@@ -59,7 +60,7 @@ for (i in 1:17){
   for (j in 1:9999) {
     sim_sx[[i]]$value[j+1] <- OU(y= initialState_sx,
                                  sigma2 = 2,
-                                 alpha = 0.5,
+                                 alpha = 0.4,
                                  theta = 0.2,
                                  dt = 0.001)
     initialState_sx <- sim_sx[[i]]$value[j+1]
@@ -148,7 +149,7 @@ for (i in 1:17){
   for (j in 1:2999) {
     sim_sd[[i]]$value[j+1] <- OU(y= initialState_sd,
                                  sigma2 = 0.5,
-                                 alpha = 0.5,
+                                 alpha = 0.4,
                                  theta = -0.2,
                                  dt = 0.001)
     sim_sd[[i]]$state[j+1] = "1"
@@ -212,3 +213,138 @@ ggsave("sxou.pdf", p1, width = 100, height = 60, units = "mm")
 ggsave("sxou2.pdf", p2, width = 100, height = 60, units = "mm")
 ggsave("sxou3.pdf", p3, width = 100, height = 60, units = "mm")
 ggsave("sdou.png", p4, width = 160, height = 90, units = "mm")
+
+
+
+
+
+sim_sd <- expand.grid(it=1:1000,
+                      branch=1:5,
+                      value=0,
+                      state=NA)
+
+# sigma2, alpha, theta
+par_state0 <- c(10, 2, -1)
+par_state1 <- c(12, 2, 1)
+
+sim_sd[which(sim_sd$it==1),3] <- par_state1[3]
+  
+# state 1: P,(Q,R)
+for (j in 1:80) {
+  sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j)],
+                                                               sigma2 = par_state1[1],
+                                                               alpha  = par_state1[2],
+                                                               theta  = par_state1[3],
+                                                               dt = 0.001)
+  sim_sd$value[which(sim_sd$branch==2 & sim_sd$it==j+1)] <-
+    sim_sd$value[which(sim_sd$branch==3 & sim_sd$it==j+1)] <-
+    sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j+1)]
+}
+sim_sd$state[which(sim_sd$branch %in% c(1,2,3) & sim_sd$it %in% 1:81)] <- "1"
+
+# state 0: P,(Q,R)
+for (j in 81:200) {
+  sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j)],
+                                                               sigma2 = par_state0[1],
+                                                               alpha  = par_state0[2],
+                                                               theta  = par_state0[3],
+                                                               dt = 0.001)
+  sim_sd$value[which(sim_sd$branch==2 & sim_sd$it==j+1)] <-
+    sim_sd$value[which(sim_sd$branch==3 & sim_sd$it==j+1)] <-
+    sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j+1)]
+}
+sim_sd$state[which(sim_sd$branch %in% c(1,2,3) & sim_sd$it %in% 82:201)] <- "0"
+
+# state 0: (Q,R)
+for (j in 201:300) {
+  sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j)],
+                                                               sigma2 = par_state0[1],
+                                                               alpha  = par_state0[2],
+                                                               theta  = par_state0[3],
+                                                               dt = 0.001)
+  sim_sd$value[which(sim_sd$branch==3 & sim_sd$it==j+1)] <-
+    sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j+1)]
+}
+sim_sd$state[which(sim_sd$branch %in% c(1,3) & sim_sd$it %in% 202:301)] <- "0"
+
+# state 0: R
+for (j in 301:999) {
+  sim_sd$value[which(sim_sd$branch==3 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==3 & sim_sd$it==j)],
+                                                               sigma2 = par_state0[1],
+                                                               alpha  = par_state0[2],
+                                                               theta  = par_state0[3],
+                                                               dt = 0.001)
+}
+sim_sd$state[which(sim_sd$branch %in% c(3) & sim_sd$it %in% 302:1000)] <- "0"
+# state 0: Q
+for (j in 301:999) {
+  sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==1 & sim_sd$it==j)],
+                                                               sigma2 = par_state0[1],
+                                                               alpha  = par_state0[2],
+                                                               theta  = par_state0[3],
+                                                               dt = 0.001)
+}
+sim_sd$state[which(sim_sd$branch %in% c(1) & sim_sd$it %in% 302:1000)] <- "0"
+# state 0: P
+for (j in 201:700) {
+  sim_sd$value[which(sim_sd$branch==2 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==2 & sim_sd$it==j)],
+                                                               sigma2 = par_state0[1],
+                                                               alpha  = par_state0[2],
+                                                               theta  = par_state0[3],
+                                                               dt = 0.001)
+}
+sim_sd$state[which(sim_sd$branch %in% c(2) & sim_sd$it %in% 202:701)] <- "0"
+
+# state 1: P
+for (j in 701:999) {
+  sim_sd$value[which(sim_sd$branch==2 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==2 & sim_sd$it==j)],
+                                                               sigma2 = par_state1[1],
+                                                               alpha  = par_state1[2],
+                                                               theta  = par_state1[3],
+                                                               dt = 0.001)
+}
+sim_sd$state[which(sim_sd$branch %in% c(2) & sim_sd$it %in% 702:1000)] <- "1"
+
+# state 1: (M,N)
+for (j in 1:500) {
+  sim_sd$value[which(sim_sd$branch==4 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==4 & sim_sd$it==j)],
+                                                               sigma2 = par_state1[1],
+                                                               alpha  = par_state1[2],
+                                                               theta  = par_state1[3],
+                                                               dt = 0.001)
+  sim_sd$value[which(sim_sd$branch==5 & sim_sd$it==j+1)] <-
+    sim_sd$value[which(sim_sd$branch==4 & sim_sd$it==j+1)]
+}
+sim_sd$state[which(sim_sd$branch %in% c(4,5) & sim_sd$it %in% 1:501)] <- "1"
+# state 1: M
+for (j in 501:999) {
+  sim_sd$value[which(sim_sd$branch==4 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==4 & sim_sd$it==j)],
+                                                               sigma2 = par_state1[1],
+                                                               alpha  = par_state1[2],
+                                                               theta  = par_state1[3],
+                                                               dt = 0.001)
+}
+sim_sd$state[which(sim_sd$branch %in% c(4) & sim_sd$it %in% 502:1000)] <- "1"
+# state 1: N
+for (j in 501:999) {
+  sim_sd$value[which(sim_sd$branch==5 & sim_sd$it==j+1)] <- OU(y = sim_sd$value[which(sim_sd$branch==5 & sim_sd$it==j)],
+                                                               sigma2 = par_state1[1],
+                                                               alpha  = par_state1[2],
+                                                               theta  = par_state1[3],
+                                                               dt = 0.001)
+}
+sim_sd$state[which(sim_sd$branch %in% c(5) & sim_sd$it %in% 502:1000)] <- "1"
+
+plot_dummy5 <- sim_sd %>% 
+  #filter(branch==1) %>% 
+  ggplot(aes(x=it,y=value, group = branch, colour = state)) +
+  geom_line() +
+  scale_color_manual(values=c("#44aa99", "#882255")) + 
+  theme_minimal() + 
+  theme(legend.position = "none",
+        axis.title = element_blank(),
+        axis.text = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+plot_dummy5
+ggsave("../sdOU_local/thesis/figures/dummy_5taxa_trajectory.pdf", plot_dummy5, width = 8, height = 6)
