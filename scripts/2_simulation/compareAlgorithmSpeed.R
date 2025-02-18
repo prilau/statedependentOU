@@ -53,9 +53,15 @@ stv <- runif(n=2*nrow(grid), 1, 10)
 theta <- runif(n=2*nrow(grid), -10, 10)
 set.seed(NULL)
 
-write_tsv(as.data.frame(halflife), file = "data/2_simulation/algorithm_speed/halflife.txt", col_names = FALSE)
-write_tsv(as.data.frame(stv), file = "data/2_simulation/algorithm_speed/stv.txt", col_names = FALSE)
-write_tsv(as.data.frame(theta), file = "data/2_simulation/algorithm_speed/theta.txt", col_names = FALSE)
+pars <- data.frame()
+pars$halflife1 <- halflife[1:nrow(grid)]
+pars$halflife2 <- halflife[nrow(grid)+1:2*nrow(grid)]
+pars$stv1 <- stv[1:nrow(grid)]
+pars$stv2 <- stv[nrow(grid)+1:2*nrow(grid)]
+pars$theta1 <- theta[1:nrow(grid)]
+pars$theta2 <- theta[nrow(grid)+1:2*nrow(grid)]
+
+write_tsv(pars, file = "data/2_simulation/algorithm_speed/pars.txt", col_names = FALSE)
 
 bar = txtProgressBar(style=3, width=40)
 for(i in 1:nrow(grid)) {
@@ -82,7 +88,7 @@ rownames(Q) = colnames(Q) = 1:2
 
 bar = txtProgressBar(style=3, width=40)
 for(i in 1:nrow(grid)) {
-  if(grid[i,1]!=1e+05) next
+  if(grid[i,1]==1e+05) next
   #if(!is.na(grid[i,12])) next
   
   this_row = grid[i,]
@@ -109,7 +115,7 @@ for(i in 1:nrow(grid)) {
     cont_list[[tip]] <- cont[j]
   }
   
-  write.nexus.data(cont_list, paste0(this_dir, "/t", this_tree, "_cont.nex"))
+  write.nexus.data(cont_list, paste0(this_dir, "/t", this_tree, "_cont.nex"), format = "continuous")
   
   #this_alphas <- log(2) / c(this_row[[3]], this_row[[4]])
   #this_sigma2s <- 2 * this_alphas * c(this_row[[5]], this_row[[6]])
