@@ -53,6 +53,10 @@ stv <- runif(n=2*nrow(grid), 1, 10)
 theta <- runif(n=2*nrow(grid), -10, 10)
 set.seed(NULL)
 
+write_tsv(as.data.frame(halflife), file = "data/2_simulation/algorithm_speed/halflife.txt", col_names = FALSE)
+write_tsv(as.data.frame(stv), file = "data/2_simulation/algorithm_speed/stv.txt", col_names = FALSE)
+write_tsv(as.data.frame(theta), file = "data/2_simulation/algorithm_speed/theta.txt", col_names = FALSE)
+
 bar = txtProgressBar(style=3, width=40)
 for(i in 1:nrow(grid)) {
   # halflives
@@ -78,8 +82,8 @@ rownames(Q) = colnames(Q) = 1:2
 
 bar = txtProgressBar(style=3, width=40)
 for(i in 1:nrow(grid)) {
-  if(grid[i,1]!=2e+02) next
-  if(!is.na(grid[i,12])) next
+  if(grid[i,1]!=1e+05) next
+  #if(!is.na(grid[i,12])) next
   
   this_row = grid[i,]
   this_num_tip      = this_row[[1]]
@@ -95,32 +99,45 @@ for(i in 1:nrow(grid)) {
   set.seed(1503)
   cat("simulating regime history.\n")
   history = sim.history(tree, rate * Q, nsim=1, message=FALSE)
+  write.simmap(history, file = paste0(this_dir, "/t", this_tree, "_simmap.tre"))
   
   set.seed(i)
   cont <- rnorm(this_num_tip, mean=0, sd=4)
-  names(cont) <- paste0("t", 1:this_num_tip)
-
+  cont_list <- list()
+  for (j in 1:this_num_tip){
+    tip <- paste0("t", j)
+    cont_list[[tip]] <- cont[j]
+  }
   
-  this_alphas <- log(2) / c(this_row[[3]], this_row[[4]])
-  this_sigma2s <- 2 * this_alphas * c(this_row[[5]], this_row[[6]])
-  this_thetas <- c(this_row[[7]], this_row[[8]])
-  names(this_alphas) <- names(this_sigma2s) <- names(this_thetas) <- c("1", "2")
+  write.nexus.data(cont_list, paste0(this_dir, "/t", this_tree, "_cont.nex"))
+  
+  #this_alphas <- log(2) / c(this_row[[3]], this_row[[4]])
+  #this_sigma2s <- 2 * this_alphas * c(this_row[[5]], this_row[[6]])
+  #this_thetas <- c(this_row[[7]], this_row[[8]])
+  #names(this_alphas) <- names(this_sigma2s) <- names(this_thetas) <- c("1", "2")
   
   #cat("running pruning algorithm.\n")
   #start.time <- Sys.time()
   #grid[i,9] <- sd_logL_pruning(history, cont, this_alphas, this_sigma2s, this_thetas)
   #end.time <- Sys.time()
   #grid[i,10] <- end.time - start.time
-  cat("running vcv algorithm.\n")
-  if(grid[i,1]==1e+04) next
-  start.time <- Sys.time()
-  grid[i,11] <- sd_logL_vcv(history, cont, this_alphas, this_sigma2s, this_thetas)
-  end.time <- Sys.time()
-  grid[i,12] <- end.time - start.time
+  #cat("running vcv algorithm.\n")
+  #if(grid[i,1]==1e+04) next
+  #start.time <- Sys.time()
+  #grid[i,11] <- sd_logL_vcv(history, cont, this_alphas, this_sigma2s, this_thetas)
+  #end.time <- Sys.time()
+  #grid[i,12] <- end.time - start.time
   
   # increment the progress bar
   setTxtProgressBar(bar, i / nrow(grid))
 }
+
+
+
+
+############
+# plotting #
+############
 
 # Calculate intercept and slope of regression line
 grid_tmp <- grid %>% filter(!is.na(time_pruning)) %>% 
