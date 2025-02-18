@@ -84,7 +84,7 @@ for(i in 1:nrow(grid)) {
 
 Q = matrix(1, 2, 2)
 diag(Q) = -1
-rownames(Q) = colnames(Q) = 1:2
+rownames(Q) = colnames(Q) = 0:1
 
 bar = txtProgressBar(style=3, width=40)
 for(i in 1:nrow(grid)) {
