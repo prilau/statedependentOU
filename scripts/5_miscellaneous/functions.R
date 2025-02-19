@@ -5009,6 +5009,7 @@ sd_logL_pruning <- function(tree, continuousChar, alpha, sigma2, theta){
 #                                                 #
 #                  Stateless vcv                  #
 #                                                 #
+###################################################
 logL_vcv <- function(tree, continuousChar, alpha, sigma2, theta){
   ntip <- length(tree$tip.label)
   mrca1 <- ape::mrca(tree) # get the ancestral node label for each pair of tips
