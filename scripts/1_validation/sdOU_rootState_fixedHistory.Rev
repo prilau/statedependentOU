@@ -94,7 +94,7 @@ mymodel = model(Y)
 
 mymcmc = mcmc(mymodel, monitors, moves)
 
-validation = validationAnalysis( mymcmc, NUM_VALIDATION_REPLICATES, directory="output/1_validation/fixedHistory" )
+validation = validationAnalysis( mymcmc, NUM_VALIDATION_REPLICATES, directory="output/1_validation/sdOU_fixedHistory" )
 validation.burnin(generations=0.1*NUM_MCMC_ITERATIONS,tuningInterval=100)
 validation.run(generations=NUM_MCMC_ITERATIONS)
 validation.summarize(coverageProbability=0.9)

@@ -3,7 +3,7 @@ library(phytools)
 library(geiger)
 library(TESS)
 library(tidyverse)
-
+source("scripts/5_miscellaneous/functions.R")
 
 # sim for false positive
 num_sim = 1000

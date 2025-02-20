@@ -6,7 +6,7 @@ library(slouch)
 library(tibble) 
 library(tidyverse)
 library(ggdist)
-source("scripts/5_miscellaneous/functions.R")
+#source("scripts/5_miscellaneous/functions.R")
 
 # simulate trees of different sizes
 num_tips   = c(100, 200, 500, 1000, 5000, 10000, 100000)
