@@ -26,7 +26,7 @@ avmvn_ou = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
 characterCont <- 1
 characterDisc <- 1
 
-cont <- readContinuousCharacterData("data/1_validation/mammal/mammal_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/mammal/mammal_r50_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
@@ -94,7 +94,7 @@ mymodel = model(Y)
 
 mymcmc = mcmc(mymodel, monitors, moves)
 
-validation = validationAnalysis( mymcmc, NUM_VALIDATION_REPLICATES, directory="output/1_validation/sdOU_fixedHistory" )
+validation = validationAnalysis( mymcmc, NUM_VALIDATION_REPLICATES, directory="output/1_validation/sdOU_rootState_fixedHistory" )
 validation.burnin(generations=0.1*NUM_MCMC_ITERATIONS,tuningInterval=100)
 validation.run(generations=NUM_MCMC_ITERATIONS)
 validation.summarize(coverageProbability=0.9)

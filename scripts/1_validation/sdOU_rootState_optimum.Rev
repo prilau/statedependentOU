@@ -28,7 +28,7 @@ avmvn_ou = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
 characterCont <- 1
 characterDisc <- 1
 
-cont <- readContinuousCharacterData("data/1_validation/mammal/mammal_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/mammal/mammal_r50_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
