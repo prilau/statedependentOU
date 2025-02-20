@@ -109,6 +109,7 @@ bar = txtProgressBar(style=3, width=40)
 for(i in 1:nrow(grid)) {
   this_row = grid[i,]
   this_num_tip = this_row[[1]]
+  this_tree = this_row[[2]]
   this_dir = paste0("data/2_simulation/algorithm_speed/n", this_num_tip)
   history <- read.simmap(paste0(this_dir, "/t", this_tree, "_simmap.tre"), format="phylip")
   
