@@ -46,6 +46,9 @@ grid = expand.grid(num_tips=num_tips, tree=1:reps, lik_rb=NA, time_rb=NA,
 #}
 
 # I use fixed OU parameters since the speed of likelihood calculation is not dependent on parameter values
+alpha <- c()
+sigma2 <- c()
+theta <- c()
 alpha[1] <- 1
 alpha[2] <- 0.1
 sigma2[1] <- 4
@@ -58,33 +61,33 @@ names(alpha) <- names(sigma2) <- names(theta) <- c("0", "1")
 # simulate 1 discrete regime history per tree
 
 
-Q = matrix(1, 2, 2)
-diag(Q) = -1
-rownames(Q) = colnames(Q) = 0:1
-
-bar = txtProgressBar(style=3, width=40)
-for(i in 1:nrow(grid)) {
-  #if(grid[i,1]!=1e+05) next
-
-  this_row = grid[i,]
-  this_num_tip      = this_row[[1]]
-  this_tree       = this_row[[2]]
-  
-  this_dir = paste0("data/2_simulation/algorithm_speed/n", this_num_tip)
-  if(paste0("t", this_tree, "_simmap.tre") %in% list.files(this_dir)) next
-
-  tree <- read.tree(paste0(this_dir, "/t", this_tree, ".tre"))
-  cat("successfully read tree.\n")
-  
-  tree_length = sum(tree$edge.length)
-  rate = 100 / tree_length
-  
-  set.seed(1503)
-  cat("simulating regime history.\n")
-  history = sim.history(tree, rate * Q, nsim=1, message=FALSE)
-  write.simmap(history, file = paste0(this_dir, "/t", this_tree, "_simmap.tre"))
-  setTxtProgressBar(bar, i / nrow(grid))
-}
+#Q = matrix(1, 2, 2)
+#diag(Q) = -1
+#rownames(Q) = colnames(Q) = 0:1
+#
+#bar = txtProgressBar(style=3, width=40)
+#for(i in 1:nrow(grid)) {
+#  #if(grid[i,1]!=1e+05) next
+#
+#  this_row = grid[i,]
+#  this_num_tip      = this_row[[1]]
+#  this_tree       = this_row[[2]]
+#  
+#  this_dir = paste0("data/2_simulation/algorithm_speed/n", this_num_tip)
+#  if(paste0("t", this_tree, "_simmap.tre") %in% list.files(this_dir)) next
+#
+#  tree <- read.tree(paste0(this_dir, "/t", this_tree, ".tre"))
+#  cat("successfully read tree.\n")
+#  
+#  tree_length = sum(tree$edge.length)
+#  rate = 100 / tree_length
+#  
+#  set.seed(1503)
+#  cat("simulating regime history.\n")
+#  history = sim.history(tree, rate * Q, nsim=1, message=FALSE)
+#  write.simmap(history, file = paste0(this_dir, "/t", this_tree, "_simmap.tre"))
+#  setTxtProgressBar(bar, i / nrow(grid))
+#}
 
 # I use same continuous trait for tree replicates with same num_tips since the speed of likelihood calculation is not dependent on the trait values. 
 #for(i in num_tips) {
@@ -98,28 +101,55 @@ for(i in 1:nrow(grid)) {
 #  }
 #  write.nexus.data(cont_list, paste0(this_dir, "/Continuous.nex"), format = "continuous")
 #}
-  #this_alphas <- log(2) / c(this_row[[3]], this_row[[4]])
-  #this_sigma2s <- 2 * this_alphas * c(this_row[[5]], this_row[[6]])
-  #this_thetas <- c(this_row[[7]], this_row[[8]])
-  #names(this_alphas) <- names(this_sigma2s) <- names(this_thetas) <- c("1", "2")
+
+
+#timetaken <- tibble(rb=NA, rPrune=NA, rVcv=NA)
+
+bar = txtProgressBar(style=3, width=40)
+for(i in 1:nrow(grid)) {
+  this_row = grid[i,]
+  this_num_tip = this_row[[1]]
+  this_dir = paste0("data/2_simulation/algorithm_speed/n", this_num_tip)
+  history <- read.simmap(paste0(this_dir, "/t", this_tree, "_simmap.tre"), format="phylip")
   
-  #cat("running pruning algorithm.\n")
-  #start.time <- Sys.time()
-  #grid[i,9] <- sd_logL_pruning(history, cont, alpha, sigma2, theta)
-  #end.time <- Sys.time()
-  #grid[i,10] <- end.time - start.time
-  #cat("running vcv algorithm.\n")
-  #if(grid[i,1]==1e+04) next
-  #start.time <- Sys.time()
-  #grid[i,11] <- sd_logL_vcv(history, cont, alpha, sigma2, theta)
-  #end.time <- Sys.time()
-  #grid[i,12] <- end.time - start.time
+  set.seed(1503)
+  cont <- rnorm(this_num_tip, mean=0, sd=4)
+  names(cont) <- paste0("t", 1:this_num_tip)
+  
+  cat("running pruning algorithm.\n")
+  start.time <- Sys.time()
+  grid[i,5] <- sd_logL_pruning(history, cont, alpha, sigma2, theta)
+  end.time <- Sys.time()
+  grid[i,6] <- end.time - start.time
   
   # increment the progress bar
-#setTxtProgressBar(bar, i / nrow(grid))
+  setTxtProgressBar(bar, i / nrow(grid))
+}
 
+write.csv(grid, file="output/2_simulation/algorithm_speed/r_pruning.csv")
 
+bar = txtProgressBar(style=3, width=40)
+for(i in 1:nrow(grid)) {
+  this_row = grid[i,]
+  this_num_tip = this_row[[1]]
+  this_dir = paste0("data/2_simulation/algorithm_speed/n", this_num_tip)
+  history <- read.simmap(paste0(this_dir, "/t", this_tree, "_simmap.tre"), format="phylip")
+  
+  set.seed(1503)
+  cont <- rnorm(this_num_tip, mean=0, sd=4)
+  names(cont) <- paste0("t", 1:this_num_tip)
+  
+  cat("running vcv algorithm.\n")
+  start.time <- Sys.time()
+  grid[i,7] <- sd_logL_vcv(history, cont, alpha, sigma2, theta)
+  end.time <- Sys.time()
+  grid[i,8] <- end.time - start.time
+  
+  # increment the progress bar
+  setTxtProgressBar(bar, i / nrow(grid))
+}
 
+write.csv(grid, file="output/2_simulation/algorithm_speed/r_vcv.csv")
 
 
 #############

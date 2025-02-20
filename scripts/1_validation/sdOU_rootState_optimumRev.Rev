@@ -12,12 +12,14 @@
 ## Global settings
 
 NUM_VALIDATION_REPLICATES = 1000
-NUM_MCMC_ITERATIONS       = 25000
+NUM_MCMC_ITERATIONS       = 50000
 
 
 # create the monitor and moves vectors
 moves     = VectorMoves()
 monitors  = VectorMonitors()
+avmvn_rates = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
+avmvn_ou = mvAVMVN(weight=20, waitBeforeLearning=500, waitBeforeUsing=1000)
 
 
 #######################
@@ -26,11 +28,11 @@ monitors  = VectorMonitors()
 characterCont <- 1
 characterDisc <- 1
 
-cont <- readContinuousCharacterData("data/1_validation/artiodactyla/artiodactyla_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/mammal/mammal_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/1_validation/artiodactyla/artiodactyla_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/mammal/mammal_binary_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -43,26 +45,31 @@ taxa <- cont.taxa()
 # Tree model #
 ##############
 
-tree <- readTrees( "data/1_validation/artiodactyla/artiodactyla.tree" )[1]
-#charHist <- readCharacterHistory( "data/1_validation/artiodactyla/artiodactyla.trees" )[1]
+tree <- readTrees( "data/1_validation/mammal/mammal_r50_TH1.tree" )[1]
 
 ntips <- tree.ntips()
 nbranches <- 2 * ntips - 2
 
 # make the Q matrix
-Q <- fnJC(num_disc_states)
+rates ~ dnDirichlet([1,1]*100)
+moves.append( mvBetaSimplex( rates, weight=2 ) )
+moves.append( mvDirichletSimplex( rates, weight=2 ) )
+avmvn_rates.addVariable( rates )
 
-# make the transition rate parameter
-lambda ~ dnLoguniform(1e-5, 2)
+Q := fnFreeK(rates, rescaled=TRUE)
+
+lambda ~ dnLognormal(ln(0.05), 0.4)
 moves.append( mvScale(lambda, weight=1.0) )
+avmvn_rates.addVariable( lambda )
+
 
 # make the data-augmented CTCM model
 X ~ dnPhyloCTMCDASiteIID(tree, Q, branchRates=lambda, type="Standard", nSites=1)
 X.clamp(disc)
 
 # include proposals for the discrete character history
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=20.0) )
-moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=20.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="node",   proposal="rejection", weight=40.0) )
+moves.append( mvCharacterHistory(ctmc=X, qmap_site=Q, graph="branch", proposal="rejection", weight=40.0) )
 
 # keep track of the number of transitions
 for(i in 1:nbranches) {
@@ -81,12 +88,18 @@ char_hist := X.characterHistories()
 for (i in 1:num_disc_states){
   theta[i] ~ dnUniform(-10, 15)
   moves.append(mvSlide(theta[i], weight = 1.0) )
+  avmvn_ou.addVariable(theta[i])
 
-  sigma2[i] ~ dnLoguniform(1e-5, 10)
-  moves.append(mvScale(sigma2[i], weight = 1.0) )
+  halflife[i] ~ dnLognormal(0, 0.587)
+  moves.append(mvScale(halflife[i], weight = 1.0) )
+  avmvn_ou.addVariable(halflife[i])
 
-  alpha[i] ~ dnExponential( abs(27.3 / 2.0 / ln(2.0)) )
-  moves.append(mvScale(alpha[i], weight = 1.0) )
+  stv[i] ~ dnLognormal(ln(0.245), 0.587405)
+  moves.append(mvScale(stv[i], weight = 1.0) )
+  avmvn_ou.addVariable(stv[i])
+
+  alpha[i] := ln(2) / halflife[i] 
+  sigma2[i] := 2 * alpha[i] * stv[i]
 }
 
 

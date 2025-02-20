@@ -12,7 +12,7 @@
 ## Global settings
 
 NUM_VALIDATION_REPLICATES = 1000
-NUM_MCMC_ITERATIONS       = 25000
+NUM_MCMC_ITERATIONS       = 50000
 
 
 # create the monitor and moves vectors
@@ -26,11 +26,11 @@ monitors  = VectorMonitors()
 characterCont <- 1
 characterDisc <- 1
 
-cont <- readContinuousCharacterData("data/1_validation/artiodactyla/artiodactyla_Continuous.nex")
+cont <- readContinuousCharacterData("data/1_validation/mammal/mammal_Continuous.nex")
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/1_validation/artiodactyla/artiodactyla_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/mammal/mammal_binary_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -43,7 +43,7 @@ taxa <- cont.taxa()
 # Tree model #
 ##############
 
-tree <- readTrees( "data/1_validation/artiodactyla/artiodactyla.tree" )[1]
+tree <- readTrees( "data/1_validation/mammal/mammal_r50_TH1.tree" )[1]
 #charHist <- readCharacterHistory( "data/1_validation/artiodactyla/artiodactyla.trees" )[1]
 
 ntips <- tree.ntips()

@@ -1,4 +1,5 @@
 library(ape)
+library(phytools)
 library(tidyverse)
 
 # since I obtained the phylogeny and the trait data from different sources
@@ -72,9 +73,28 @@ write.nexus.data(mammal_cont, "data/3_empirical/mammal_log_kg_n3500_Continuous.n
 # and the thesis uses a different trait dataset as source
 # let's search for taxa that intersect with that dataset as well
 
-set.seed(1234) # I did not set seed when I first made this tree
+# 50-taxa tree for validation
+set.seed(1234)
+tree_r50 <- keep.tip(tree, sample(trait$Binomial.1.2, 50)) 
+trait_r50 <- trait %>% filter(Binomial.1.2 %in% tree_r50$tip.label)
+mammal_diet2_r50 <- list()
+mammal_cont_r50 <- list()
+for (i in 1:nrow(trait_r50)){
+  sp <- trait_r50$Binomial.1.2[i]
+  mammal_diet2_r50[[sp]] <- ifelse(trait_r50$diet4[i] <= 1, 0, 1)
+  mammal_cont_r50[[sp]]  <- trait_r50$log_mass_kg[i]
+}
+tree_r50$edge.length <- tree_r50$edge.length / max(node.depth.edgelength(tree_r50))
+# save characters
+write.nexus.data(mammal_diet2_r50, "data/1_validation/mammal/mammal_diet2_r50_Discrete.nex", format = "standard")
+write.nexus.data(mammal_cont_r50, "data/1_validation/mammal/mammal_log_kg_r50_Continuous.nex", format = "continuous")
+# save tree
+write.tree(tree_r50, file="data/1_validation/mammal/mammal_TH1_r50.tre")
+simmaps <- make.simmap(tree_r50, x = mammal_diet2_r50 %>% unlist, model = "ARD", nsim=1)
+write.simmap(simmaps, file = "data/1_validation/mammal/mammal_r50_simmap.tre")
+
 #tree_r500 <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
-tree_r6 <- keep.tip(tree, sample(trait$Binomial.1.2, 6)) 
+
 tips_r500 <- sample(trait_picky$Binomial.1.2, 500)
 tree_r500 <- keep.tip(tree, tips_r500)
 max(node.depth.edgelength(tree))

@@ -1,0 +1,59 @@
+#NEXUS
+[Data written by write.nexus.data.R, Thu Feb 20 15:51:14 2025]
+BEGIN DATA;
+  DIMENSIONS NTAX=50 NCHAR=1;
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="01";
+  MATRIX
+    allactaga_balikunica          0
+    antechinomys_laniger          1
+    barbastella_leucomelas        1
+    beatragus_hunteri             0
+    brachyphylla_nana             0
+    bradypus_variegatus           0
+    carollia_sowelli              0
+    chaetodipus_penicillatus      0
+    corynorhinus_rafinesquii      1
+    crocidura_hikmiya             1
+    crocidura_luna                1
+    ctenomys_sociabilis           0
+    elephantulus_myurus           1
+    elephantulus_rufescens        1
+    eonycteris_spelaea            0
+    eulemur_rufus                 0
+    eumops_hansae                 1
+    eupleres_goudotii             1
+    gerbilliscus_leucogaster      0
+    glauconycteris_egeria         1
+    heteromys_oresterus           0
+    hipposideros_demissus         1
+    leggadina_forresti            0
+    martes_foina                  1
+    meriones_chengi               0
+    miopithecus_ogouensis         0
+    mustela_nivalis               1
+    myotis_punicus                1
+    neotoma_magister              0
+    ochotona_alpina               0
+    oxymycterus_nasutus           1
+    papio_papio                   0
+    platyrrhinus_aurarius         0
+    pogonomys_loriae              0
+    propithecus_tattersalli       0
+    pteropus_hypomelanus          0
+    puma_concolor                 1
+    rupicapra_pyrenaica           0
+    saguinus_mystax               0
+    saimiri_boliviensis           0
+    sciurus_variegatoides         0
+    solisorex_pearsoni            1
+    sorex_trowbridgii             1
+    styloctenium_mindorensis      0
+    stylodipus_andrewsi           0
+    tamias_striatus               0
+    trachypithecus_germaini       0
+    tylonycteris_pachypus         1
+    uroderma_magnirostrum         0
+    vespadelus_vulturnus          1
+  ;
+END;
+

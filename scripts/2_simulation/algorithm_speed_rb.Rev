@@ -1,0 +1,83 @@
+###############################################
+# RevBayes Example: Testing alogirithm speed
+#
+#
+# authors: Priscilla Lau
+#
+################################################
+
+#######################
+# Reading in the Data #
+#######################
+
+### Read in the tree
+num_tips <- [100, 200, 500, 1000, 5000, 10000, 100000]
+
+alpha[1] <- 1
+alpha[2] <- 0.1
+sigma2[1] <- 4
+sigma2[2] <- 8
+theta[1] <- 5
+theta[2] <- -5
+
+it <- 0
+for (j in num_tips){
+  character <- 1
+  cont <- readContinuousCharacterData("data/2_simulation/algorithm_speed/n" + j + "/Continuous.nex")
+  cont.excludeAll()
+  cont.includeCharacter(character)
+  for (i in 1:10) {
+    char_hist[i] = readCharacterHistory("data/2_simulation/algorithm_speed/n" + j + "/t" + i + "_simmap.tre")
+  }
+
+    Y1 ~ dnPhyloOUSD(char_hist[1], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y1.clamp(cont)
+    Y2 ~ dnPhyloOUSD(char_hist[2], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y2.clamp(cont)
+    Y3 ~ dnPhyloOUSD(char_hist[3], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y3.clamp(cont)
+    Y4 ~ dnPhyloOUSD(char_hist[4], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y4.clamp(cont)
+    Y5 ~ dnPhyloOUSD(char_hist[5], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y5.clamp(cont)
+    Y6 ~ dnPhyloOUSD(char_hist[6], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y6.clamp(cont)
+    Y7 ~ dnPhyloOUSD(char_hist[7], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y7.clamp(cont)
+    Y8 ~ dnPhyloOUSD(char_hist[8], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y8.clamp(cont)
+    Y9 ~ dnPhyloOUSD(char_hist[9], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y9.clamp(cont)
+    Y10 ~ dnPhyloOUSD(char_hist[10], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
+    Y10.clamp(cont)
+
+    time_begin <- time("milliseconds")
+    p[it+1] <- Y1.lnProbability()
+    p[it+2] <- Y2.lnProbability()
+    p[it+3] <- Y3.lnProbability()
+    p[it+4] <- Y4.lnProbability()
+    p[it+5] <- Y5.lnProbability()
+    p[it+6] <- Y6.lnProbability()
+    p[it+7] <- Y7.lnProbability()
+    p[it+8] <- Y8.lnProbability()
+    p[it+9] <- Y9.lnProbability()
+    p[it+10] <- Y10.lnProbability()
+    time_end <- time("milliseconds")
+    time_taken[it/10+1] <- time_end - time_begin
+  
+  it += 10
+}
+
+writeDelimitedCharacterData(filename="output/2_simulation/algorithm_speed/rb_timetaken.txt",
+                            data=time_taken, separator=",")
+writeDelimitedCharacterData(filename="output/2_simulation/algorithm_speed/rb_lik.txt",
+                            data=p, separator=",")
+
+
+## quit ##
+q()
+
+
+
+
+#halflives x scale by tree height

@@ -1,0 +1,59 @@
+#NEXUS
+[Data written by write.nexus.data.R, Thu Feb 20 15:51:14 2025]
+BEGIN DATA;
+  DIMENSIONS NTAX=50 NCHAR=1;
+  FORMAT DATATYPE=CONTINUOUS MISSING=? GAP=- INTERLEAVE=NO;
+  MATRIX
+    allactaga_balikunica          -2.62416871712151
+    antechinomys_laniger          -3.68887945411394
+    barbastella_leucomelas        -4.19306053516126
+    beatragus_hunteri             4.38202663467388
+    brachyphylla_nana             -3.32980738557548
+    bradypus_variegatus           1.4667216102325
+    carollia_sowelli              -4.1043948980756
+    chaetodipus_penicillatus      -4.08044165705311
+    corynorhinus_rafinesquii      -4.69948086545933
+    crocidura_hikmiya             -4.8665349501225
+    crocidura_luna                -4.23360662955561
+    ctenomys_sociabilis           -1.56064774826467
+    elephantulus_myurus           -2.94884868765514
+    elephantulus_rufescens        -3.28341434600577
+    eonycteris_spelaea            -2.84558961512427
+    eulemur_rufus                 0.864997437486605
+    eumops_hansae                 -4.19306053516126
+    eupleres_goudotii             1.09861228866811
+    gerbilliscus_leucogaster      -2.6200393237795
+    glauconycteris_egeria         -4.87960703168985
+    heteromys_oresterus           -2.59293739400171
+    hipposideros_demissus         -3.69288747551148
+    leggadina_forresti            -3.91202300542815
+    martes_foina                  0.432301762061724
+    meriones_chengi               -2.39360449138121
+    miopithecus_ogouensis         0.245531070191839
+    mustela_nivalis               -1.98413136187551
+    myotis_punicus                -3.75075485783202
+    neotoma_magister              -0.885519073207401
+    ochotona_alpina               -1.33560124680437
+    oxymycterus_nasutus           -2.68824757380603
+    papio_papio                   2.74085292706776
+    platyrrhinus_aurarius         -3.37552963491358
+    pogonomys_loriae              -2.35282630943079
+    propithecus_tattersalli       1.25276296849537
+    pteropus_hypomelanus          -0.848398465831237
+    puma_concolor                 3.94352167248752
+    rupicapra_pyrenaica           3.40119738166216
+    saguinus_mystax               -0.481266821524446
+    saimiri_boliviensis           -0.486133011175619
+    sciurus_variegatoides         -0.723606388044654
+    solisorex_pearsoni            -2.70905070143579
+    sorex_trowbridgii             -5.5727542122498
+    styloctenium_mindorensis      -1.55116900431012
+    stylodipus_andrewsi           -2.81341071676004
+    tamias_striatus               -2.19014966366426
+    trachypithecus_germaini       1.97116009759435
+    tylonycteris_pachypus         -5.62682143352007
+    uroderma_magnirostrum         -4.08044165705311
+    vespadelus_vulturnus          -5.49676830527187
+  ;
+END;
+
