@@ -45,7 +45,7 @@ taxa <- cont.taxa()
 # Tree model #
 ##############
 
-tree <- readTrees( "data/1_validation/mammal/mammal_r50_TH1.tree" )[1]
+tree <- readTrees( "data/1_validation/mammal/mammal_r50_TH1.tre" )[1]
 
 ntips <- tree.ntips()
 nbranches <- 2 * ntips - 2
