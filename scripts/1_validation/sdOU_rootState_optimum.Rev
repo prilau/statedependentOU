@@ -90,18 +90,17 @@ for (i in 1:num_disc_states){
   moves.append(mvSlide(theta[i], weight = 1.0) )
   avmvn_ou.addVariable(theta[i])
 
-  halflife[i] ~ dnLognormal(0, 0.587)
-  moves.append(mvScale(halflife[i], weight = 1.0) )
-  avmvn_ou.addVariable(halflife[i])
+  alpha[i] ~ dnLognormal(1/(2*ln(2)) , 0.587405)
+  moves.append(mvScale(alpha[i], weight = 1.0) )
+  avmvn_ou.addVariable(alpha[i])
 
-  stv[i] ~ dnLognormal(ln(0.245), 0.587405)
-  moves.append(mvScale(stv[i], weight = 1.0) )
-  avmvn_ou.addVariable(stv[i])
+  sigma2[i] ~ dnLogUniform(1e-10, 1)
+  moves.append(mvScale(sigma2[i], weight = 1.0) )
+  avmvn_ou.addVariable(sigma2[i])
 
-  alpha[i] := ln(2) / halflife[i] 
-  sigma2[i] := 2 * alpha[i] * stv[i]
 }
 
+moves.append( avmvn_ou )
 
 
 ###################
