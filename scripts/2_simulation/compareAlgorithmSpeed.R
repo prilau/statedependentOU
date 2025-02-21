@@ -441,17 +441,17 @@ names(alpha) <- names(sigma2) <- names(theta) <- c("0", "1")
 #}
 
 # I use same continuous trait for tree replicates with same num_tips since the speed of likelihood calculation is not dependent on the trait values. 
-#for(i in num_tips) {
-#  this_dir = paste0("data/2_simulation/algorithm_speed/n", i)
-#  set.seed(1503)
-#  cont <- rnorm(num_tips, mean=0, sd=4)
-#  cont_list <- list()
-#  for (j in 1:this_num_tip){
-#    tip <- paste0("t", j)
-#    cont_list[[tip]] <- cont[j]
-#  }
-#  write.nexus.data(cont_list, paste0(this_dir, "/Continuous.nex"), format = "continuous")
-#}
+for(i in num_tips) {
+  this_dir = paste0("data/2_simulation/algorithm_speed/n", i)
+  set.seed(1503)
+  cont <- rnorm(i, mean=0, sd=4)
+  cont_list <- list()
+  for (j in 1:i){
+    tip <- paste0("t", j)
+    cont_list[[tip]] <- cont[j]
+  }
+  write.nexus.data(cont_list, paste0(this_dir, "/Continuous.nex"), format = "continuous")
+}
 
 
 #timetaken <- tibble(rb=NA, rPrune=NA, rVcv=NA)
