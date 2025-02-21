@@ -13,12 +13,12 @@
 ### Read in the tree
 num_tips <- ["100", "200", "500", "1000", "5000", "10000", "1e+05"]
 
-alpha[1] <- 1
-alpha[2] <- 0.1
-sigma2[1] <- 4
-sigma2[2] <- 8
-theta[1] <- 5
-theta[2] <- -5
+alpha[1] <- abs(1.0)
+alpha[2] <- abs(0.1)
+sigma2[1] <- abs(4.0)
+sigma2[2] <- abs(8.0)
+theta[1] <- 5.0
+theta[2] <- -5.0
 
 it <- 0
 for (j in num_tips){
