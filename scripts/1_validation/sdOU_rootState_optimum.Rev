@@ -94,7 +94,7 @@ for (i in 1:num_disc_states){
   moves.append(mvScale(alpha[i], weight = 1.0) )
   avmvn_ou.addVariable(alpha[i])
 
-  sigma2[i] ~ dnLogUniform(1e-10, 1)
+  sigma2[i] ~ dnLoguniform(1e-10, 1)
   moves.append(mvScale(sigma2[i], weight = 1.0) )
   avmvn_ou.addVariable(sigma2[i])
 
