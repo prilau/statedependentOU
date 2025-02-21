@@ -30,7 +30,7 @@ cont <- readContinuousCharacterData("data/1_validation/mammal/mammal_r50_Continu
 cont.excludeAll()
 cont.includeCharacter(characterCont)
 
-disc <- readDiscreteCharacterData("data/1_validation/mammal/mammal_binary_Discrete.nex")
+disc <- readDiscreteCharacterData("data/1_validation/mammal/mammal_r50_binary_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
@@ -44,9 +44,6 @@ taxa <- cont.taxa()
 ##############
 
 charHist <- readCharacterHistory( "data/1_validation/mammal/mammal_r50_simmap.tre" )[1]
-
-ntips <- tree.ntips()
-nbranches <- 2 * ntips - 2
 
 
 #######################
