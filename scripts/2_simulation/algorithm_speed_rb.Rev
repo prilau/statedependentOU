@@ -51,70 +51,34 @@ for (j in num_tips){
   Y9.clamp(cont)
   Y10 ~ dnPhyloOUSD(char_hist[10], theta=theta, rootTreatment="optimum", alpha=alpha, sigma=sigma2^0.5)
   Y10.clamp(cont)
-  time_begin <- time("milliseconds")
-  p[it+1] <- Y1.lnProbability()
-  p[it+2] <- Y2.lnProbability()
-  p[it+3] <- Y3.lnProbability()
-  p[it+4] <- Y4.lnProbability()
-  p[it+5] <- Y5.lnProbability()
-  p[it+6] <- Y6.lnProbability()
-  p[it+7] <- Y7.lnProbability()
-  p[it+8] <- Y8.lnProbability()
-  p[it+9] <- Y9.lnProbability()
-  p[it+10] <- Y10.lnProbability()
-  time_end <- time("milliseconds")
-
-  total_time[k] <- time_end - time_begin
   
-  time_begin <- time("milliseconds")
+  time[1] <- time("milliseconds")
   p[it+1] <- Y1.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+1] <- time_end - time_begin
-  
-  time_begin <- time("milliseconds")
+  time[2] <- time("milliseconds")
   p[it+2] <- Y2.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+2] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[3] <- time("milliseconds")  
   p[it+3] <- Y3.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+3] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[4] <- time("milliseconds")
   p[it+4] <- Y4.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+4] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[5] <- time("milliseconds")
   p[it+5] <- Y5.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+5] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[6] <- time("milliseconds")
   p[it+6] <- Y6.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+6] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[7] <- time("milliseconds")
   p[it+7] <- Y7.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+7] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[8] <- time("milliseconds")
   p[it+8] <- Y8.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+8] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[9] <- time("milliseconds")
   p[it+9] <- Y9.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+9] <- time_end - time_begin
-
-  time_begin <- time("milliseconds")
+  time[10] <- time("milliseconds")
   p[it+10] <- Y10.lnProbability()
-  time_end <- time("milliseconds")
-  per_rep_time[it+10] <- time_end - time_begin
+  time[11] <- time("milliseconds")
+
+  total_time[k] <- time[11] - time[1]
+  
+  for (i in 1:10) {
+    per_rep_time[it+1] <- time[i+1] - time[i]
+  }
 
   it += 10
   k +=1
