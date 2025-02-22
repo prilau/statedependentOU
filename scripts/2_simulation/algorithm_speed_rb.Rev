@@ -70,10 +70,8 @@ for (j in num_tips){
   k +=1
 }
 
-writeDelimitedCharacterData(filename="output/2_simulation/algorithm_speed/rb_timetaken.txt",
-                            data=time_taken, separator=",")
-writeDelimitedCharacterData(filename="output/2_simulation/algorithm_speed/rb_lik.txt",
-                            data=p, separator=",")
+write(time_taken, filename="output/2_simulation/algorithm_speed/rb_timetaken.txt", separator=",")
+write(p, filename="output/2_simulation/algorithm_speed/rb_lik.txt", separator=",")
 
 
 ## quit ##
