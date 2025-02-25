@@ -1,3 +1,4 @@
+library(cowplot)
 library(RevGadgets)
 library(ggplot2)
 library(tidyverse)
@@ -10,11 +11,18 @@ tree <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
 trait <- read.csv("data/3_empirical/mammal_traits.csv") %>% filter(Binomial.1.2 %in% tree$tip.label) %>% 
   mutate(diet3 = as.factor(diet3),
          diet4 = as.factor(diet4))
+root_age <- max(node.depth.edgelength(tree))
 
 ###########
 # 3-state #
 ###########
 trace_sdou3 <- readTrace(c("output/3_empirical/sdOU_r500_3StateOrderedModel/trace_run_1.log", "output/3_empirical/sdOU_r500_3StateOrderedModel/trace_run_4.log"), burnin = 0.1)
+trace_sdou3[[1]]$`halflife[1]` <- trace_sdou3[[1]]$`halflife[1]` / root_age
+trace_sdou3[[1]]$`halflife[2]` <- trace_sdou3[[1]]$`halflife[2]` / root_age
+trace_sdou3[[1]]$`halflife[3]` <- trace_sdou3[[1]]$`halflife[3]` / root_age
+trace_sdou3[[2]]$`halflife[1]` <- trace_sdou3[[2]]$`halflife[1]` / root_age
+trace_sdou3[[2]]$`halflife[2]` <- trace_sdou3[[2]]$`halflife[2]` / root_age
+trace_sdou3[[2]]$`halflife[3]` <- trace_sdou3[[2]]$`halflife[3]` / root_age
 
 trait_tmp <- trait %>%
   mutate(diet3 = ifelse(diet3==0, "theta[1]", ifelse(diet3==1, "theta[2]", "theta[3]")))
@@ -25,9 +33,9 @@ names(color_sdou3) <- c("halflife[1]", "halflife[2]", "halflife[3]")
 p1 <- plotTrace(trace_sdou3, vars = c("halflife[1]", "halflife[2]", "halflife[3]"), color = color_sdou3)[[1]] +
   ggtitle(TeX("Phylogenetic half-life $t_{0.5}$")) +
   theme(legend.position = "none") +
-  xlab("Time (million years)") +
+  xlab("Time (tree height)") +
   ylab("Posterior probability density") +
-  xlim(0,2000)
+  xlim(0,10)
 
 names(color_sdou3) <- c("stv[1]", "stv[2]", "stv[3]")
 p2 <- plotTrace(trace_sdou3, vars = c("stv[1]", "stv[2]", "stv[3]"), color = color_sdou3)[[1]] +
@@ -100,6 +108,10 @@ ggsave("figures/3_empirical/sdOU_r500_3StateOrderedModel/ou_posterior.pdf", post
 ###########
 
 trace_sdou4 <- readTrace("output/3_empirical/sdOU_r500_4StateModel/trace_run_1.log", burnin = 0.1)
+trace_sdou4[[1]]$`halflife[1]` <- trace_sdou4[[1]]$`halflife[1]` / root_age
+trace_sdou4[[1]]$`halflife[2]` <- trace_sdou4[[1]]$`halflife[2]` / root_age
+trace_sdou4[[1]]$`halflife[3]` <- trace_sdou4[[1]]$`halflife[3]` / root_age
+trace_sdou4[[1]]$`halflife[4]` <- trace_sdou4[[1]]$`halflife[4]` / root_age
 
 trait_tmp <- trait %>%
   mutate(diet4 = ifelse(diet4==0, "theta[1]", ifelse(diet4==1, "theta[2]",ifelse(diet4==2, "theta[3]", "theta[4]"))))
@@ -111,8 +123,8 @@ p7 <- plotTrace(trace_sdou4, vars = c("halflife[1]", "halflife[2]", "halflife[3]
   ggtitle(TeX("Phylogenetic half-life $t_{0.5}$")) +
   theme(legend.position = "none") +
   ylab("Posterior probability density") +
-  xlim(0,2500) +
-  xlab("Time (million years)")
+  xlim(0,15) +
+  xlab("Time (tree height)")
 names(color_sdou4) <- c("stv[1]", "stv[2]", "stv[3]", "stv[4]")
 p8 <- plotTrace(trace_sdou4, vars = c("stv[1]", "stv[2]", "stv[3]", "stv[4]"), color = color_sdou4)[[1]] +
   ggtitle(TeX("Stationary variance $V_y$")) +

@@ -15,6 +15,8 @@ trait <- read.csv("data/3_empirical/mammal_traits.csv") %>% filter(Binomial.1.2 
 #  2-state  #
 #############
 trace <- readTrace("output/3_empirical/sdOU_r500_missingStateModel/trace_nstate_2_run_6.log", burnin=0.1)
+trace[[1]]$`halflife[1]` <- trace[[1]]$`halflife[1]` / root_age
+trace[[1]]$`halflife[2]` <- trace[[1]]$`halflife[2]` / root_age
 ase <- processAncStates("output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_2_run_6.log",
                         state_labels=c("0"="Large", "1"="Small"))
 # Plot p0 to for its legend only
@@ -110,20 +112,20 @@ ptable <- trace[[1]] %>% mutate(dhalflife12=ifelse(`halflife[1]`>`halflife[2]`, 
 
 colnames(ptable) <- c("Optima i;j", TeX("\\textbf{P(}$t_{0.5_i}>t_{0.5_j}$\\textbf{)}"))
 
-ptable <- tibble(x = 1500, y = 0.015,
+ptable <- tibble(x = 10, y = 2.6,
                        tb = list(ptable))
 
 color2 <- c("#364B9a", "#c2e4ef")
 names(color2) <- c("halflife[1]", "halflife[2]")
 p4 <- plotTrace(trace, vars = c("halflife[1]", "halflife[2]"), color = color2)[[1]] +
   theme(legend.position="none") +
-  xlim(0,1500) +
+  xlim(0,10) +
   geom_table(data = ptable,
              aes(x = x, y = y, label = tb),
              vjust = 1,
              table.theme = tt) +
   ggtitle(TeX("$t_{0.5}$")) +
-  xlab("Time (million years)") +
+  xlab("Time (tree height)") +
   ylab("Posterior density")
 
 p4
@@ -188,6 +190,9 @@ ggsave("figures/3_empirical/sdOU_r500_MissingStateModel/nstate_2.pdf", row123, w
 #  3-state  #
 #############
 trace <- readTrace("output/3_empirical/sdOU_r500_missingStateModel/trace_nstate_3_run_5.log", burnin=0.1)
+trace[[1]]$`halflife[1]` <- trace[[1]]$`halflife[1]` / root_age
+trace[[1]]$`halflife[2]` <- trace[[1]]$`halflife[2]` / root_age
+trace[[1]]$`halflife[3]` <- trace[[1]]$`halflife[3]` / root_age
 ase <- processAncStates("output/3_empirical/sdOU_r500_missingStateModel/anc_states_nstate_3_run_5.log",
                         state_labels=c("0"="Large", "1"="Medium", "2"="Small"))
 
@@ -280,7 +285,7 @@ ptable <- trace[[1]] %>% mutate(dhalflife12=ifelse(`halflife[1]`>`halflife[2]`, 
 ptable <- data.frame(n=c("Large; medium", "Large; small", "Medium; small"), p=c(ptable$phalflife12, ptable$phalflife13, ptable$phalflife23))
 
 colnames(ptable) <- c("Optima i;j", TeX("\\textbf{P(}$t_{0.5_i}>t_{0.5_j}$\\textbf{)}"))
-ptable <- tibble(x = 2000, y = 0.018,
+ptable <- tibble(x = 10, y = 3.1,
                  tb = list(ptable))
 
 color3 <- c("#364B9a", "#4a7bb7", "#c2e4ef")
@@ -292,7 +297,7 @@ p10 <- plotTrace(trace, vars = c("halflife[1]", "halflife[2]", "halflife[3]"), c
              vjust = 1,
              table.theme = tt) +
   ggtitle(TeX("$t_{0.5}$")) +
-  xlab("Time (million years)") +
+  xlab("Time (tree height)") +
   ylab("Posterior density")
 
 p10
