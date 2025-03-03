@@ -45,7 +45,7 @@ root_age <- tree.rootAge()
 
 # make the Q matrix
 
-rates ~ dnDirichlet(rep(1,21))
+rates ~ dnDirichlet(rep(1,42))
 moves.append( mvBetaSimplex( rates, weight=10 ) )
 moves.append( mvDirichletSimplex( rates, weight=10 ) )
 avmvn_rates.addVariable( rates )
@@ -55,7 +55,7 @@ avmvn_rates.addVariable( lambda )
 
 moves.append( avmvn_rates )
 
-Q := fnFreeK(rates, rescaled=FALSE)
+Q := fnFreeK(rates, rescaled=TRUE)
 
 rf_prior <- rep(1,num_disc_states)
 rf ~ dnDirichlet( rf_prior )
