@@ -67,7 +67,7 @@ avmvn_rf.addVariable( rf )
 moves.append( avmvn_rf )
 
 # make the CTCM model
-X ~ dnPhyloCTMC(tree=tree, Q=Q*lambda, rootFrequencies=rf, type="Standard")
+X ~ dnPhyloCTMC(tree=tree, Q=Q, rootFrequencies=rf, type="Standard")
 X.clamp(disc)
 
 #############
