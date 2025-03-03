@@ -53,9 +53,11 @@ avmvn_rates.addVariable( rates )
 lambda ~ dnExp(root_age / 10)
 avmvn_rates.addVariable( lambda )
 
+q <- rates * lambda
+
 moves.append( avmvn_rates )
 
-Q := fnFreeK(rates, rescaled=TRUE)
+Q := fnFreeK(q, rescaled=FALSE)
 
 rf_prior <- rep(1,num_disc_states)
 rf ~ dnDirichlet( rf_prior )
