@@ -33,45 +33,21 @@ markCompareMAP <- function(ref, map){
   return(mark_map)
 }
 
-t <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
-dir_in = "output/3_empirical/sdOU_r500_missingStateModel/"
-run6_sum <- tipMAP(paste0(dir_in, "augch_nstate_2_run_6.log"), t)
+t <- read.tree("data/1_validation/artiodactyla/artiodactyla.tree")
+dir_in = "output/2_simulation/missing_state/"
+dir_in2 = "data/2_simulation/missing_state/"
 
-
-dir_in = "output/3_empirical/ase_r500_3StateOrdered/"
-ase3_run4_sum <- tipMAP(paste0(dir_in, "states_run_4.log"), t)
-
-ase3_run4_sum[which(ase3_run4_sum==1)] = NA
-ase3_run4_sum[which(ase3_run4_sum==2)] = 1
-compareMAP(ase3_run4_sum, run6_sum)
-run6_mark <- markCompareMAP(ase3_run4_sum, run6_sum)
-
-
-ase <- processAncStates("output/3_empirical/ase_r500_3StateOrdered/anc_states_run_4.tre",
-                        state_labels=c("0"="match", "1"="mismatch", "2"="NA"))
-
-ase@data[1:500,2] <- "1"
-ase@data[1:500,4] <- "0"
-ase@data[1:500,6] <- "0"
-
-
-for (i in 1:500){
-  ase@data[i,1] <- run6_mark[501-i]
+num_match = 0
+for (i in 1:16){
+  subdir <- paste0(dir_in, "sim_", i)
+  sum <- tipMAP(paste0(subdir, "/augch_nstate_2_run_2.log"), t)
+  
+  subdir2 <- paste0(dir_in2, "sim_", i) 
+  sum2 <- read_tsv(paste0(subdir2, "/nstate_2_true_history.log")) %>%
+    select(2:44) %>% 
+    pivot_longer(cols=1:43, names_to = "node", values_to = "state") %>% 
+    mutate(state = as.numeric(substring(state, 2,2))-1) %>% 
+    select(state) %>% unlist %>% unname
+  num_match = num_match + sum(sum==sum2)
 }
-
-p1 <- plotAncStatesMAP(t = ase,
-                       #tip_labels_offset = 0.5,
-                       tip_labels = FALSE,
-                       node_color_as = ,
-                       node_color = c("match"="green", "mismatch"="red", "NA"="grey"),
-                       node_size = c(0.0, 0.000001),
-                       tip_states = TRUE,
-                       tip_states_size = 1,
-                       #tip_states_shape = 1,
-                       state_transparency = 0.7,
-                       tree_layout = "circular",
-                       #tip_labels_size = 0.5
-                       tree_color = "#bbbbbb",
-                       tree_linewidth = 0.25) +
-  # modify legend location using ggplot2
-  theme(legend.position.inside = c(0.6,0.81))
+perc_match = num_match / (43 * 16)

@@ -4,8 +4,8 @@ library(RevGadgets)
 library(tidyverse)
 source("scripts/5_miscellaneous/functions.R")
 
-tree <- read.tree("data/3_empirical/mammal_perMY_r500.tre")
-dir_in = "output/3_empirical/sdOU_r500_missingStateModel/"
+tree <- read.tree("data/1_validation/artiodactyla/artiodactyla.tree")
+dir_in = "output/2_simulation/missing_state/"
 files <- list.files(dir_in, recursive = TRUE)[grepl(".trees", list.files(dir_in, recursive = TRUE))]
 
 log_to_simmap(dir_in, files)

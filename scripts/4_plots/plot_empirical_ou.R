@@ -53,42 +53,47 @@ p3 <- plotTrace(trace_sdou3, vars = c("theta[1]", "theta[2]", "theta[3]"), color
                     name="Diet",
                     labels=c("Herbivore", "Omnivore", "Carnivore")) +
   xlab("ln(body mass (kg))") +
-  annotate("rect", xmin = -8, xmax = 12, ymin = 0.25, ymax = 0.32, fill="grey80", alpha=0.5, size=0.1) +
-  annotate("text", x=-2.5, y=0.31, label= "Empirical distribution", size=2.5) +
+  annotate("rect", xmin = -7, xmax = 10, ymin = 0.15, ymax = 0.35, fill="grey80", alpha=0.4, size=0.1) +
+  #annotate("text", x=-2.5, y=0.31, label= "Empirical distribution", size=5) +
   geom_boxplot(data=trait_tmp[which(trait_tmp$diet3=="theta[1]"),],
-               aes(x=log_mass_kg, y=0.29),
+               aes(x=log_mass_kg, y=0.3),
                color="#44aa99",
-               width=0.01,
-               linewidth=0.2) +
-  geom_point(data=trait_tmp[which(trait_tmp$diet3=="theta[1]"),], aes(x=log_mass_kg, y=0.29),
-             shape = 16,
-             size = 0.3,
-             alpha = 0.3,
-             color="#44aa99",
-             position=position_jitter(height=0.0025)) +
+               width=0.04,
+               linewidth=0.3,
+               outlier.shape=NA
+               ,alpha=0.3) +
+  #geom_point(data=trait_tmp[which(trait_tmp$diet3=="theta[1]"),], aes(x=log_mass_kg, y=0.29),
+  #           shape = 16,
+  #           size = 0.3,
+  #           alpha = 0.3,
+  #           color="#44aa99",
+  #           position=position_jitter(height=0.0025)) +
   geom_boxplot(data=trait_tmp[which(trait_tmp$diet3=="theta[2]"),],
-               aes(x=log_mass_kg, y=0.275),
+               aes(x=log_mass_kg, y=0.25),
                color="#ddcc77",
-               width=0.01,
-               linewidth=0.2) +
-  geom_point(data=trait_tmp[which(trait_tmp$diet3=="theta[2]"),], aes(x=log_mass_kg, y=0.275),
-             shape = 16,
-             size = 0.3,
-             alpha = 0.3,
-             color="#ddcc77",
-             position=position_jitter(height=0.0025)) +
+               width=0.04,
+               linewidth=0.3,
+               outlier.shape=NA
+               ,alpha=0.3) +
+  #geom_point(data=trait_tmp[which(trait_tmp$diet3=="theta[2]"),], aes(x=log_mass_kg, y=0.275),
+  #           shape = 16,
+  #           size = 0.3,
+  #           alpha = 0.3,
+  #           color="#ddcc77",
+  #           position=position_jitter(height=0.0025)) +
   geom_boxplot(data=trait_tmp[which(trait_tmp$diet3=="theta[3]"),],
-               aes(x=log_mass_kg, y=0.26),
+               aes(x=log_mass_kg, y=0.2),
                color="#882255",
-               width=0.01,
-               linewidth=0.2,
-               outlier.shape=NA) +
-  geom_point(data=trait_tmp[which(trait_tmp$diet3=="theta[3]"),], aes(x=log_mass_kg, y=0.26),
-             shape = 16,
-             size = 0.3,
-             alpha = 0.3,
-             color="#882255",
-             position=position_jitter(height=0.0025)) +
+               width=0.04,
+               linewidth=0.3,
+               outlier.shape=NA
+               ,alpha=0.2) +
+  #geom_point(data=trait_tmp[which(trait_tmp$diet3=="theta[3]"),], aes(x=log_mass_kg, y=0.26),
+  #           shape = 16,
+  #           size = 0.3,
+  #           alpha = 0.3,
+  #           color="#882255",
+  #           position=position_jitter(height=0.0025)) +
   theme(legend.position = "none")
 p3  
 
@@ -141,53 +146,58 @@ p9 <- plotTrace(trace_sdou4, vars = c("theta[1]", "theta[2]", "theta[3]", "theta
   scale_color_manual(values=c("#44aa99", "#999933", "#CC6677", "#882255"), 
                      name="Diet",
                      labels=c("Herbivore", TeX("Omnivore ($>50\\%$ plants)"), TeX("Omnivore ($\\leq 50\\%$ plants)"), "Carnivore")) +
-  annotate("rect", xmin = -8, xmax = 12, ymin = 0.25, ymax = 0.33, fill="grey80", alpha=0.5, size=0.1) +
-  annotate("text", x=0, y=0.32, label= "Empirical distribution", size=2.5) +
+  annotate("rect", xmin = -7, xmax = 10, ymin = 0.15, ymax = 0.33, fill="grey80", alpha=0.4, size=0.1) +
+  #annotate("text", x=0, y=0.32, label= "Empirical distribution", size=2.5) +
   geom_boxplot(data=trait_tmp[which(trait_tmp$diet4=="theta[1]"),],
-               aes(x=log_mass_kg, y=0.305),
+               aes(x=log_mass_kg, y=0.30),
                color="#44aa99",
-               width=0.01,
-               linewidth=0.2) +
-  geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[1]"),], aes(x=log_mass_kg, y=0.305),
-             shape = 16,
-             size = 0.3,
-             alpha = 0.3,
-             color="#44aa99",
-             position=position_jitter(height=0.0025)) +
+               width=0.03,
+               linewidth=0.3,
+               alpha=0.2) +
+  #geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[1]"),], aes(x=log_mass_kg, y=0.305),
+  #           shape = 16,
+  #           size = 0.3,
+  #           alpha = 0.3,
+  #           color="#44aa99",
+  #           position=position_jitter(height=0.0025)) +
   geom_boxplot(data=trait_tmp[which(trait_tmp$diet4=="theta[2]"),],
-               aes(x=log_mass_kg, y=0.29),
-               color="#999933",
-               width=0.01,
-               linewidth=0.2,
-               outlier.shape=NA) +
-  geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[2]"),], aes(x=log_mass_kg, y=0.29),
-             shape = 16,
-             size = 0.3,
-             alpha = 0.3,
-             color="#999933",
-             position=position_jitter(height=0.0025)) +
-  geom_boxplot(data=trait_tmp[which(trait_tmp$diet4=="theta[3]"),],
-               aes(x=log_mass_kg, y=0.275),
-               color="#CC6677",
-               width=0.01,
-               linewidth=0.2) +
-  geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[3]"),], aes(x=log_mass_kg, y=0.275),
-             shape = 16,
-             size = 0.3,
-             alpha = 0.3,
-             color="#CC6677",
-             position=position_jitter(height=0.0025)) +
-  geom_boxplot(data=trait_tmp[which(trait_tmp$diet4=="theta[3]"),],
                aes(x=log_mass_kg, y=0.26),
+               color="#999933",
+               width=0.03,
+               linewidth=0.3,
+               outlier.shape=NA,
+               alpha=0.2) +
+  #geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[2]"),], aes(x=log_mass_kg, y=0.29),
+  #           shape = 16,
+  #           size = 0.3,
+  #           alpha = 0.3,
+  #           color="#999933",
+  #           position=position_jitter(height=0.0025)) +
+  geom_boxplot(data=trait_tmp[which(trait_tmp$diet4=="theta[3]"),],
+               aes(x=log_mass_kg, y=0.22),
+               color="#CC6677",
+               width=0.03,
+               linewidth=0.3,
+               alpha=0.2) +
+  #geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[3]"),], aes(x=log_mass_kg, y=0.275),
+  #           shape = 16,
+  #           size = 0.3,
+  #           alpha = 0.3,
+  #           color="#CC6677",
+  #           position=position_jitter(height=0.0025)) +
+  geom_boxplot(data=trait_tmp[which(trait_tmp$diet4=="theta[4]"),],
+               aes(x=log_mass_kg, y=0.18),
                color="#882255",
-               width=0.01,
-               linewidth=0.2) +
-  geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[3]"),], aes(x=log_mass_kg, y=0.26),
-             shape = 16,
-             size = 0.3,
-             alpha = 0.3,
-             color="#882255",
-             position=position_jitter(height=0.0025))
+               width=0.03,
+               linewidth=0.3,
+               alpha=0.2,
+               outlier.shape=NA)
+  #geom_point(data=trait_tmp[which(trait_tmp$diet4=="theta[3]"),], aes(x=log_mass_kg, y=0.26),
+  #           shape = 16,
+  #           size = 0.3,
+  #           alpha = 0.3,
+  #           color="#882255",
+  #           position=position_jitter(height=0.0025))
 p9
 
 post_sdou4 <- cowplot::plot_grid(p7, p8, p9, ncol=3)
@@ -196,7 +206,7 @@ legend4 <- get_legend2(p9 + theme(legend.position = "right",
 
 post_sdou4_wlegend <- plot_grid(post_sdou4, legend4, rel_widths = c(3, .7))
 
-ggsave("figures/3_empirical/sdOU_r500_4StateModel/ou_posterior.pdf", post_sdou4_wlegend, width = 11.5, height = 4, units = "in")
+ggsave("figures/3_empirical/sdOU_r500_4StateModel/ou4_posterior.pdf", post_sdou4_wlegend, width = 11.5, height = 4, units = "in")
 
 
 ###########

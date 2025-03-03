@@ -222,16 +222,20 @@ p_th_power <- ggplot(powers_th) +
   geom_errorbar(aes(x = halflife, ymin = q025_power, ymax=q975_power,
                     group=stv, color=stv, width=0.0125),
                 linewidth = 0.25, alpha=0.9)+
-  scale_shape_manual("V", values=c(15, 16, 17))+
-  scale_color_manual("V",values=c('#004488', '#DDAA33', '#BB5566')) +
+  scale_shape_manual(TeX("$V_y$"), values=c(15, 16, 17))+
+  scale_color_manual(TeX("$V_y$"),values=c('#004488', '#DDAA33', '#BB5566')) +
   theme_bw() +
   scale_x_continuous(breaks=c(0.1, 0.3, 0.6)) + 
   xlab(TeX("$t_{0.5}$")) +
   ylab("") +
   coord_cartesian(ylim=c(0, 1)) +
   ggtitle(TeX("Optimum $\\theta$")) +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.position = "bottom")
+  theme(plot.title = element_text(hjust = 0.5, size=14),
+        legend.position = "bottom",
+        axis.text = element_text(size=12),
+        legend.title = element_text(size=12),
+        legend.text = element_text(size=12),
+        axis.title.x = element_text(size=12))
 
 p_hl_power <- ggplot(powers_hl) +
   geom_point(aes(x = stv, y=power, group=stv,
@@ -246,12 +250,16 @@ p_hl_power <- ggplot(powers_hl) +
                     group=factor(dtheta_T), color=factor(dtheta_T), width=0.0375),
                 linewidth = 0.25, alpha=0.9)+
   ylab("Power") +
-  xlab("V") +
+  xlab(TeX("$V_y$")) +
   scale_x_continuous(breaks=c(0.5, 1, 2), label=c("0.5v", "v", "2v")) + 
   coord_cartesian(ylim=c(0, 1)) +
   ggtitle(TeX("Phylogenetic half-life $t_{0.5}$")) +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.position = "bottom")
+  theme(plot.title = element_text(hjust = 0.5, size=14),
+        legend.position = "bottom",
+        axis.text = element_text(size=12),
+        legend.title = element_text(size=12),
+        legend.text = element_text(size=12),
+        axis.title = element_text(size=12))
 
 p_stv_power <- ggplot(powers_stv) +
   geom_point(aes(x = dtheta_T, y=power, group=factor(halflife),
@@ -269,12 +277,16 @@ p_stv_power <- ggplot(powers_stv) +
   xlab(TeX("$\\Delta \\theta$")) + 
   scale_x_continuous(breaks=c(2, 6, 10)) + 
   coord_cartesian(ylim=c(0, 1)) +
-  ggtitle("Stationary variance V") +
-  theme(plot.title = element_text(hjust = 0.5),
-        legend.position = "bottom")
+  ggtitle(TeX("Stationary variance $V_y$")) +
+  theme(plot.title = element_text(hjust = 0.5, size=14),
+        legend.position = "bottom",
+        axis.text = element_text(size=12),
+        legend.title = element_text(size=12),
+        legend.text = element_text(size=12),
+        axis.title.x = element_text(size=12))
 p_stv_power
-p_power <- arrangeGrob(p_hl_power, p_stv_power, p_th_power, nrow = 1)
-ggsave("figures/2_simulation/power.pdf", p_power, width = 200, height = 90, unit = "mm")
+p_power <- cowplot::plot_grid(p_hl_power, p_stv_power, p_th_power, nrow = 1)
+ggsave("figures/2_simulation/power.pdf", p_power, width = 220, height = 90, unit = "mm")
 
 #p_th_ppv <- ggplot(powers_th) +
 #  geom_point(aes(x = halflife, y=ppv, group=stv, shape=stv, color=stv), size=2) +

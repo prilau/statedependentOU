@@ -33,8 +33,8 @@ write.csv(fp, "output/2_simulation/false_positive/grid.csv")
 thresholds <- tibble(sim=1:num_sim, upper=0.975, lower=0.025)
 p <- list()
 pars <- c("halflife", "stv", "theta")
-pars_title <- c(TeX("Phylogenetic half-life $t_{0.5}$"), "Stationary variance V", TeX("Optimum $\\theta$"))
-pars_ylab <- c(TeX("P($t_{0.5_1} > t_{0.5_2}$)"), TeX("P($V_1 > V_2$)"), TeX("P($\\theta_1 > \\theta_2$)"))
+pars_title <- c(TeX("Phylogenetic half-life $t_{0.5}$"), TeX("Stationary variance $V_y$"), TeX("Optimum $\\theta$"))
+pars_ylab <- c(TeX("P($t_{0.5\\,0} > t_{0.5\\,1}$)"), TeX("P($V_{y\\,0} > V_{y\\,1}$)"), TeX("P($\\theta_0 > \\theta_1$)"))
 
 i=1
 for (par in pars){
@@ -52,7 +52,12 @@ for (par in pars){
     xlab(pars_ylab[i]) +
     ylab("") +
     #scale_y_continuous(breaks = c(0, 20, 40)) +
-    theme(plot.title = element_text(hjust = 0.5),
+    theme(plot.title = element_text(hjust = 0.5, size=14),
+          legend.position = "bottom",
+          axis.text = element_text(size=12),
+          legend.title = element_text(size=12),
+          legend.text = element_text(size=12),
+          axis.title.x = element_text(size=12),
           axis.title.y = element_blank())
   i=i+1
 }
@@ -66,8 +71,8 @@ fp_bin <- fp %>%
   summarise(`False positive rate` = signif(mean(value),2)) %>% 
   rename(Parameter = par)
 
-p_all <- arrangeGrob(p[[1]], p[[2]], p[[3]], nrow = 1)
+p_all <- cowplot::plot_grid(p[[1]], p[[2]], p[[3]], nrow = 1)
 
-file_out <- paste0(dir_out, "fpr.pdf")
+file_out <- paste0(dir_out, "/fpr.pdf")
 ggsave(file_out, p_all, width = 180, height = 70, units = "mm")
 

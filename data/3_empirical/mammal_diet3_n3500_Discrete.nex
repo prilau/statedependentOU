@@ -2,7 +2,7 @@
 [Data written by write.nexus.data.R, Tue Jan 14 09:53:13 2025]
 BEGIN DATA;
   DIMENSIONS NTAX=3500 NCHAR=1;
-  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="0123456789";
+  FORMAT DATATYPE=STANDARD MISSING=? GAP=- INTERLEAVE=NO symbols="012";
   MATRIX
     abeomelomys_sevia                      1
     abrawayaomys_ruschii                   1
