@@ -20,7 +20,7 @@ T <- readTrees("data/3_empirical/mammal_perMY_r500.tre")[1]
 ntips <- T.ntips()
 nbranches <- 2 * ntips - 2
 
-disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet3_r500_Discrete.nex")
+disc <- readDiscreteCharacterData("data/3_empirical/mammal_diet7_n3500_Discrete.nex")
 num_disc_states <- disc.getStateDescriptions().size()
 disc.excludeAll()
 disc.includeCharacter(characterDisc)
